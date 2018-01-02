@@ -42,7 +42,8 @@ class NumbersController(BaseController):
                 area code.
 
         Returns:
-            void: Response from the API. OK
+            mixed: Response from the API. A JSON object of Central Office (exchange) codes containing
+                    purchasable phone numbers that satisfy your search criteria.
 
         Raises:
             APIException: When an error occurs while fetching the data from
@@ -97,7 +98,8 @@ class NumbersController(BaseController):
                 specified maximum non-recurring setup cost.
 
         Returns:
-            void: Response from the API. OK
+            mixed: Response from the API. A JSON object of area codes containing
+                    purchasable phone numbers that satisfy your search criteria.
 
         Raises:
             APIException: When an error occurs while fetching the data from
