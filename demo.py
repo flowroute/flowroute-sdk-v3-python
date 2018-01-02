@@ -41,3 +41,29 @@ offset = None
 print("--List Account Phone Numbers")
 result = numbers_controller.get_account_phone_numbers(starts_with, ends_with, contains, limit, offset)
 pprint.pprint(result)
+
+limit = 3
+offset = None
+max_setup_cost = None
+areacode = 347
+print("--List Available Exchange Codes")
+result = numbers_controller.list_available_exchange_codes(limit, offset, max_setup_cost, areacode)
+pprint.pprint(result)
+
+limit = 3
+offset = None
+max_setup_cost = 3.25
+print("--List Available Area Codes")
+result = numbers_controller.list_available_area_codes(limit, offset, max_setup_cost)
+pprint.pprint(result)
+
+starts_with = 646
+contains = 3
+ends_with = 7
+limit = 3
+offset = None
+rate_center = None
+state = 'WA'
+print("--Search for Purchasable Phone Numbers")
+result = numbers_controller.search_for_purchasable_phone_numbers(starts_with, contains, ends_with, limit, offset, rate_center, state)
+pprint.pprint(result)
