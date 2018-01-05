@@ -45,12 +45,12 @@ result = numbers_controller.search_for_purchasable_phone_numbers(starts_with, co
 pprint.pprint(result)
 
 print("--Purchase a Phone Number")
-numberid = result['data'][0]['id'])
-result = numbers_controller.purchase_a_phone_number(numberid)
+number_id = result['data'][0]['id'])
+result = numbers_controller.purchase_a_phone_number(number_id)
 
 
 print("--List Phone Number Details")
-result = numbers_controller.list_phone_number_details(numberid)
+result = numbers_controller.list_phone_number_details(number_id)
 pprint.pprint(result)
 
 
@@ -95,14 +95,13 @@ pprint.pprint(result)
 #result = routes_controller.update_failover_voice_route()
 #pprint.pprint(result)
 
----
-
 #print ("---Send A Message")
 #result = messages_controller.send_a_message()
 #pprint.pprint(result)
 
 print ("---Look Up A Message Detail Record")
-result = messages_controller.look_up_a_message_detail_record()
+message_id = "mdr2-ca82be46e6ba11e79d08862d092cf73d"
+result = messages_controller.look_up_a_message_detail_record(message_id)
 pprint.pprint(result)
 
 print ("---Look Up A Set Of Messages")
