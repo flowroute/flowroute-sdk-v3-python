@@ -1,22 +1,4 @@
 #!/usr/bin/env python
-
-"""
-demo.py
-
-Flowroute-numbers-python is a Python API Wrapper that provides methods for interacting with v1 (version 1)
-of the Flowroute API. These methods can be used to accomplish the following:
-
-* Search for purchasable phone numbers
-* Purchase phone numbers
-* View the phone numbers you own, as well as their related details
-* Create a new inbound route
-* Update the primary and failover route on a phone number
-
-
-Copyright Flowroute, Inc.  2016
-
-"""
-
 import pprint
 import os
 import json
