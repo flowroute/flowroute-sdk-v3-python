@@ -21,27 +21,19 @@ Requirements
 *   Flowroute [API credentials](https://manage.flowroute.com/accounts/preferences/api/)
 *   [Python](https://www.python.org/downloads/) 2.x or higher
 
-
-[View Repo](https://github.com/flowroute/flowroute-numbers-messaging-python)
-
 ### Installation
 
 1. First, start a shell session and clone the SDK:
-    * via HTTPS	
+    * via HTTPS: `git clone https://github.com/flowroute/flowroute-numbers-python.git`
 
-`git clone https://github.com/flowroute/flowroute-numbers-python.git`
+    * via SSH: `git@github.com:flowroute/flowroute-numbers-messaging-python.git`
 
-    * via SSH
-
-`git@github.com:flowroute/flowroute-numbers-messaging-python.git`
-    
-
-2. Switch to the newly-created `flowroute-numbers-messaging-python` directory. The Flowroute SDK for Python v3 comes with a requirements file listing the required Python libraries. Click [here](https://packaging.python.org/installing/#requirements-files) to learn more about different ways to install Python packages. Depending on your `pip` permissions, you may be required to preface each `pip` command with `sudo`.
+2. Switch to the newly-created `flowroute-numbers-messaging-python` directory. Version 3 of the Flowroute SDK for Python comes with a requirements file listing the required Python libraries. Click [here](https://packaging.python.org/installing/#requirements-files) to learn more about different ways to install Python packages. Depending on your `pip` permissions, you may be required to preface each `pip` command with `sudo`.
 
 `pip install -r requirements.txt`
 
 ### Usage
-In Flowroute's approach to building Python API Wrapper 3, HTTP requests are handled by controllers named after the API resources they represent: **Numbers**, **Routes**, and **Messages**. These controllers contain the methods used to perform tasks with the Python SDK.
+In Flowroute's approach to building Python API Wrapper v3, HTTP requests are handled by controllers named after the API resources they represent: **Numbers**, **Routes**, and **Messages**. These controllers contain the methods used to perform number management, route management, and messaging tasks with the Python SDK.
 
 #### Controllers
 
@@ -104,6 +96,7 @@ messages_controller = client.messages
 
 ### Number Management
 
+#### List Area Codes
 ##### list\_available\_area\_codes()
 
 The method accepts `limit`, `offset`, and `max_setup_cost` as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/list-available-area-codes/).
