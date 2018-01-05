@@ -47,7 +47,7 @@ class RoutesController(BaseController):
 
         # Prepare headers
         _headers = {
-            'content-type': 'application/json; charset=utf-8'
+            'content-type': 'application/vnd.api+json; charset=utf-8'
         }
 
         # Prepare and execute request
@@ -112,9 +112,59 @@ class RoutesController(BaseController):
             raise APIException('Unauthorized', _context)
         elif _context.response.status_code == 404:
             raise APIException('Not Found', _context)
+        elif _context.response.status_code <> 200:
+            raise ErrorException('Unspecified error occurred', _context)
         self.validate_response(_context)
 
-    def update_failover_voice_route_for_a_phone_number(self,
+        return APIHelper.json_deserialize(_context.response.raw_body)
+
+    def update_primary_voice_route(self,
+                                                      number_id,
+                                                      body):
+        """Does a PATCH request to /v2/numbers/{number_id}/relationships/primary_route.
+
+        Use this endpoint to update the primary voice route for a phone
+        number. You must create the route first by following "Create an
+        Inbound Route". You can then assign the created route by specifying
+        its value in a PATCH request.
+
+        Args:
+            number_id (int): The phone number in E.164 11-digit North American
+                format to which the primary route for voice will be assigned.
+            body (void): The primary route to be assigned.
+
+        Returns:
+            void: Response from the API. NO CONTENT
+
+        Raises:
+            APIException: When an error occurs while fetching the data from
+                the remote API. This exception includes the HTTP Response
+                code, an error message, and the HTTP body that was received in
+                the request.
+
+        """
+
+        # Prepare query URL
+        _query_builder = Configuration.base_uri
+        _query_builder += '/v2/numbers/{number_id}/relationships/primary_route'
+        _query_builder = APIHelper.append_url_with_template_parameters(_query_builder, { 
+            'number_id': number_id
+        })
+        _query_url = APIHelper.clean_url(_query_builder)
+
+        # Prepare and execute request
+        _request = self.http_client.patch(_query_url, parameters=str(body))
+        BasicAuth.apply(_request)
+        _context = self.execute_request(_request)
+
+        # Endpoint and global error handling using HTTP status codes.
+        if _context.response.status_code == 401:
+            raise ErrorException('Unauthorized – There was an issue with your API credentials.', _context)
+        elif _context.response.status_code == 404:
+            raise ErrorException('The specified resource was not found', _context)
+        self.validate_response(_context)
+
+    def update_failover_voice_route(self,
                                                        number_id,
                                                        body):
         """Does a PATCH request to /v2/numbers/{number_id}/relationships/failover_route.
@@ -144,52 +194,6 @@ class RoutesController(BaseController):
         # Prepare query URL
         _query_builder = Configuration.base_uri
         _query_builder += '/v2/numbers/{number_id}/relationships/failover_route'
-        _query_builder = APIHelper.append_url_with_template_parameters(_query_builder, { 
-            'number_id': number_id
-        })
-        _query_url = APIHelper.clean_url(_query_builder)
-
-        # Prepare and execute request
-        _request = self.http_client.patch(_query_url, parameters=str(body))
-        BasicAuth.apply(_request)
-        _context = self.execute_request(_request)
-
-        # Endpoint and global error handling using HTTP status codes.
-        if _context.response.status_code == 401:
-            raise ErrorException('Unauthorized – There was an issue with your API credentials.', _context)
-        elif _context.response.status_code == 404:
-            raise ErrorException('The specified resource was not found', _context)
-        self.validate_response(_context)
-
-    def update_primary_voice_route_for_a_phone_number(self,
-                                                      number_id,
-                                                      body):
-        """Does a PATCH request to /v2/numbers/{number_id}/relationships/primary_route.
-
-        Use this endpoint to update the primary voice route for a phone
-        number. You must create the route first by following "Create an
-        Inbound Route". You can then assign the created route by specifying
-        its value in a PATCH request.
-
-        Args:
-            number_id (int): The phone number in E.164 11-digit North American
-                format to which the primary route for voice will be assigned.
-            body (void): The primary route to be assigned.
-
-        Returns:
-            void: Response from the API. NO CONTENT
-
-        Raises:
-            APIException: When an error occurs while fetching the data from
-                the remote API. This exception includes the HTTP Response
-                code, an error message, and the HTTP body that was received in
-                the request.
-
-        """
-
-        # Prepare query URL
-        _query_builder = Configuration.base_uri
-        _query_builder += '/v2/numbers/{number_id}/relationships/primary_route'
         _query_builder = APIHelper.append_url_with_template_parameters(_query_builder, { 
             'number_id': number_id
         })
