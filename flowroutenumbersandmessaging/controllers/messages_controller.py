@@ -18,7 +18,7 @@ class MessagesController(BaseController):
     """A Controller to access Endpoints in the flowroutenumbersandmessaging API."""
 
 
-    def get_look_up_a_set_of_messages(self,
+    def look_up_a_set_of_messages(self,
                                       start_date,
                                       end_date=None,
                                       limit=None,
@@ -87,7 +87,7 @@ class MessagesController(BaseController):
         # Return appropriate type
         return APIHelper.json_deserialize(_context.response.raw_body)
 
-    def get_look_up_a_message_detail_record(self,
+    def look_up_a_message_detail_record(self,
                                             id):
         """Does a GET request to /v2.1/messages/{id}.
 
@@ -138,8 +138,7 @@ class MessagesController(BaseController):
         # Return appropriate type
         return APIHelper.json_deserialize(_context.response.raw_body, MDR2.from_dictionary)
 
-    def create_send_a_message(self,
-                              body):
+    def send_a_message(self, body):
         """Does a POST request to /v2.1/messages.
 
         Sends an SMS or MMS from a Flowroute long code or toll-free phone
