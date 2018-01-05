@@ -78,6 +78,8 @@ class NumbersController(BaseController):
             raise ErrorException('The specified resource was not found', _context)
         self.validate_response(_context)
 
+        return APIHelper.json_deserialize(_context.response.raw_body)
+
     def list_available_area_codes(self,
                                   limit=None,
                                   offset=None,
@@ -131,7 +133,11 @@ class NumbersController(BaseController):
             raise ErrorException('Unauthorized – There was an issue with your API credentials.', _context)
         elif _context.response.status_code == 404:
             raise ErrorException('The specified resource was not found', _context)
+        elif _context.response.status_code == 422:
+            raise ErrorException('Invalid Query', _context)
         self.validate_response(_context)
+
+        return APIHelper.json_deserialize(_context.response.raw_body)
 
     def search_for_purchasable_phone_numbers(self,
                                              starts_with=None,
@@ -212,7 +218,7 @@ class NumbersController(BaseController):
         # Return appropriate type
         return APIHelper.json_deserialize(_context.response.raw_body)
 
-    def get_account_phone_numbers(self,
+    def list_account_phone_numbers(self,
                                   starts_with=None,
                                   ends_with=None,
                                   contains=None,
@@ -285,7 +291,7 @@ class NumbersController(BaseController):
         # Return appropriate type
         return APIHelper.json_deserialize(_context.response.raw_body)
 
-    def create_purchase_a_phone_number(self,
+    def purchase_a_phone_number(self,
                                        id):
         """Does a POST request to /v2/numbers/{id}.
 
@@ -332,9 +338,9 @@ class NumbersController(BaseController):
         self.validate_response(_context)
 
         # Return appropriate type
-        return APIHelper.json_deserialize(_context.response.raw_body, Number26.from_dictionary)
+        return APIHelper.json_deserialize(_context.response.raw_body)
 
-    def get_phone_number_details(self,
+    def list_phone_number_details(self,
                                  id):
         """Does a GET request to /v2/numbers/{id}.
 
@@ -384,4 +390,4 @@ class NumbersController(BaseController):
         self.validate_response(_context)
 
         # Return appropriate type
-        return APIHelper.json_deserialize(_context.response.raw_body, Number26.from_dictionary)
+        return APIHelper.json_deserialize(_context.response.raw_body)
