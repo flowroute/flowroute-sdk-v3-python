@@ -19,51 +19,110 @@ Copyright Flowroute, Inc.  2016
 
 import pprint
 import os
+import json
 from flowroutenumbersandmessaging.flowroutenumbersandmessaging_client import FlowroutenumbersandmessagingClient
+from flowroutenumbersandmessaging.models import *
+from flowroutenumbersandmessaging.models.new_route import NewRoute
 
 print("Number Control Demo")
 
-# Setup your api credentials
+# Set up your api credentials
 basic_auth_user_name = os.environ.get('FR_ACCESS_KEY')
 basic_auth_password = os.environ.get('FR_SECRET_KEY')
 
-# Create our controller
+# Instantiate API client and create controllers for Numbers, Messages, and Routes
 client = FlowroutenumbersandmessagingClient(basic_auth_user_name, basic_auth_password)
-
 numbers_controller = client.numbers
+routes_controller = client.routes
+messages_controller = client.messages
 
-starts_with = 201
-ends_with = None
-contains = None
+print("--List Available Area Codes")
+max_setup_cost = 3.25
 limit = 3
 offset = None
-
-print("--List Account Phone Numbers")
-result = numbers_controller.get_account_phone_numbers(starts_with, ends_with, contains, limit, offset)
+result = numbers_controller.list_available_area_codes(limit, offset, max_setup_cost)
 pprint.pprint(result)
 
+print("--List Available Exchange Codes")
 limit = 3
 offset = None
 max_setup_cost = None
 areacode = 347
-print("--List Available Exchange Codes")
 result = numbers_controller.list_available_exchange_codes(limit, offset, max_setup_cost, areacode)
 pprint.pprint(result)
 
-limit = 3
-offset = None
-max_setup_cost = 3.25
-print("--List Available Area Codes")
-result = numbers_controller.list_available_area_codes(limit, offset, max_setup_cost)
-pprint.pprint(result)
-
+print("--Search for Purchasable Phone Numbers")
 starts_with = 646
 contains = 3
 ends_with = 7
 limit = 3
 offset = None
 rate_center = None
-state = 'WA'
-print("--Search for Purchasable Phone Numbers")
+state = None
 result = numbers_controller.search_for_purchasable_phone_numbers(starts_with, contains, ends_with, limit, offset, rate_center, state)
+pprint.pprint(result)
+
+print("--Purchase a Phone Number")
+numberid = result['data'][0]['id'])
+result = numbers_controller.purchase_a_phone_number(numberid)
+
+
+print("--List Phone Number Details")
+result = numbers_controller.list_phone_number_details(numberid)
+pprint.pprint(result)
+
+
+print("--List Account Phone Numbers")
+starts_with = 201
+ends_with = None
+contains = None
+limit = 3
+offset = None
+result = numbers_controller.list_account_phone_numbers(starts_with, ends_with, contains, limit, offset)
+pprint.pprint(result)
+
+
+#print ("---Create an Inbound Route")
+#request_body = '{
+#  "data": {
+#    "type": "route",
+#    "attributes": {
+#      "route_type": "host",
+#      "value": "www.example.com",
+#      "alias": "new_route_id"
+#    }
+#  }
+#}'
+
+#routepost = NewRoute(json.dumps({"data": {"type": "route", "attributes": {"route_type": "host", "value": "13471654563", "alias": "new_route_56"}}}))
+#result = routes_controller.create_an_inbound_route(routepost)
+result = routes_controller.create_an_inbound_route(request_body)
+pprint.pprint(result)
+
+print ("---List Inbound Routes")
+result = routes_controller.list_inbound_routes()
+pprint.pprint(result)
+
+#print ("---Update Primary Voice Route")
+#routeid = result['data'][1]['id']
+#result = routes_controller.update_primary_voice_route()
+#pprint.pprint(result)
+#
+#print ("---Update Failover Voice Route")
+#routeid = result['data'][2]['id']
+#result = routes_controller.update_failover_voice_route()
+#pprint.pprint(result)
+
+---
+
+#print ("---Send A Message")
+#result = messages_controller.send_a_message()
+#pprint.pprint(result)
+
+print ("---Look Up A Message Detail Record")
+result = messages_controller.look_up_a_message_detail_record()
+pprint.pprint(result)
+
+print ("---Look Up A Set Of Messages")
+result = messages_controller.look_up_a_set_of_messages()
 pprint.pprint(result)
