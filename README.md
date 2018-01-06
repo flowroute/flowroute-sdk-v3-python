@@ -46,7 +46,7 @@ In Flowroute's approach to building Python API Wrapper v3, HTTP requests are han
     Contains all of the methods necessary to search through Flowroute's phone number inventory, purchase a phone number, and review details of your account phone numbers.
     
     *   [list\_available\_area\_codes()](#list_available_area_codes) \- Returns a list of all Numbering Plan Area (NPA) codes containing purchasable phone numbers.
-    *   [list\_available\_exchange\_codes()](#list-available_exchange_codes) \- Returns a list of all Central Office (exchange) codes containing purchasable phone numbers.
+    *   [list\_available\_exchange\_codes()](#list_available_exchange_codes) \- Returns a list of all Central Office (exchange) codes containing purchasable phone numbers.
     *   [search\_for\_purchasable\_phone\_numbers()](#search_for_purchasable_phone_numbers) \- Searches for purchasable phone numbers by state or rate center, or by your specified search value.
     *   [purchase\_a\_phone\_number(number\_id)](#purchase_a_phone_numbernumber_id) \- Lets you purchase a phone number from available Flowroute inventory.
     *   [list\_account\_phone\_numbers()](#list_account_phone_numbers) \- Returns a list of all phone numbers currently on your Flowroute account. The response includes details such as the phone number's rate center, state, number type, and whether CNAM Lookup is enabled for that number.
@@ -58,16 +58,16 @@ In Flowroute's approach to building Python API Wrapper v3, HTTP requests are han
     
     *   [create\_an\_inbound\_route(route\_body)](#create_an_inbound_routeroute_body) \- Create a new inbound route that can then be assigned as either a primary or failover voice route for a phone number.
     *   [list\_inbound\_routes()](#list_inbound_routes) \- Returns a list of your inbound routes. From the list, you can then select routes to use as the primary and failover voice routes for your phone number.
-    *   [update\_primary\_voice\_route(number\_id, route\_body)](#update_primary_voice_route) \- Updates the primary voice route for a phone number. You must create the route first via the `create_an_inbound_route(routebody)` method.
-    *   [update\_failover\_voice\_route(number\_id, route\_body)](#update_failover_voice_route) \- Updates the failover voice route for a phone number. You must create the route first via the `create_an_inbound_route(routebody)` method.
+    *   [update\_primary\_voice\_route(number\_id, route\_body)](#update_primary_voice_routenumber_id-route_body) \- Updates the primary voice route for a phone number. You must create the route first via the `create_an_inbound_route(routebody)` method.
+    *   [update\_failover\_voice\_route(number\_id, route\_body)](#update_failover_voice_routenumber_id-route_body) \- Updates the failover voice route for a phone number. You must create the route first via the `create_an_inbound_route(routebody)` method.
 
 *   MessagesController
     
     Contains the methods required to send an MMS or SMS, and review a specific Message Detail Record (MDR) or a set of messages.
     
     *   [send\_a\_message(message\_body)](#send_a_messagemessage_body) \- Sends an SMS or MMS from a Flowroute long code or toll-free phone number to another valid phone number.
-    *   [look\_up\_a\_message\_detail\_record()](#look_up_a_message_detail_record) \- Searches for a specific message record ID and returns a Message Detail Record (in MDR2 format).
-    *   [look\_up\_a\_set\_of\_messages()](#look_up_a_set_of_messages) \- Retrieves a list of Message Detail Records (MDRs) within a specified date range. Date and time is based on Coordinated Universal Time (UTC).
+    *   [look\_up\_a\_message\_detail\_record()](#look_up_a_message_detail_recordmessage_id) \- Searches for a specific message record ID and returns a Message Detail Record (in MDR2 format).
+    *   [look\_up\_a\_set\_of\_messages()](#look_up_a_set_of_messagesstart_date) \- Retrieves a list of Message Detail Records (MDRs) within a specified date range. Date and time is based on Coordinated Universal Time (UTC).
 
 The following shows an example of a single Python file that imports the Flowroute API client and all the required modules. The Python SDK comes with a **demo.py** file that you can edit and run as an example.
 
