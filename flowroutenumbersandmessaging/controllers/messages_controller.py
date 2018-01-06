@@ -136,7 +136,7 @@ class MessagesController(BaseController):
         self.validate_response(_context)
 
         # Return appropriate type
-        return APIHelper.json_deserialize(_context.response.raw_body, MDR2.from_dictionary)
+        return APIHelper.json_deserialize(_context.response.raw_body)
 
     def send_a_message(self, body):
         """Does a POST request to /v2.1/messages.
