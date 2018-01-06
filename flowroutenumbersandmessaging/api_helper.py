@@ -9,6 +9,7 @@
 import re
 import sys
 import datetime
+import dateutil.parser
 import calendar
 import email.utils as eut
 from time import mktime
@@ -394,7 +395,9 @@ class APIHelper(object):
 
         @classmethod
         def from_datetime(cls, date_time):
-            return date_time.isoformat()
+            d = dateutil.parser.parse(date_time).isoformat()
+            return d
+
 
         @classmethod
         def from_value(cls, value):
