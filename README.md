@@ -2,7 +2,7 @@
 Flowroute SDK for Python (v3)
 =====================
 
-The Flowroute Python API Wrapper v3 provides methods for interacting with **[Numbers v2](#numbers)** and **[Messages v2.1](#messaging)** of the [Flowroute](https://www.flowroute.com) API.
+The Flowroute Python API Wrapper v3 provides methods for interacting with [Numbers v2](https://developer.flowroute.com/api/numbers/v2.0/ and [Messages v2.1](https://developer.flowroute.com/api/messages/v2.1/) of the [Flowroute](https://www.flowroute.com) API.
 
 **Topics**
 
@@ -26,7 +26,7 @@ Installation
 ------------
 
 1. First, start a shell session and clone the SDK:
-    * via HTTPS: `git clone https://github.com/flowroute/flowroute-numbers-python.git`
+    * via HTTPS: `git clone https://github.com/flowroute/flowroute-numbers-messaging-python.git`
 
     * via SSH: `git@github.com:flowroute/flowroute-numbers-messaging-python.git`
 
