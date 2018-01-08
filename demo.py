@@ -45,7 +45,7 @@ result = numbers_controller.search_for_purchasable_phone_numbers(starts_with, co
 pprint.pprint(result)
 
 print("--Purchase a Phone Number")
-number_id = result['data'][0]['id'])
+number_id = result['data'][0]['id']
 result = numbers_controller.purchase_a_phone_number(number_id)
 
 
