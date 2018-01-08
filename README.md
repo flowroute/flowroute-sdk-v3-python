@@ -1,8 +1,7 @@
-# flowroute-numbers-messaging-python
 Flowroute SDK for Python (v3)
 =====================
 
-The Flowroute Python API Wrapper v3 provides methods for interacting with [Numbers v2](https://developer.flowroute.com/api/numbers/v2.0/ and [Messages v2.1](https://developer.flowroute.com/api/messages/v2.1/) of the [Flowroute](https://www.flowroute.com) API.
+The Flowroute SDK v3 for Python provides methods for interacting with [Numbers v2](https://developer.flowroute.com/api/numbers/v2.0/ and [Messages v2.1](https://developer.flowroute.com/api/messages/v2.1/) of the [Flowroute](https://www.flowroute.com) API.
 
 **Topics**
 
@@ -37,31 +36,31 @@ Installation
 * * *
 Usage
 ------------
-In Flowroute's approach to building Python API Wrapper v3, HTTP requests are handled by controllers named after the API resources they represent: **Numbers**, **Routes**, and **Messages**. These controllers contain the methods used to perform number management, route management, and messaging tasks with the Python SDK.
+In Flowroute's approach to building SDK v3 for Python, HTTP requests are handled by controllers named after the API resources they represent: **Numbers**, **Routes**, and **Messages**. These controllers contain the methods used to perform messaging, number management, and route management within the Python SDK.
 
 ### Controllers
 
-*   NumbersController
+#### NumbersController
     
     Contains all of the methods necessary to search through Flowroute's phone number inventory, purchase a phone number, and review details of your account phone numbers.
     
-    *   [list\_available\_area\_codes()](#list_available_area_codes) \- Returns a list of all Numbering Plan Area (NPA) codes containing purchasable phone numbers.
-    *   [list\_available\_exchange\_codes()](#list_available_exchange_codes) \- Returns a list of all Central Office (exchange) codes containing purchasable phone numbers.
+    *   [list\_available\_area\_codes()](#list_available_area_codes) \- Returns a list of all Numbering Plan Area (NPA) codes containing purchasable phone numbers. All request parameters are optional. If you don't specify a limit, results are limited to the first 10 items.
+    *   [list\_available\_exchange\_codes()](#list_available_exchange_codes) \- Returns a list of all Central Office (exchange) codes containing purchasable phone numbers. All request parameters are optional.
     *   [search\_for\_purchasable\_phone\_numbers()](#search_for_purchasable_phone_numbers) \- Searches for purchasable phone numbers by state or rate center, or by your specified search value.
     *   [purchase\_a\_phone\_number(number\_id)](#purchase_a_phone_numbernumber_id) \- Lets you purchase a phone number from available Flowroute inventory.
-    *   [list\_account\_phone\_numbers()](#list_account_phone_numbers) \- Returns a list of all phone numbers currently on your Flowroute account. The response includes details such as the phone number's rate center, state, number type, and whether CNAM Lookup is enabled for that number.
-    *   [list\_phone\_number\_details(numberid)](#list_phone_number_detailsnumber_id) \- Lists all of the information associated with any of the phone numbers in your account, including billing method, primary voice route, and failover voice route.
+    *   [list\_account\_phone\_numbers()](#list_account_phone_numbers) \- Returns a list of all phone numbers currently on your Flowroute account. 
+    *   [list\_phone\_number\_details(numberid)](#list_phone_number_detailsnumber_id) \- Returns details on a specific phone number associated with your account, including primary voice route, and failover voice route if previously configured.
 
-*   RoutesController
+#### RoutesController
     
     Contains the methods required to create new inbound routes, view all of your account routes, and update primary and failover voice routes for your phone numbers.
     
-    *   [create\_an\_inbound\_route(route\_body)](#create_an_inbound_routeroute_body) \- Create a new inbound route that can then be assigned as either a primary or failover voice route for a phone number.
-    *   [list\_inbound\_routes()](#list_inbound_routes) \- Returns a list of your inbound routes. From the list, you can then select routes to use as the primary and failover voice routes for your phone number.
+    *   [create\_an\_inbound\_route(route\_body)](#create_an_inbound_routeroute_body) \- Creates a new inbound route which can then be assigned as either a primary or a failover voice route for a phone number on your account.
+    *   [list\_inbound\_routes()](#list_inbound_routes) \- Returns a list of your inbound routes. From the list, you can then select routes to use as the primary and failover voice routes for phone numbers on your account.
     *   [update\_primary\_voice\_route(number\_id, route\_body)](#update_primary_voice_routenumber_id-route_body) \- Updates the primary voice route for a phone number. You must create the route first via the `create_an_inbound_route(routebody)` method.
     *   [update\_failover\_voice\_route(number\_id, route\_body)](#update_failover_voice_routenumber_id-route_body) \- Updates the failover voice route for a phone number. You must create the route first via the `create_an_inbound_route(routebody)` method.
 
-*   MessagesController
+####   MessagesController
     
     Contains the methods required to send an MMS or SMS, and review a specific Message Detail Record (MDR) or a set of messages.
     
@@ -79,7 +78,7 @@ from flowroutenumbersandmessaging.flowroutenumbersandmessaging_client import Flo
 ```    
 #### Credentials
 
-In **demo.py**, replace `basic_auth_user_name` with your API Access Key and `basic_auth_password` with your API Secret Key from the [Flowroute Manager](https://manage.flowroute.com/accounts/preferences/api/). Note that in our example, we are accessing them as environment variables. To learn more about setting environment variables, see [How To Read and Set Environmental and Shell Variables](https://www.digitalocean.com/community/tutorials/how-to-read-and-set-environmental-and-shell-variables-on-a-linux-vps).
+In **demo.py**, replace `basic_auth_user_name` with your API Access Key and `basic_auth_password` with your API Secret Key from the [Flowroute Manager](https://manage.flowroute.com/accounts/preferences/api/). Note that in our example, we are accessing your Flowroute credentials as environment variables. To learn more about setting environment variables, see [How To Read and Set Environmental and Shell Variables](https://www.digitalocean.com/community/tutorials/how-to-read-and-set-environmental-and-shell-variables-on-a-linux-vps).
 
 ```python
 # Set up your api credentials
@@ -277,7 +276,7 @@ The method is used to purchase a telephone number from Flowroute's inventory and
 ##### Example Request
 ```python
 print("--Purchase a Phone Number")
-numberid = result['data'][0]['id'])
+numberid = result['data'][0]['id']
 result = numbers_controller.purchase_a_phone_number(numberid)
 ```
 
