@@ -6,7 +6,7 @@ from flowroutenumbersandmessaging.flowroutenumbersandmessaging_client import Flo
 from flowroutenumbersandmessaging.models import *
 from flowroutenumbersandmessaging.models.new_route import NewRoute
 
-print("Number Control Demo")
+print("Number/Route Management v2 & Messaging v2.1 Demo")
 
 # Set up your api credentials
 basic_auth_user_name = os.environ.get('FR_ACCESS_KEY')
@@ -64,20 +64,18 @@ result = numbers_controller.list_account_phone_numbers(starts_with, ends_with, c
 pprint.pprint(result)
 
 
-#print ("---Create an Inbound Route")
-#request_body = '{
-#  "data": {
-#    "type": "route",
-#    "attributes": {
-#      "route_type": "host",
-#      "value": "www.example.com",
-#      "alias": "new_route_id"
-#    }
-#  }
-#}'
+print ("---Create an Inbound Route")
+request_body = '{ \
+  "data": { \
+    "type": "route", \
+    "attributes": { \
+      "route_type": "host", \
+      "value": "' + str(number_id) +'", \
+      "alias": "new_route_id" \
+    } \
+  } \
+}'
 
-#routepost = NewRoute(json.dumps({"data": {"type": "route", "attributes": {"route_type": "host", "value": "13471654563", "alias": "new_route_56"}}}))
-#result = routes_controller.create_an_inbound_route(routepost)
 result = routes_controller.create_an_inbound_route(request_body)
 pprint.pprint(result)
 
@@ -85,19 +83,46 @@ print ("---List Inbound Routes")
 result = routes_controller.list_inbound_routes()
 pprint.pprint(result)
 
-#print ("---Update Primary Voice Route")
-#routeid = result['data'][1]['id']
-#result = routes_controller.update_primary_voice_route()
-#pprint.pprint(result)
-#
-#print ("---Update Failover Voice Route")
-#routeid = result['data'][2]['id']
-#result = routes_controller.update_failover_voice_route()
-#pprint.pprint(result)
+request_body = '{ \
+  "data": { \
+    "type": "route", \
+    "id": "87050" \
+  } \
+}'
 
-#print ("---Send A Message")
-#result = messages_controller.send_a_message()
-#pprint.pprint(result)
+print ("---Update Primary Voice Route")
+routeid = result['data'][1]['id']
+result = routes_controller.update_primary_voice_route(number_id, request_body)
+pprint.pprint(result)
+
+request_body = '{ \
+  "data": { \
+    "type": "route", \
+    "id": "87051" \
+  } \
+}'
+
+print ("---Update Failover Voice Route")
+routeid = result['data'][2]['id']
+result = routes_controller.update_failover_voice_route(number_id, request_body)
+pprint.pprint(result)
+
+request_body = '{ \
+  "data": { \
+    "type": "message", \
+    "attributes": { \
+      "to": "12067392634", \
+      "from": "' + str(testnumber) + '", \
+      "body": "hello there", \
+      "is_mms": "true", \
+      "media_urls": ["http://s3.amazonaws.com/barkpost-assets/50+GIFs/37.gif"] \
+    } \
+  } \
+}'
+
+print ("---Send A Message")
+result = messages_controller.send_a_message(request_body)
+pprint.pprint(result)
 
 print ("---Look Up A Message Detail Record")
 message_id = "mdr2-ca82be46e6ba11e79d08862d092cf73d"
@@ -105,5 +130,5 @@ result = messages_controller.look_up_a_message_detail_record(message_id)
 pprint.pprint(result)
 
 print ("---Look Up A Set Of Messages")
-result = messages_controller.look_up_a_set_of_messages()
+result = messages_controller.look_up_a_set_of_messages('2017-12-31')
 pprint.pprint(result)

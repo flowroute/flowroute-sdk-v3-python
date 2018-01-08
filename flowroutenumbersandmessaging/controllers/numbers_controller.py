@@ -318,6 +318,8 @@ class NumbersController(BaseController):
         _query_builder = APIHelper.append_url_with_template_parameters(_query_builder, { 
             'id': id
         })
+        # Return appropriate type
+        return APIHelper.json_deserialize(_context.response.raw_body)
         _query_url = APIHelper.clean_url(_query_builder)
 
         # Prepare headers

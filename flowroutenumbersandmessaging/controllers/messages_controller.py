@@ -12,6 +12,7 @@ from ..configuration import Configuration
 from ..http.auth.basic_auth import BasicAuth
 from ..models.mdr_2 import MDR2
 from ..exceptions.error_exception import ErrorException
+import json
 
 class MessagesController(BaseController):
 
@@ -53,13 +54,17 @@ class MessagesController(BaseController):
                 the request.
 
         """
+        parsed_end_date = None
+
+        if end_date is not None:
+          parsed_end_date = APIHelper.RFC3339DateTime(end_date)
 
         # Prepare query URL
         _query_builder = Configuration.base_uri
         _query_builder += '/v2.1/messages'
         _query_parameters = {
             'start_date': APIHelper.RFC3339DateTime(start_date),
-            'end_date': APIHelper.RFC3339DateTime(end_date),
+            'end_date': parsed_end_date,
             'limit': limit,
             'offset': offset
         }
@@ -165,12 +170,12 @@ class MessagesController(BaseController):
 
         # Prepare headers
         _headers = {
-            'accept': 'application/json',
-            'content-type': 'application/json; charset=utf-8'
+            'accept': 'application/vnd.api+json',
+            'content-type': 'application/vnd.api+json; charset=utf-8'
         }
 
         # Prepare and execute request
-        _request = self.http_client.post(_query_url, headers=_headers, parameters=APIHelper.json_serialize(body))
+        _request = self.http_client.post(_query_url, headers=_headers, parameters=APIHelper.json_serialize(json.loads(body)))
         BasicAuth.apply(_request)
         _context = self.execute_request(_request)
 

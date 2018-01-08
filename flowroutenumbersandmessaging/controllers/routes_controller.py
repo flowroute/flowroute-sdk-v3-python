@@ -12,14 +12,14 @@ from ..configuration import Configuration
 from ..http.auth.basic_auth import BasicAuth
 from ..exceptions.error_exception import ErrorException
 from ..exceptions.api_exception import APIException
+import json
 
 class RoutesController(BaseController):
 
     """A Controller to access Endpoints in the flowroutenumbersandmessaging API."""
 
 
-    def create_an_inbound_route(self,
-                                body):
+    def create_an_inbound_route(self, body):
         """Does a POST request to /v2/routes.
 
         Creates a new inbound route which can then be associated with phone
@@ -30,7 +30,7 @@ class RoutesController(BaseController):
             body (NewRoute): The new inbound route to be created.
 
         Returns:
-            void: Response from the API. CREATED
+            string: Response from the API. CREATED
 
         Raises:
             APIException: When an error occurs while fetching the data from
@@ -51,9 +51,10 @@ class RoutesController(BaseController):
         }
 
         # Prepare and execute request
-        _request = self.http_client.post(_query_url, headers=_headers, parameters=APIHelper.json_serialize(body))
+        _request = self.http_client.post(_query_url, headers=_headers, parameters=APIHelper.json_serialize(json.loads(body)))
         BasicAuth.apply(_request)
         _context = self.execute_request(_request)
+        print _context.response.status_code
 
         # Endpoint and global error handling using HTTP status codes.
         if _context.response.status_code == 401:
@@ -61,6 +62,9 @@ class RoutesController(BaseController):
         elif _context.response.status_code == 404:
             raise ErrorException('The specified resource was not found', _context)
         self.validate_response(_context)
+
+        # Return appropriate type
+        return APIHelper.json_deserialize(_context.response.raw_body)
 
     def list_inbound_routes(self,
                             limit=None,
@@ -118,9 +122,7 @@ class RoutesController(BaseController):
 
         return APIHelper.json_deserialize(_context.response.raw_body)
 
-    def update_primary_voice_route(self,
-                                                      number_id,
-                                                      body):
+    def update_primary_voice_route(self, number_id, body):
         """Does a PATCH request to /v2/numbers/{number_id}/relationships/primary_route.
 
         Use this endpoint to update the primary voice route for a phone
@@ -147,13 +149,13 @@ class RoutesController(BaseController):
         # Prepare query URL
         _query_builder = Configuration.base_uri
         _query_builder += '/v2/numbers/{number_id}/relationships/primary_route'
-        _query_builder = APIHelper.append_url_with_template_parameters(_query_builder, { 
+        _query_builder = APIHelper.append_url_with_template_parameters(_query_builder, {
             'number_id': number_id
         })
         _query_url = APIHelper.clean_url(_query_builder)
 
         # Prepare and execute request
-        _request = self.http_client.patch(_query_url, parameters=str(body))
+        _request = self.http_client.patch(_query_url, parameters=APIHelper.json_serialize(json.loads(body)))
         BasicAuth.apply(_request)
         _context = self.execute_request(_request)
 
@@ -194,13 +196,13 @@ class RoutesController(BaseController):
         # Prepare query URL
         _query_builder = Configuration.base_uri
         _query_builder += '/v2/numbers/{number_id}/relationships/failover_route'
-        _query_builder = APIHelper.append_url_with_template_parameters(_query_builder, { 
+        _query_builder = APIHelper.append_url_with_template_parameters(_query_builder, {
             'number_id': number_id
         })
         _query_url = APIHelper.clean_url(_query_builder)
 
         # Prepare and execute request
-        _request = self.http_client.patch(_query_url, parameters=str(body))
+        _request = self.http_client.patch(_query_url, parameters=APIHelper.json_serialize(json.loads(body)))
         BasicAuth.apply(_request)
         _context = self.execute_request(_request)
 
