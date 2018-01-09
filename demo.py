@@ -2,6 +2,9 @@
 import pprint
 import os
 import json
+import random
+import string
+import requests
 from flowroutenumbersandmessaging.flowroutenumbersandmessaging_client import FlowroutenumbersandmessagingClient
 from flowroutenumbersandmessaging.models import *
 from flowroutenumbersandmessaging.models.new_route import NewRoute
@@ -46,13 +49,7 @@ pprint.pprint(result)
 
 print("--Purchase a Phone Number")
 number_id = result['data'][0]['id']
-result = numbers_controller.purchase_a_phone_number(number_id)
-
-
-print("--List Phone Number Details")
-result = numbers_controller.list_phone_number_details(number_id)
-pprint.pprint(result)
-
+#result = numbers_controller.purchase_a_phone_number(number_id)
 
 print("--List Account Phone Numbers")
 starts_with = 201
@@ -63,56 +60,54 @@ offset = None
 result = numbers_controller.list_account_phone_numbers(starts_with, ends_with, contains, limit, offset)
 pprint.pprint(result)
 
-
-print ("---Create an Inbound Route")
-request_body = '{ \
-  "data": { \
-    "type": "route", \
-    "attributes": { \
-      "route_type": "host", \
-      "value": "' + str(number_id) +'", \
-      "alias": "new_route_id" \
-    } \
-  } \
-}'
-
-result = routes_controller.create_an_inbound_route(request_body)
+print("--List Phone Number Details")
+number_id = result['data'][0]['id']
+result = numbers_controller.list_phone_number_details(number_id)
 pprint.pprint(result)
+
 
 print ("---List Inbound Routes")
-result = routes_controller.list_inbound_routes()
+limit = 3
+result = routes_controller.list_inbound_routes(limit)
 pprint.pprint(result)
 
+
+prirouteid = result['data'][1]['id']
+secrouteid = result['data'][2]['id']
 request_body = '{ \
   "data": { \
     "type": "route", \
-    "id": "87050" \
+    "id": "' + str(prirouteid) +'" \
   } \
 }'
 
 print ("---Update Primary Voice Route")
-routeid = result['data'][1]['id']
 result = routes_controller.update_primary_voice_route(number_id, request_body)
-pprint.pprint(result)
+if result is None:
+    print "204: No Content"
+else:
+    print result
 
 request_body = '{ \
   "data": { \
     "type": "route", \
-    "id": "87051" \
+    "id": "' + str(secrouteid) +'" \
   } \
 }'
 
 print ("---Update Failover Voice Route")
-routeid = result['data'][2]['id']
 result = routes_controller.update_failover_voice_route(number_id, request_body)
-pprint.pprint(result)
+if result is None:
+    print "204: No Content"
+else:
+    print result
 
 request_body = '{ \
   "data": { \
     "type": "message", \
     "attributes": { \
       "to": "12067392634", \
-      "from": "' + str(testnumber) + '", \
+      "from": "' + str(number_id) + '", \
       "body": "hello there", \
       "is_mms": "true", \
       "media_urls": ["http://s3.amazonaws.com/barkpost-assets/50+GIFs/37.gif"] \
@@ -121,14 +116,36 @@ request_body = '{ \
 }'
 
 print ("---Send A Message")
-result = messages_controller.send_a_message(request_body)
-pprint.pprint(result)
-
-print ("---Look Up A Message Detail Record")
-message_id = "mdr2-ca82be46e6ba11e79d08862d092cf73d"
-result = messages_controller.look_up_a_message_detail_record(message_id)
+#result = messages_controller.send_a_message(request_body)
 pprint.pprint(result)
 
 print ("---Look Up A Set Of Messages")
-result = messages_controller.look_up_a_set_of_messages('2017-12-31')
+start_date = '2017-12-01'
+end_date = '2018-01-08'
+result = messages_controller.look_up_a_set_of_messages(start_date, end_date)
 pprint.pprint(result)
+
+print ("---Look Up A Message Detail Record")
+message_id = result['data'][0]['id']
+result = messages_controller.look_up_a_message_detail_record(message_id)
+pprint.pprint(result)
+
+
+print ("---Create an Inbound Route")
+# Function to generate six-charac random string
+def id_generator(size=6, chars=string.ascii_lowercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+new_route = id_generator() + '.sonsofodin.com'
+print new_route
+request_body = '{ \
+  "data": { \
+    "type": "route", \
+    "attributes": { \
+      "route_type": "host", \
+      "value": "' + new_route +'", \
+      "alias": "test_route_id" \
+    } \
+  } \
+}'
+result = routes_controller.create_an_inbound_route(request_body)
+print ("---New Route Created")
