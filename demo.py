@@ -60,9 +60,28 @@ offset = None
 result = numbers_controller.list_account_phone_numbers(starts_with, ends_with, contains, limit, offset)
 pprint.pprint(result)
 
+<<<<<<< HEAD
 print("--List Phone Number Details")
 number_id = result['data'][0]['id']
 result = numbers_controller.list_phone_number_details(number_id)
+=======
+
+print ("---Create an Inbound Route")
+host_address = '8.8.8.8'
+request_body = '{ \
+  "data": { \
+    "type": "route", \
+    "attributes": { \
+      "route_type": "host", \
+      "value": "' + str(host_address) +'", \
+      "alias": "new_route_id" \
+    } \
+  } \
+}'
+
+result = routes_controller.create_an_inbound_route(request_body)
+print result
+>>>>>>> 890bb1052f22d46307c7ca823c95e56d2ed46ee5
 pprint.pprint(result)
 
 
