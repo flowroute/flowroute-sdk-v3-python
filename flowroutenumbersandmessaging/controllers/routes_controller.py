@@ -30,7 +30,7 @@ class RoutesController(BaseController):
             body (NewRoute): The new inbound route to be created.
 
         Returns:
-            string: Response from the API. CREATED
+            mixed: Response from the API. CREATED
 
         Raises:
             APIException: When an error occurs while fetching the data from
@@ -47,6 +47,7 @@ class RoutesController(BaseController):
 
         # Prepare headers
         _headers = {
+            'accept': 'application/vnd.api+json',
             'content-type': 'application/vnd.api+json; charset=utf-8'
         }
 
@@ -54,11 +55,12 @@ class RoutesController(BaseController):
         _request = self.http_client.post(_query_url, headers=_headers, parameters=APIHelper.json_serialize(json.loads(body)))
         BasicAuth.apply(_request)
         _context = self.execute_request(_request)
-        print _context.response.status_code
 
         # Endpoint and global error handling using HTTP status codes.
         if _context.response.status_code == 401:
             raise ErrorException('Unauthorized – There was an issue with your API credentials.', _context)
+        elif _context.response.status_code == 403:
+            raise ErrorException('Forbidden – The server understood the request but refuses to authorize it.', _context)
         elif _context.response.status_code == 404:
             raise ErrorException('The specified resource was not found', _context)
         self.validate_response(_context)
