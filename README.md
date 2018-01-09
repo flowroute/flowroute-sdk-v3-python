@@ -475,29 +475,41 @@ The method accepts the route object in JSON format as a parameter which you can 
 
 ##### Example Request
 ```python
-#print ("---Create an Inbound Route")
-#request_body = '{
-#  "data": {
-#    "type": "route",
-#    "attributes": {
-#      "route_type": "host",
-#      "value": "www.example.com",
-#      "alias": "new_route_id"
-#    }
-#  }
-#}'
-
-#routepost = NewRoute(json.dumps({"data": {"type": "route", "attributes": {"route_type": "host", "value": "13471654563", "alias": "new_route_56"}}}))
-#result = routes_controller.create_an_inbound_route(routepost)
+print ("---Create an Inbound Route")
+request_body = '{ \
+  "data": { \
+    "type": "route", \
+    "attributes": { \
+      "route_type": "number", \
+      "value": "' + str(number_id) +'", \
+      "alias": "new_route_id" \
+    } \
+  } \
+}'
 result = routes_controller.create_an_inbound_route(request_body)
 pprint.pprint(result)
 ```
 
 ##### Example Response
 ```
+{
+  "data": {
+    "attributes": {
+      "alias": "new_route_id",
+      "route_type": "number",
+      "value": "12011231234"
+    },
+    "id": "98396",
+    "links": {
+      "self": "https://api.flowroute.com/routes/98396"
+    },
+    "type": "route"
+  },
+  "links": {
+    "self": "https://api.flowroute.com/routes/98396"
+  }
+}
 ```
-Currently has some issues with POST and PATCH requests via the SDK methods provided.
-
 #### list\_inbound\_routes()
 
 The method accepts `limit` and `offset` as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/list-inbound-routes/).
