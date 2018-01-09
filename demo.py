@@ -11,9 +11,11 @@ from flowroutenumbersandmessaging.models.new_route import NewRoute
 
 print("Number/Route Management v2 & Messaging v2.1 Demo")
 
-# Set up your api credentials
+# Set up your api credentials and test mobile number for outbound SMS or MMS
 basic_auth_user_name = os.environ.get('FR_ACCESS_KEY')
 basic_auth_password = os.environ.get('FR_SECRET_KEY')
+mobile_number = "YOUR_MOBILE_NUMBER"
+
 
 # Instantiate API client and create controllers for Numbers, Messages, and Routes
 client = FlowroutenumbersandmessagingClient(basic_auth_user_name, basic_auth_password)
@@ -105,7 +107,7 @@ request_body = '{ \
   "data": { \
     "type": "message", \
     "attributes": { \
-      "to": "12067392634", \
+      "to": "' + str(mobile_number) + '", \
       "from": "' + str(number_id) + '", \
       "body": "hello there", \
       "is_mms": "true", \
@@ -119,8 +121,8 @@ print ("---Send A Message")
 #pprint.pprint(result)
 
 print ("---Look Up A Set Of Messages")
-start_date = '2017-12-01'
-end_date = '2018-01-08'
+start_date = "2017-12-01"
+end_date = "2018-01-08"
 result = messages_controller.look_up_a_set_of_messages(start_date, end_date)
 pprint.pprint(result)
 
@@ -135,6 +137,8 @@ print ("---Create an Inbound Route")
 def id_generator(size=6, chars=string.ascii_lowercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 new_route = id_generator() + '.sonsofodin.com'
+alias = "new route"
+for i in range(10): alias += str(i)
 print new_route
 request_body = '{ \
   "data": { \
@@ -142,9 +146,9 @@ request_body = '{ \
     "attributes": { \
       "route_type": "host", \
       "value": "' + new_route +'", \
-      "alias": "test_route_id" \
+      "alias": "' + alias + '" \
     } \
   } \
 }'
 result = routes_controller.create_an_inbound_route(request_body)
-print "New Route Created"
+print result
