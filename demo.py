@@ -9,8 +9,11 @@ from flowroutenumbersandmessaging.models.new_route import NewRoute
 print("Number/Route Management v2 & Messaging v2.1 Demo")
 
 # Set up your api credentials
-basic_auth_user_name = os.environ.get('FR_ACCESS_KEY')
-basic_auth_password = os.environ.get('FR_SECRET_KEY')
+#basic_auth_user_name = os.environ.get('FR_ACCESS_KEY')
+#basic_auth_password = os.environ.get('FR_SECRET_KEY')
+basic_auth_user_name = 'FR_ACCESS_KEY'
+basic_auth_password = 'FR_SECRET_KEY'
+
 
 # Instantiate API client and create controllers for Numbers, Messages, and Routes
 client = FlowroutenumbersandmessagingClient(basic_auth_user_name, basic_auth_password)
@@ -65,18 +68,20 @@ pprint.pprint(result)
 
 
 print ("---Create an Inbound Route")
+host_address = '8.8.8.8'
 request_body = '{ \
   "data": { \
     "type": "route", \
     "attributes": { \
       "route_type": "host", \
-      "value": "' + str(number_id) +'", \
+      "value": "' + str(host_address) +'", \
       "alias": "new_route_id" \
     } \
   } \
 }'
 
 result = routes_controller.create_an_inbound_route(request_body)
+print result
 pprint.pprint(result)
 
 print ("---List Inbound Routes")
