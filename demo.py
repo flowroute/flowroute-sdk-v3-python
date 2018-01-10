@@ -50,8 +50,8 @@ result = numbers_controller.search_for_purchasable_phone_numbers(starts_with, co
 pprint.pprint(result)
 
 print("--Purchase a Phone Number")
-number_id = result['data'][0]['id']
-#result = numbers_controller.purchase_a_phone_number(number_id)
+purchasable_number = result['data'][0]['id']
+#result = numbers_controller.purchase_a_phone_number(purchasable_number)
 
 print("--List Account Phone Numbers")
 starts_with = 201
@@ -66,6 +66,7 @@ pprint.pprint(result)
 print("--List Phone Number Details")
 number_id = result['data'][0]['id']
 result = numbers_controller.list_phone_number_details(number_id)
+print result
 
 print ("---List Inbound Routes")
 limit = 3
@@ -123,7 +124,8 @@ print ("---Send A Message")
 print ("---Look Up A Set Of Messages")
 start_date = "2017-12-01"
 end_date = "2018-01-08"
-result = messages_controller.look_up_a_set_of_messages(start_date, end_date)
+limit = 2
+result = messages_controller.look_up_a_set_of_messages(start_date, end_date, limit)
 pprint.pprint(result)
 
 print ("---Look Up A Message Detail Record")
