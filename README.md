@@ -643,9 +643,11 @@ else:
 ```
 
 ##### Example Response
-`204: No Content`
 
 On success, the HTTP status code in the response header is `204 No Content` which means that the server successfully processed the request and is not returning any content.
+
+`204: No Content`
+
 
 ### Messaging
 Flowroute SDK version 3 for Python allows you to make HTTP requests to the `messages` resource of Flowroute API v2.1: `https://api.flowroute.com/v2.1/messages`
@@ -797,7 +799,7 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
       "timestamp": "2017-12-22T01:52:39.39Z",
       "delivery_receipts": [],
       "amount_display": "$0.0040",
-      "from": "12067392634",
+      "from": "12061232634",
       "is_mms": false,
       "message_type": "longcode"
     },
