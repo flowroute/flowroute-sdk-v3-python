@@ -33,9 +33,9 @@ Installation
 
     * via SSH: `git@github.com:flowroute/flowroute-numbers-messaging-python.git`
 
-2. Switch to the newly-created `flowroute-sdk-v3-python` directory. This version of the SDK comes with a requirements file listing the required Python libraries. Click [here](https://packaging.python.org/installing/#requirements-files) to learn more about different ways to install Python packages. 
+2. Switch to the newly-created `flowroute-sdk-v3-python` directory. This version of the SDK comes with a requirements file listing the required Python libraries. See [Installing Packages](https://packaging.python.org/tutorials/installing-packages/) to learn more about different ways to install Python packages. 
 
-`pip` is already installed if you're using `Python 2 >=2.7.9` or `Python 3 >=3.4`. This SDK has been tested with both `Python 2.7.9` and `Python 3.6.4`. To see which version of `pip` is installed on your machine, run the following:
+`pip` is already installed if you're using `Python 2 >=2.7.9` or `Python 3 >=3.4`. This SDK has been tested with both `Python 2.7.9` and `Python 3.6.4` for Mac OS X. To see which version of `pip` is installed on your machine, run the following:
 
 `pip --version`
 
