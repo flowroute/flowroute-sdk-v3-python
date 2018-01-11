@@ -47,8 +47,8 @@ class RoutesController(BaseController):
 
         # Prepare headers
         _headers = {
-            'accept': 'application/vnd.api+json',
-            'content-type': 'application/vnd.api+json; charset=utf-8'
+            'accept': 'application/json',
+            'content-type': 'application/json; charset=utf-8'
         }
 
         # Prepare and execute request
@@ -58,12 +58,13 @@ class RoutesController(BaseController):
 
         # Endpoint and global error handling using HTTP status codes.
         if _context.response.status_code == 401:
-            raise ErrorException('Unauthorized – There was an issue with your API credentials.', _context)
+            raise ErrorException('401 Unauthorized – There was an issue with your API credentials.', _context)
         elif _context.response.status_code == 403:
-            raise ErrorException('Forbidden – The server understood the request but refuses to authorize it.', _context)
+            raise ErrorException('403 Forbidden – The server understood the request but refuses to authorize it.', _context)
         elif _context.response.status_code == 404:
-            raise ErrorException('The specified resource was not found', _context)
+            raise ErrorException('404 The specified resource was not found', _context)
         self.validate_response(_context)
+
 
         # Return appropriate type
         return APIHelper.json_deserialize(_context.response.raw_body)
@@ -118,8 +119,6 @@ class RoutesController(BaseController):
             raise APIException('Unauthorized', _context)
         elif _context.response.status_code == 404:
             raise APIException('Not Found', _context)
-        elif _context.response.status_code <> 200:
-            raise ErrorException('Unspecified error occurred', _context)
         self.validate_response(_context)
 
         return APIHelper.json_deserialize(_context.response.raw_body)

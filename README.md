@@ -21,7 +21,8 @@ Requirements
 ------------
 
 *   Flowroute [API credentials](https://manage.flowroute.com/accounts/preferences/api/)
-*   [Python](https://www.python.org/downloads/) 2.x or higher
+*   [Python](https://www.python.org/downloads/) `2 >=2.7.9` or `3 >=3.4`
+
 
 * * *
 Installation
@@ -32,9 +33,15 @@ Installation
 
     * via SSH: `git@github.com:flowroute/flowroute-numbers-messaging-python.git`
 
-2. Switch to the newly-created `flowroute-numbers-messaging-python` directory. Version 3 of the Flowroute SDK for Python comes with a requirements file listing the required Python libraries. Click [here](https://packaging.python.org/installing/#requirements-files) to learn more about different ways to install Python packages. Depending on your `pip` permissions, you may be required to preface each `pip` command with `sudo`.
+2. Switch to the newly-created `flowroute-numbers-messaging-python` directory. To build and install the required modules, run the following:
+`python setup.py install`
 
-`pip install -r requirements.txt`
+3. Version 3 of the Flowroute SDK for Python comes with a requirements file listing the required Python libraries. Click [here](https://packaging.python.org/installing/#requirements-files) to learn more about different ways to install Python packages. `pip` is already installed if you're using `Python 2 >=2.7.9` or `Python 3 >=3.4`. This SDK has been tested with both `2.7.9` and `3.6.4`. To see which version of `pip` is installed on your machine, run the following:
+`pip --version`
+
+Depending on your `pip` permissions, you may be required to preface each `pip` command with `sudo`.  
+
+`pip3 install -r requirements.txt`
 
 * * *
 Usage

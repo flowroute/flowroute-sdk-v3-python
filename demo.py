@@ -4,7 +4,6 @@ import os
 import json
 import random
 import string
-import requests
 from flowroutenumbersandmessaging.flowroutenumbersandmessaging_client import FlowroutenumbersandmessagingClient
 from flowroutenumbersandmessaging.models import *
 from flowroutenumbersandmessaging.models.new_route import NewRoute
@@ -68,7 +67,7 @@ number_id = result['data'][0]['id']
 result = numbers_controller.list_phone_number_details(number_id)
 pprint.pprint(result)
 
-print ("---Create an Inbound Route")
+print("---Create an Inbound Route")
 # Function to generate six-charac random string
 def id_generator(size=6, chars=string.ascii_lowercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
@@ -104,12 +103,12 @@ request_body = '{ \
   } \
 }'
 
-print ("---Update Primary Voice Route")
+print("---Update Primary Voice Route")
 result = routes_controller.update_primary_voice_route(number_id, request_body)
 if result is None:
-    print "204: No Content"
+    print("204: No Content")
 else:
-    print result
+    print (result)
 
 request_body = '{ \
   "data": { \
@@ -118,12 +117,12 @@ request_body = '{ \
   } \
 }'
 
-print ("---Update Failover Voice Route")
+print("---Update Failover Voice Route")
 result = routes_controller.update_failover_voice_route(number_id, request_body)
 if result is None:
-    print "204: No Content"
+    print("204: No Content")
 else:
-    print result
+    print (result)
 
 request_body = '{ \
   "data": { \
@@ -138,11 +137,11 @@ request_body = '{ \
   } \
 }'
 
-print ("---Send A Message")
+print("---Send A Message")
 #result = messages_controller.send_a_message(request_body)
 #pprint.pprint(result)
 
-print ("---Look Up A Set Of Messages")
+print("---Look Up A Set Of Messages")
 start_date = "2017-12-01"
 end_date = "2018-01-08"
 limit = 2
