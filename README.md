@@ -675,6 +675,7 @@ print ("---Send A Message")
 result = messages_controller.send_a_message(request_body)
 pprint.pprint(result)
 ```
+Note that this function call is currently commented out. Uncomment to test the `send_a_message` method.
 
 ##### Example Response
 

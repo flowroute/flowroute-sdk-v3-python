@@ -66,7 +66,28 @@ pprint.pprint(result)
 print("--List Phone Number Details")
 number_id = result['data'][0]['id']
 result = numbers_controller.list_phone_number_details(number_id)
-print result
+pprint.pprint(result)
+
+print ("---Create an Inbound Route")
+# Function to generate six-charac random string
+def id_generator(size=6, chars=string.ascii_lowercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+new_route = id_generator() + '.sonsofodin.com'
+alias = id_generator()
+for i in range(10): 
+    alias += str(i)
+request_body = '{ \
+  "data": { \
+    "type": "route", \
+    "attributes": { \
+      "route_type": "host", \
+      "value": "' + new_route +'", \
+      "alias": "' + alias + '" \
+    } \
+  } \
+}'
+result = routes_controller.create_an_inbound_route(request_body)
+pprint.pprint(result)
 
 print ("---List Inbound Routes")
 limit = 3
@@ -134,23 +155,3 @@ result = messages_controller.look_up_a_message_detail_record(message_id)
 pprint.pprint(result)
 
 
-print ("---Create an Inbound Route")
-# Function to generate six-charac random string
-def id_generator(size=6, chars=string.ascii_lowercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
-new_route = id_generator() + '.sonsofodin.com'
-alias = "new route"
-for i in range(10): alias += str(i)
-print new_route
-request_body = '{ \
-  "data": { \
-    "type": "route", \
-    "attributes": { \
-      "route_type": "host", \
-      "value": "' + new_route +'", \
-      "alias": "' + alias + '" \
-    } \
-  } \
-}'
-result = routes_controller.create_an_inbound_route(request_body)
-print result
