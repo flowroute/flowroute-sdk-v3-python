@@ -491,7 +491,7 @@ Flowroute SDK version 3 for Python allows you to make HTTP requests to the `rout
     
 #### create\_an\_inbound\_route(route\_body) 
 
-The method accepts the route object in JSON format as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/create-an-inbound-route/). In the following example, we define a function to generate a six-character random string for our subdomain which we later concatenate with our example domain and assign as our `host` value.
+The method accepts the route object in JSON format as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/create-an-inbound-route/). In the following example, we define a function to generate a six-character random string for our subdomain which we later concatenate with our example domain and assign as our `host` value. We use the same function to generate a unique `alias`.
 
 ##### Example Request
 ```python
@@ -500,8 +500,8 @@ print ("---Create an Inbound Route")
 def id_generator(size=6, chars=string.ascii_lowercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 new_route = id_generator() + '.sonsofodin.com'
-alias = "new route"
-for i in range(10): alias += str(i)
+alias = id_generator()
+for i in range(6): alias += str(i)
 print new_route
 request_body = '{ \
   "data": { \
