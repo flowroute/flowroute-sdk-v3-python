@@ -5,8 +5,6 @@ import json
 import random
 import string
 from flowroutenumbersandmessaging.flowroutenumbersandmessaging_client import FlowroutenumbersandmessagingClient
-from flowroutenumbersandmessaging.models import *
-from flowroutenumbersandmessaging.models.new_route import NewRoute
 
 print("Number/Route Management v2 & Messaging v2.1 Demo")
 
