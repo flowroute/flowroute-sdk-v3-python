@@ -1,7 +1,7 @@
-Flowroute SDK for Python (v3)
+Flowroute Python Library v3
 =====================
 
-The Flowroute SDK for Python (v3) provides methods for interacting with [Numbers v2](https://developer.flowroute.com/api/numbers/v2.0/) and [Messages v2.1](https://developer.flowroute.com/api/messages/v2.1/) of the [Flowroute](https://www.flowroute.com) API.
+The Flowroute Python library v3 provides methods for interacting with [Numbers v2](https://developer.flowroute.com/api/numbers/v2.0/) and [Messages v2.1](https://developer.flowroute.com/api/messages/v2.1/) of the [Flowroute](https://www.flowroute.com) API.
 
 **Topics**
 
@@ -28,25 +28,25 @@ Requirements
 Installation
 ------------
 
-1. First, start a shell session and clone the SDK:
-    * via HTTPS: `git clone https://github.com/flowroute/flowroute-numbers-messaging-python.git`
+1. First, start a shell session and clone the Python library:
+    * via HTTPS: `git clone https://github.com/flowroute/flowroute-sdk-v3-python.git`
 
-    * via SSH: `git@github.com:flowroute/flowroute-numbers-messaging-python.git`
+    * via SSH: `git@github.com:flowroute/flowroute-sdk-v3-python.git`
 
-2. Switch to the newly-created `flowroute-sdk-v3-python` directory. This version of the SDK comes with a requirements file listing the required Python libraries. See [Installing Packages](https://packaging.python.org/tutorials/installing-packages/) to learn more about different ways to install Python packages. 
+2. Switch to the newly-created `flowroute-sdk-v3-python` directory. This version of the library comes with a requirements file listing the required Python libraries. See [Installing Packages](https://packaging.python.org/tutorials/installing-packages/) to learn more about different ways to install Python packages. 
 
-`pip` is already installed if you're using `Python 2 >=2.7.9` or `Python 3 >=3.4`. This SDK has been tested with both `Python 2.7.9` and `Python 3.6.4` for Mac OS X. To see which version of `pip` is installed on your machine, run the following:
+`pip` is already installed if you're using `Python 2 >=2.7.9` or `Python 3 >=3.4`. This version of the library has been tested with both `Python 2.7.9` and `Python 3.6.4` for Mac OS X. To see which version of `pip` is installed on your machine, run the following:
 
 `pip --version`
 
-Depending on your `pip` permissions, you may be required to preface each `pip` command with `sudo`.  
+Depending on your `pip` permissions, you may be required to preface each `pip` command with `sudo`. 
 
 `pip3 install -r requirements.txt`
 
 * * *
 Usage
 ------------
-In Flowroute's approach to building SDK v3 for Python, HTTP requests are handled by controllers named after the API resources they represent: **Numbers**, **Routes**, and **Messages**. These controllers contain the methods used to perform messaging, number management, and route management within the Python SDK.
+In Flowroute's approach to building the Python library v3, HTTP requests are handled by controllers named after the API resources they represent: **Numbers**, **Routes**, and **Messages**. These controllers contain the methods used to perform messaging, number management, and route management within the Python library.
 
 ## Controllers
 
@@ -78,7 +78,7 @@ Contains the methods required to send an MMS or SMS, and review a specific Messa
 *   [look\_up\_a\_message\_detail\_record()](#look_up_a_message_detail_recordmessage_id) \- Searches for a specific message record ID and returns a Message Detail Record (in MDR2 format).
 *   [look\_up\_a\_set\_of\_messages()](#look_up_a_set_of_messagesstart_date) \- Retrieves a list of Message Detail Records (MDRs) within a specified date range. Date and time is based on Coordinated Universal Time (UTC).
 
-The following shows an example of a single Python file that imports the Flowroute API client and all the required modules. The Python SDK comes with a **demo.py** file that you can edit and run as an example.
+The following shows an example of a single Python file that imports the Flowroute API client and all the required modules. The Python library v3 comes with a **demo.py** file that you can edit and run as an example.
 
 ```python
 import pprint
@@ -86,7 +86,6 @@ import os
 import json
 import random
 import string
-import requests
 from flowroutenumbersandmessaging.flowroutenumbersandmessaging_client import FlowroutenumbersandmessagingClient
 ```    
 #### Credentials
@@ -114,7 +113,7 @@ The following section will demonstrate the capabilities of Numbers v2 and Messag
 
 ### Number Management
 
-Flowroute SDK version 3 for Python allows you to make HTTP requests to the `numbers` resource of Flowroute API v2: `https://api.flowroute.com/v2/numbers`
+The Flowroute Python library v3  allows you to make HTTP requests to the `numbers` resource of Flowroute API v2: `https://api.flowroute.com/v2/numbers`
 
 #### list\_available\_area\_codes()
 
@@ -494,7 +493,7 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
 
 ### Route Management
 
-Flowroute SDK version 3 for Python allows you to make HTTP requests to the `routes` resource of Flowroute API v2: `https://api.flowroute.com/v2/routes`
+The Flowroute Python library v3 allows you to make HTTP requests to the `routes` resource of Flowroute API v2: `https://api.flowroute.com/v2/routes`
     
 #### create\_an\_inbound\_route(route\_body) 
 
@@ -657,7 +656,7 @@ On success, the HTTP status code in the response header is `204 No Content` whic
 
 
 ### Messaging
-Flowroute SDK version 3 for Python allows you to make HTTP requests to the `messages` resource of Flowroute API v2.1: `https://api.flowroute.com/v2.1/messages`
+The Flowroute Python library v3 allows you to make HTTP requests to the `messages` resource of Flowroute API v2.1: `https://api.flowroute.com/v2.1/messages`
 
 #### send\_a\_message(message\_body)
 
