@@ -14,7 +14,26 @@ The Flowroute Python library v3 provides methods for interacting with [Numbers v
         * [Messages Controller](#messagescontroller)
     *   [Credentials](#credentials)
     *   [Methods](#methods)
+        *   [Number Management](#number-management)
+            *   [list_available_area_codes](#list_available_area_codes)
+            *   [list_available_exchange_codes](#list_available_exchange_codes)
+            *   [search_for_purchasable_phone_numbers](#search_for_purchasable_phone_numbers)
+            *   [purchase_a_phone_number](#purchase_a_phone_numberpurchasable_number)
+            *   [list_account_phone_numbers](#list_account_phone_numbers)
+            *   [list_phone_number_details](#list_phone_number_detailsnumber_id)
+
+        *   [Route Management](#route-management)
+            *   [create_an_inbound_route](#create_an_inbound_routeroute_body)
+            *   [list_inbound_routes](#list_inbound_routes)
+            *   [update_primary_voice_route](#update_primary_voice_routenumber_id-route_body)
+            *   [update_failover_voice_route](#update_failover_voice_routenumber_id-route_body)
+
+        *   [Messaging](#messaging)
+            *   [send_a_message](#send_a_messagemessage_body)
+            *   [look_up_a_set_of_messagesstart_date](#look_up_a_set_of_messagesstart_date)
+            *   [look_up_a_message_detail_record](#look_up_a_message_detail_recordmessage_id)
     *   [Errors](#errors)
+    *   [Testing](#testing)
 
 * * *
 Requirements
@@ -824,3 +843,8 @@ In cases of method errors, the Python library raises an exception which includes
 raise ErrorException('403 Forbidden – The server understood the request but refuses to authorize it.', _context)
 ```
   
+## Testing
+
+Once you are done configuring your Flowroute API credentials and updating the function parameters, run the file to see the demo in action:
+
+` ruby demo.rb `
