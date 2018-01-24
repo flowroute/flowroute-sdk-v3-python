@@ -847,4 +847,4 @@ raise ErrorException('403 Forbidden – The server understood the request but re
 
 Once you are done configuring your Flowroute API credentials and updating the function parameters, run the file to see the demo in action:
 
-` ruby demo.rb `
+` python demo.py `
