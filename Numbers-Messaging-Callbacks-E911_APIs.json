@@ -1,0 +1,2171 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Flowroute APIs",
+    "description": "The Flowroute APIs are organized around REST. Our APIs have resource-oriented URLs, support HTTP Verbs, and respond with HTTP Status Codes. All API requests and responses, including errors, will be represented as JSON objects. You can use the Flowroute APIs to manage your Flowroute phone numbers including setting primary and failover routes for inbound calls, and sending text messages (SMS and MMS) using long-code or toll-free numbers in your account.",
+    "version": "0.1.1"
+  },
+  "servers": [
+    {
+      "url": "https://api.flowroute.com/",
+      "description": "Main (production) server"
+    },
+    {
+      "url": "https://api.staging.fl.gg/",
+      "description": "Staging server"
+    }
+  ],
+  "security": [
+    {
+      "basicAuth": []
+    }
+  ],
+  "paths": {
+    "/v2.1/messages": {
+      "post": {
+        "summary": "Send a Message",
+        "description": "Sends an SMS or MMS from a Flowroute long code or toll-free phone number to another valid phone number.",
+        "requestBody": {
+          "description": "The SMS or MMS message to send.",
+          "required": true,
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Message"
+              }
+            }
+          }
+        },
+        "tags": [
+          "messages"
+        ],
+        "responses": {
+          "202": {
+            "description": "ACCEPTED",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/MessageSuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/Unprocessable"
+          }
+        }
+      },
+      "get": {
+        "summary": "Look Up a Set of Messages",
+        "description": "Retrieves a list of Message Detail Records (MDRs) within a specified date range. Date and time is based on Coordinated Universal Time (UTC).",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2017-12-01T00:00:00.000Z"
+            },
+            "description": "The beginning date and time, in UTC, on which to perform an MDR search. The DateTime can be formatted as YYYY-MM-DDor YYYY-MM-DDTHH:mm:ss.SSZ."
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2017-12-06T00:00:00.000Z"
+            },
+            "description": "The ending date and time, in UTC, on which to perform an MDR search. The DateTime can be formatted as YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.SSZ."
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The number of MDRs to retrieve at one time. You can set as high of a number as you want, but the number cannot be negative and must be greater than 0 (zero)."
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The number of MDRs to skip when performing a query. The number must be 0 (zero) or greater, but cannot be negative."
+          }
+        ],
+        "tags": [
+          "messages"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/MDRSet"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v2.1/messages/{id}": {
+      "get": {
+        "summary": "Look Up a Message Detail Record",
+        "description": "Searches for a specific message record ID and returns a Message Detail Record (in MDR2 format).",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The unique message detail record identifier (MDR ID) of any message. When entering the MDR ID, the number should include the mdr2- preface."
+          }
+        ],
+        "tags": [
+          "messages"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/MDR2"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v2.1/messages/{callback_type}": {
+      "put": {
+        "summary": "Set a Callback URL for Your Account",
+        "description": "Lets you assign a callback URL for POST notifications of inbound SMS or MMS messages to your Flowroute long code or toll-free phone number, or delivery receipts (DLRs) of SMS messages that you have sent from your Flowroute long code or toll-free number.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "callback_type",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Callback type to be associated with the account. Possible values are sms_callback, mms_callback, and dlr_callback."
+          }
+        ],
+        "requestBody": {
+          "description": "The callback URL for your specified callback type.",
+          "required": false,
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "callback_url": {
+                    "type": "string",
+                    "format": "url"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "callbacks"
+        ],
+        "responses": {
+          "204": {
+            "description": "NO CONTENT"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          },
+          "422": {
+            "$ref": "#/components/responses/Unprocessable"
+          }
+        }
+      },
+      "get": {
+        "summary": "Look Up Callback Details for Your Account",
+        "description": "Lets you retrieve the callback information for your inbound SMS, inbound MMS, or outbound delivery receipt (DLR) callback service.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "callback_type",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Callback type to be associated with the account. Options are sms_callback, mms_callback, anf dlr_callback."
+          },
+          {
+            "in": "query",
+            "name": "number",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "callback",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "callbacks"
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON object of phone numbers in your account",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Callback"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove Callback Details For Your Account",
+        "description": "Lets you delete the associated URL for your inbound SMS, inbound MMS, or outbound delivery receipt (DLR) callback service.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "callback_type",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Callback type associated with the URL to be removed from the account. Options are sms_callback, mms_callback, anf dlr_callback."
+          }
+        ],
+        "tags": [
+          "callbacks"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v2/numbers/{id}/relationships/{callback_type}": {
+      "post": {
+        "summary": "Set a Messaging Callback URL for Your Phone Number",
+        "description": "Lets you assign a messaging callback URL to a specific long code or toll-free phone number in your account for POST notifications of inbound SMS or MMS messages, or delivery receipts (DLRs) of SMS messages you have sent from that number.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The phone number to be associated with the messaging callback URL."
+          },
+          {
+            "in": "path",
+            "name": "callback_type",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Callback type to be associated with the specified phone number. Options are sms_callback, mms_callback, and dlr_callback."
+          }
+        ],
+        "requestBody": {
+          "description": "The callback URL to be assigned to the phone number.",
+          "required": true,
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DIDCallback"
+              }
+            }
+          }
+        },
+        "tags": [
+          "callbacks"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/Unprocessable"
+          }
+        }
+      },
+      "get": {
+        "summary": "Look Up Callback Details for Your Phone Number",
+        "description": "Lets you retrieve the URL information for the inbound SMS, inbound MMS, or delivery receipt (DLR) callback service of your long code or toll-free phone number.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The phone number associated with the callback service."
+          },
+          {
+            "in": "path",
+            "name": "callback_type",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Callback type of the callback service to retrieve details for. Options are sms_callback, mms_callback, anf dlr_callback."
+          }
+        ],
+        "tags": [
+          "callbacks"
+        ],
+        "responses": {
+          "200": {
+            "description": "A detailed callback object in JSON format.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Callback"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove Callback Details For Your Phone Number",
+        "description": "Lets you delete the associated URL for the inbound SMS, inbound MMS, or outbound delivery receipt (DLR) callback service of your phone number.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The phone number associated with the callback URL to be deleted."
+          },
+          {
+            "in": "path",
+            "name": "callback_type",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Callback type associated with the URL to be deleted for your specified phone number. Options are sms_callback, mms_callback, anf dlr_callback."
+          }
+        ],
+        "tags": [
+          "callbacks"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v2/numbers/{id}/relationships/e911": {
+      "patch": {
+        "summary": "Assign a Valid E911 Address to Your Phone Number",
+        "description": "Lets you assign a valid E911 address to a specific long code or toll-free phone number in your account.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The phone number to be associated with the valid E911 address."
+          }
+        ],
+        "requestBody": {
+          "description": "The valid E911 record to be assigned to the long code or toll-free phone number.",
+          "required": true,
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "default": "e911"
+                      },
+                      "id": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "e911, callbacks"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "#/components/responses/Unprocessable"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deactivate E911 Service for a Phone Number",
+        "description": "Lets you deactivate the current E911 service for a phone number.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The phone number associated with the E911 service to be deactivated."
+          }
+        ],
+        "tags": [
+          "numbers, e911"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v2/numbers": {
+      "get": {
+        "summary": "Account Phone Numbers",
+        "description": "Returns a list of all phone numbers currently on your Flowroute account. The response includes details such as the phone number's rate center, state, number type, and whether CNAM Lookup is enabled for that number.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "starts_with",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Retrieves phone numbers that start with the specified value."
+          },
+          {
+            "in": "query",
+            "name": "ends_with",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Retrieves phone numbers that end with the specified value."
+          },
+          {
+            "in": "query",
+            "name": "contains",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Retrieves phone numbers containing the specified value."
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Limits the number of items to retrieve. A maximum of 200 items can be retrieved."
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Offsets the list of phone numbers by your specified value. For example, if you have 4 phone numbers and you entered 1 as your offset value, then only 3 of your phone numbers will be displayed in the response."
+          }
+        ],
+        "tags": [
+          "numbers"
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON object of phone numbers in your account",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Numbers"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v2/numbers/{id}": {
+      "get": {
+        "summary": "Phone Number Details",
+        "description": "Lists all of the information associated with any of the phone numbers in your account, including billing method, primary voice route, and failover voice route.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Phone number to search for which must be a number that you own. Must be in 11-digit E.164 format; e.g. 12061231234."
+          }
+        ],
+        "tags": [
+          "numbers"
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON object of phone numbers in your account",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Number"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a Phone Number From Your Account",
+        "description": "Lets you delete a phone number from your account.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Phone number to be removed from your account. Must be in 11-digit E.164 format; e.g. 12061231234."
+          }
+        ],
+        "tags": [
+          "numbers"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Response"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Purchase a Phone Number",
+        "description": "Lets you purchase a phone number from available Flowroute inventory.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Phone number to purchase. Must be in 11-digit E.164 format; e.g. 12061231234."
+          }
+        ],
+        "tags": [
+          "numbers"
+        ],
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Number"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v2/numbers/available": {
+      "get": {
+        "summary": "Search for Purchasable Phone Numbers",
+        "description": "This endpoint lets you search for phone numbers by state or rate center, or by your specified search value.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "starts_with",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Retrieve phone numbers that start with the specified value."
+          },
+          {
+            "in": "query",
+            "name": "contains",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Retrieve phone numbers containing the specified value."
+          },
+          {
+            "in": "query",
+            "name": "ends_with",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Retrieve phone numbers that end with the specified value."
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Limits the number of items to retrieve. A maximum of 200 items can be retrieved."
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Offsets the list of phone numbers by your specified value. For example, if you have 4 phone numbers and you entered 1 as your offset value, then only 3 of your phone numbers will be displayed in the response."
+          },
+          {
+            "in": "query",
+            "name": "rate_center",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filters by and displays phone numbers in the specified case-insensitive abbreviated rate center, not the full name as differentiated in the <a href=\"https://www.nationalpooling.com/reports/NPA-RateCent    erReports/index.htm\" target=\"_blank\">NPA Rate Center Reports</a>."
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filters by and displays phone numbers in the specified case-insensitive two-character abbreviated state. For example, WA for Washington."
+          }
+        ],
+        "tags": [
+          "numbers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/PurchasableNumbers"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v2/numbers/available/areacodes": {
+      "get": {
+        "summary": "List Available Area Codes",
+        "description": "Returns a list of all Numbering Plan Area (NPA) codes containing purchasable phone numbers.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Limits the number of items to retrieve. A maximum of 400 items can be retrieved."
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Offsets the list of phone numbers by your specified value. For example, if you have 4 phone numbers and you entered 1 as your offset value, then only 3 of your phone numbers will be displayed in the response."
+          },
+          {
+            "in": "query",
+            "name": "max_setup_cost",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "float"
+            },
+            "description": "Restricts the results to area codes that include at least one telephone number with a setup fee below or equal to the specified max_setup_cost. For more details around pricing, please see <a href=\"https://www.flowroute.com/pricing-details/\" target=\"_blank\">Flowroute Pricing Details</a>."
+          }
+        ],
+        "tags": [
+          "numbers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvailableCodes"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v2/numbers/available/exchanges": {
+      "get": {
+        "summary": "List Available Exchange Codes",
+        "description": "Returns a list of all Central Office (exchange) codes containing purchasable phone numbers.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Limits the number of items to retrieve. A maximum of 200 items can be retrieved."
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Offsets the list of phone numbers by your specified value. For example, if you have 4 phone numbers and you entered 1 as your offset value, then only 3 of your phone numbers will be displayed in the response."
+          },
+          {
+            "in": "query",
+            "name": "max_setup_cost",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "float"
+            },
+            "description": "Restricts the results to exchanges that include at least one telephone number with a setup fee below or equal to the specified max_setup_cost. For more details around pricing, please see <a href=\"https://www.flowroute.com/pricing-details/\" target=\"_blank\">Flowroute Pricing Details</a>."
+          },
+          {
+            "in": "query",
+            "name": "areacode",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Restricts the results to the specified area code."
+          }
+        ],
+        "tags": [
+          "numbers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvailableCodes"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v2/numbers/{number_id}/relationships/primary_route": {
+      "patch": {
+        "summary": "Update Primary Voice Route for a Phone Number",
+        "description": "Use this endpoint to update the primary voice route for a phone number. You must create the route first by following \"Create an Inbound Route\". You can then assign the created route by specifying its value in a PATCH request.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "number_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The phone number in E.164 11-digit North American format to which the primary route for voice will be assigned."
+          }
+        ],
+        "requestBody": {
+          "description": "The primary route to be assigned.",
+          "required": true,
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Routes"
+              }
+            }
+          }
+        },
+        "tags": [
+          "routes"
+        ],
+        "responses": {
+          "204": {
+            "description": "NO CONTENT"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v2/numbers/{number_id}/relationships/failover_route": {
+      "patch": {
+        "summary": "Update Failover Voice Route for a Phone Number",
+        "description": "Use this endpoint to update the failover voice route for a phone number. You must create the route first by following \"Create an Inbound Route\". You can then assign the created route by specifying its value in a PATCH request.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "number_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The phone number in E.164 11-digit North American format to which the failover route for voice will be assigned."
+          }
+        ],
+        "requestBody": {
+          "description": "The failover route to be assigned.",
+          "required": true,
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Routes"
+              }
+            }
+          }
+        },
+        "tags": [
+          "routes"
+        ],
+        "responses": {
+          "204": {
+            "description": "NO CONTENT"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v2/routes": {
+      "post": {
+        "summary": "Create an Inbound Route",
+        "description": "Creates a new inbound route which can then be associated with phone numbers. Please see \"List Inbound Routes\" to review the route values that you can associate with your Flowroute phone numbers.",
+        "requestBody": {
+          "description": "The new inbound route to be created.",
+          "required": true,
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewRoute"
+              }
+            }
+          }
+        },
+        "tags": [
+          "routes"
+        ],
+        "responses": {
+          "201": {
+            "description": "CREATED"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "get": {
+        "summary": "List Inbound Routes",
+        "description": "Returns a list of your inbound routes. From the list, you can then select routes to use as the primary and failover routes for a phone number, which you can do via \"Update Primary Voice Route for a Phone Number\" and \"Update Failover Voice Route for a Phone Number\".",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Limits the number of routes to retrieve. A maximum of 200 items can be retrieved."
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Offsets the list of routes by your specified value. For example, if you have 4 inbound routes and you entered 1 as your offset value, then only 3 of your routes will be displayed in the response."
+          },
+          {
+            "in": "query",
+            "name": "route_type",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "host",
+                "sip-reg",
+                "uri",
+                "number"
+              ]
+            },
+            "description": "Restricts the results to inbound routes with your specified route type."
+          }
+        ],
+        "tags": [
+          "routes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountRoutes"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/v2/e911": {
+      "post": {
+        "summary": "Create and Validate a New E911 Address",
+        "description": "Creates and validates a new E911 address.",
+        "requestBody": {
+          "description": "The E911 address to be validated.",
+          "required": true,
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/E911Address"
+              }
+            }
+          }
+        },
+        "tags": [
+          "e911"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountRoutes"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "415": {
+            "$ref": "#/components/responses/NotValidated"
+          }
+        }
+      },
+      "get": {
+        "summary": "List E911 Addresses",
+        "description": "Returns a list of E911 addresses on your account. Addresses can be within the US or Canada.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Limits the number of e911 addresses to retrieve. A maximum of __ items can be retrieved."
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Offsets the list of e911 addresses by your specified value. For example, if you have 4 e911 addresses and you entered 1 as your offset value, then only 3 of your e911 addresses will be displayed in the response."
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filters by and displays E911 addresses in the specified case-insensitive two-character abbreviated state. For example, WA for Washington."
+          }
+        ],
+        "tags": [
+          "e911"
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/E911Address"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update and Validate an Existing E911 Address",
+        "description": "Use this endpoint to update and validate an existing E911 address on your account. You must create the E911 address first by following \"Create and Validate a New E911 Address\".",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "e911_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The record ID of the e911 address to be updated."
+          }
+        ],
+        "requestBody": {
+          "description": "The E911 record to be updated.",
+          "required": true,
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/E911Address"
+              }
+            }
+          }
+        },
+        "tags": [
+          "e911"
+        ],
+        "responses": {
+          "204": {
+            "description": "NO CONTENT"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove an E911 Address From Your Account",
+        "description": "Lets you delete an E911 address associated with your account.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "e911_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The record ID of the E911 address to be removed from your account."
+          }
+        ],
+        "tags": [
+          "e911"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v2/e911/validate": {
+      "post": {
+        "summary": "Validate a New E911 Address",
+        "description": "Validates a newly created US or Canada E911 address.",
+        "requestBody": {
+          "description": "The E911 address to be validated.",
+          "required": true,
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/E911Address"
+              }
+            }
+          }
+        },
+        "tags": [
+          "e911"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountRoutes"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "415": {
+            "$ref": "#/components/responses/NotValidated"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "basicAuth": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    },
+    "schemas": {
+      "E911Address": {
+        "type": "object",
+        "required": [
+          "label",
+          "first_name",
+          "last_name",
+          "street_number",
+          "street_name",
+          "city",
+          "state",
+          "country",
+          "zip"
+        ],
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "street_number": {
+            "type": "string"
+          },
+          "street_name": {
+            "type": "string"
+          },
+          "address_type": {
+            "type": "string",
+            "enum": [
+              {
+                "A": "Apartment"
+              },
+              {
+                "BM": "Basement"
+              },
+              {
+                "B": "Building"
+              },
+              {
+                "D": "Department"
+              },
+              {
+                "F": "Floor"
+              },
+              {
+                "FR": "Front"
+              },
+              {
+                "K": "Key"
+              },
+              {
+                "L": "Lobby"
+              },
+              {
+                "LT": "Lot"
+              },
+              {
+                "LO": "Lower"
+              },
+              {
+                "O": "Office"
+              },
+              {
+                "P": "Penthouse"
+              },
+              {
+                "PI": "Pier"
+              },
+              {
+                "RE": "Rear"
+              },
+              {
+                "R": "Room"
+              },
+              {
+                "S": "Side"
+              },
+              {
+                "SL": "Slip"
+              },
+              {
+                "SC": "Space"
+              },
+              {
+                "SP": "Stop"
+              },
+              {
+                "SU": "Suite"
+              },
+              {
+                "T": "Trailer"
+              },
+              {
+                "U": "Unit"
+              },
+              {
+                "UP": "Upper"
+              }
+            ],
+            "example": "A"
+          },
+          "address_number": {
+            "type": "integer"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string",
+            "enum": [
+              "USA",
+              "Canada"
+            ],
+            "example": "USA"
+          },
+          "zip": {
+            "type": "integer"
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "required": [
+          "from",
+          "to"
+        ],
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "media_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "is_mms": {
+            "type": "boolean"
+          },
+          "dlr_callback": {
+            "type": "string",
+            "format": "url"
+          }
+        }
+      },
+      "MessageSuccess": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "links": {
+                "type": "object",
+                "properties": {
+                  "self": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                }
+              },
+              "type": {
+                "type": "string",
+                "default": "message",
+                "example": "message"
+              }
+            }
+          }
+        }
+      },
+      "MDRSet": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "$ref": "#/components/schemas/MDR2"
+            }
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "next": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        }
+      },
+      "MDR2": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "amount_display": {
+                    "type": "number",
+                    "format": "float"
+                  },
+                  "amount_nanodollars": {
+                    "type": "number"
+                  },
+                  "body": {
+                    "type": "string"
+                  },
+                  "delivery_receipts": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "level": {
+                          "type": "integer"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "status_code": {
+                          "type": "integer"
+                        },
+                        "status_code_description": {
+                          "type": "string"
+                        },
+                        "timestamp": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  },
+                  "direction": {
+                    "type": "string"
+                  },
+                  "from": {
+                    "type": "string"
+                  },
+                  "is_mms": {
+                    "type": "boolean"
+                  },
+                  "message_encoding": {
+                    "type": "integer"
+                  },
+                  "message_type": {
+                    "type": "string",
+                    "enum": [
+                      "longcode",
+                      "toll-free"
+                    ]
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "timestamp": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "to": {
+                    "type": "string"
+                  }
+                }
+              },
+              "id": {
+                "type": "string"
+              },
+              "relationships": {
+                "type": "object",
+                "properties": {
+                  "media": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string",
+                              "default": "media",
+                              "example": "media"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "type": {
+                "type": "string",
+                "example": "message"
+              }
+            }
+          }
+        }
+      },
+      "Routes": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "default": "route",
+                "example": "route"
+              }
+            }
+          }
+        }
+      },
+      "NewRoute": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "default": "route",
+                "example": "route"
+              },
+              "attributes": {
+                "type": "object",
+                "required": [
+                  "alias",
+                  "route_type",
+                  "value"
+                ],
+                "properties": {
+                  "alias": {
+                    "type": "string"
+                  },
+                  "route_type": {
+                    "type": "string",
+                    "enum": [
+                      "sip-reg",
+                      "host",
+                      "uri",
+                      "number"
+                    ],
+                    "default": "sip-reg",
+                    "example": "sip-reg"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "NewRouteResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "$ref": "#/components/schemas/IncludedRoutes"
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "self": {
+                "type": "string",
+                "format": "uri",
+                "example": "https://api.flowroute.com/routes/99670"
+              }
+            }
+          }
+        }
+      },
+      "AccountRoutes": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "$ref": "#/components/schemas/IncludedRoutes"
+            }
+          },
+          "links": {
+            "$ref": "#/components/schemas/RequestLinks"
+          }
+        }
+      },
+      "IncludedRoutes": {
+        "type": "object",
+        "properties": {
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "alias": {
+                "type": "string"
+              },
+              "route_type": {
+                "type": "string",
+                "enum": [
+                  "host",
+                  "number",
+                  "uri",
+                  "sip-reg"
+                ],
+                "default": "sip-reg"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "self": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          },
+          "type": {
+            "type": "string",
+            "default": "route",
+            "example": "route"
+          }
+        }
+      },
+      "NumberRelationships": {
+        "type": "object",
+        "properties": {
+          "cnam_preset": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "string"
+              }
+            }
+          },
+          "e911_address": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "string"
+              }
+            }
+          },
+          "failover_route": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "string"
+              }
+            }
+          },
+          "primary_route": {
+            "type": "object",
+            "$ref": "#/components/schemas/Routes"
+          }
+        }
+      },
+      "Number": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "alias": {
+                    "type": "string"
+                  },
+                  "cnam_lookups_enabled": {
+                    "type": "boolean"
+                  },
+                  "number_type": {
+                    "type": "string",
+                    "enum": [
+                      "standard",
+                      "tollfree",
+                      "inum"
+                    ]
+                  },
+                  "rate_center": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "id": {
+                "type": "string"
+              },
+              "links": {
+                "type": "object",
+                "properties": {
+                  "self": {
+                    "type": "string"
+                  }
+                }
+              },
+              "relationships": {
+                "type": "object",
+                "$ref": "#/components/schemas/NumberRelationships"
+              },
+              "type": {
+                "type": "string",
+                "default": "number",
+                "example": "number"
+              }
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "$ref": "#/components/schemas/IncludedRoutes"
+            }
+          }
+        }
+      },
+      "Numbers": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "$ref": "#/components/schemas/Number"
+            }
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "self": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "PurchasableNumbers": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "attributes": {
+                  "type": "object",
+                  "properties": {
+                    "monthly_cost": {
+                      "type": "number",
+                      "format": "double"
+                    },
+                    "number_type": {
+                      "type": "string",
+                      "enum": [
+                        "standard",
+                        "tollfree"
+                      ],
+                      "example": "standard"
+                    },
+                    "rate_center": {
+                      "type": "string"
+                    },
+                    "setup_cost": {
+                      "type": "number",
+                      "format": "double"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "id": {
+                  "type": "string"
+                },
+                "links": {
+                  "$ref": "#/components/schemas/RelatedLinks"
+                },
+                "type": {
+                  "type": "string",
+                  "example": "number"
+                }
+              }
+            }
+          },
+          "links": {
+            "$ref": "#/components/schemas/RequestLinks"
+          }
+        }
+      },
+      "AvailableCodes": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "links": {
+                  "$ref": "#/components/schemas/RelatedLinks"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "areacode",
+                    "exchange"
+                  ]
+                }
+              }
+            }
+          },
+          "links": {
+            "$ref": "#/components/schemas/RequestLinks"
+          }
+        }
+      },
+      "Callback": {
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "api_version": {
+                    "type": "string"
+                  },
+                  "callback_url": {
+                    "type": "string"
+                  },
+                  "product": {
+                    "type": "string"
+                  }
+                }
+              },
+              "type": {
+                "type": "string",
+                "default": "callback",
+                "example": "callback"
+              }
+            }
+          }
+        }
+      },
+      "DIDCallback": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "callback_url": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "RelatedLinks": {
+        "type": "object",
+        "properties": {
+          "related": {
+            "type": "string",
+            "format": "uri",
+            "example": [
+              "https://api.flowroute.com/v2/numbers/12062011204",
+              "https://api.flowroute.com/v2/numbers/available/exchanges?areacode=202",
+              "https://api.flowroute.com/v2/numbers/available"
+            ]
+          }
+        }
+      },
+      "RequestLinks": {
+        "type": "object",
+        "properties": {
+          "next": {
+            "type": "string",
+            "format": "uri"
+          },
+          "self": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "status"
+              ],
+              "properties": {
+                "detail": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer"
+                },
+                "title": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "Forbidden": {
+        "description": "Forbidden – You don't have permission to access this resource.",
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "The specified resource was not found",
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "NotValidated": {
+        "description": "Required field not specified",
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "Records are already associated",
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Unauthorized – There was an issue with your API credentials.",
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "MethodNotAllowed": {
+        "description": "Method Not Allowed – The method is not allowed for the requested URL.",
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Unprocessable": {
+        "description": "Unprocessable Entity - You tried to enter an incorrect value.",
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+}
