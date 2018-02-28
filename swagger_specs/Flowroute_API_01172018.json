@@ -9,10 +9,6 @@
     {
       "url": "https://api.flowroute.com/",
       "description": "Main (production) server"
-    },
-    {
-      "url": "https://api.staging.fl.gg/",
-      "description": "Staging server"
     }
   ],
   "security": [
