@@ -64,6 +64,10 @@ print("--Associate an E911 Record and a DID")
 result = e911s_controller.associate(e911_id, did)
 pprint.pprint(result)
 
+print("--List all DIDs associated with an E911 Record")
+result = e911s_controller.list_dids_for_e911(e911_id)
+pprint.pprint(result)
+
 # Diss-Associate them
 print("--Un-associate the address")
 result = e911s_controller.disconnect(e911_id, did)
