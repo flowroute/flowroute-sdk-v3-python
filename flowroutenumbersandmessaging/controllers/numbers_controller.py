@@ -14,10 +14,10 @@ from ..models.number_26 import Number26
 from ..exceptions.error_exception import ErrorException
 from ..exceptions.api_exception import APIException
 
+
 class NumbersController(BaseController):
 
     """A Controller to access Endpoints in the flowroutenumbersandmessaging API."""
-
 
     def list_available_exchange_codes(self,
                                       limit=None,
@@ -388,6 +388,173 @@ class NumbersController(BaseController):
             raise APIException('Unauthorized', _context)
         elif _context.response.status_code == 404:
             raise APIException('Not Found', _context)
+        self.validate_response(_context)
+
+        # Return appropriate type
+        return APIHelper.json_deserialize(_context.response.raw_body)
+
+    def release_a_did(self, id):
+        """Does a DELETE request to /v2/numbers/{id}.
+
+        Lets you release a phone number back to available Flowroute inventory.
+
+        Args:
+            id (int): Phone number to purchase. Must be in 11-digit E.164
+                format; e.g. 12061231234.
+
+        Returns:
+            Number26: Response from the API. CREATED
+
+        Raises:
+            APIException: When an error occurs while fetching the data from
+                the remote API. This exception includes the HTTP Response
+                code, an error message, and the HTTP body that was received in
+                the request.
+
+        """
+
+        # Prepare query URL
+        _query_builder = Configuration.base_uri
+        _query_builder += '/v2/numbers/{id}'
+        _query_builder = APIHelper.append_url_with_template_parameters(_query_builder, {
+            'id': id
+        })
+
+        # Return appropriate type
+        _query_url = APIHelper.clean_url(_query_builder)
+
+        # Prepare headers
+        _headers = {
+            'accept': 'application/json'
+        }
+
+        # Prepare and execute request
+        _request = self.http_client.delete(_query_url, headers=_headers)
+        BasicAuth.apply(_request)
+        _context = self.execute_request(_request)
+
+        # Endpoint and global error handling using HTTP status codes.
+        if _context.response.status_code == 401:
+            raise ErrorException('Unauthorized – There was an issue with your API credentials.', _context)
+        elif _context.response.status_code == 404:
+            raise ErrorException('The specified resource was not found', _context)
+        self.validate_response(_context)
+
+        # Return appropriate type
+        return APIHelper.json_deserialize(_context.response.raw_body)
+
+    def set_did_alias(self, id, alias):
+        """Does a PATCH request to /v2/numbers/{id}.
+
+        Lets you set an alias on one of your DIDs.
+
+        Args:
+            id (int): Phone number to purchase. Must be in 11-digit E.164
+                format; e.g. 12061231234.
+            alias (string): String to use as alias for this DID
+
+        Returns:
+            Number26: Response from the API. CREATED
+
+        Raises:
+            APIException: When an error occurs while fetching the data from
+                the remote API. This exception includes the HTTP Response
+                code, an error message, and the HTTP body that was received in
+                the request.
+
+        """
+
+        # Prepare query URL
+        _query_builder = Configuration.base_uri
+        _query_builder += '/v2/numbers/{id}'
+        _query_builder = APIHelper.append_url_with_template_parameters(_query_builder, {
+            'id': id
+        })
+        # Return appropriate type
+        _query_url = APIHelper.clean_url(_query_builder)
+
+        # Prepare headers
+        _headers = {
+            'accept': 'application/json'
+        }
+
+        body = {
+            'type': 'number',
+            'alias': alias
+        }
+
+        # Prepare and execute request
+        _request = self.http_client.patch(_query_url, headers=_headers,
+                                          parameters=APIHelper.json_serialize(
+                                              body))
+        BasicAuth.apply(_request)
+        _context = self.execute_request(_request)
+
+        # Endpoint and global error handling using HTTP status codes.
+        if _context.response.status_code == 401:
+            raise ErrorException('Unauthorized – There was an issue with your API credentials.', _context)
+        elif _context.response.status_code == 404:
+            raise ErrorException('The specified resource was not found', _context)
+        self.validate_response(_context)
+
+        # Return appropriate type
+        return APIHelper.json_deserialize(_context.response.raw_body)
+
+    def set_did_callback(self, id, url):
+        """Does a POST request to /v2/numbers/{id}/relationships/dlr_callback.
+
+        Lets you set a dlr callback for a specific DID.
+
+        Args:
+            id (int): Phone number to purchase. Must be in 11-digit E.164
+                format; e.g. 12061231234.
+            url (string): String / URL to notify
+
+        Returns:
+            204 No Content
+
+        Raises:
+            APIException: When an error occurs while fetching the data from
+                the remote API. This exception includes the HTTP Response
+                code, an error message, and the HTTP body that was received in
+                the request.
+
+        """
+
+        # Prepare query URL
+        _query_builder = Configuration.base_uri
+        _query_builder += '/v2/numbers/{id}/relationships/dlr_callback'
+        _query_builder = APIHelper.append_url_with_template_parameters(_query_builder, {
+            'id': id
+        })
+        # Return appropriate type
+        _query_url = APIHelper.clean_url(_query_builder)
+
+        # Prepare headers
+        _headers = {
+            'accept': 'application/json'
+        }
+
+        body = {
+            'data': {
+                'attributes': {
+                    'callback_url': url
+                }
+            }
+        }
+
+        # Prepare and execute request
+        _request = self.http_client.post(_query_url, headers=_headers,
+                                         parameters=APIHelper.json_serialize(
+                                              body))
+        BasicAuth.apply(_request)
+        _context = self.execute_request(_request)
+
+        # Endpoint and global error handling using HTTP status codes.
+        if _context.response.status_code == 401:
+            raise ErrorException('Unauthorized – There was an issue with your API credentials.', _context)
+        elif _context.response.status_code == 404:
+            raise ErrorException('The specified resource was not found', _context)
         self.validate_response(_context)
 
         # Return appropriate type

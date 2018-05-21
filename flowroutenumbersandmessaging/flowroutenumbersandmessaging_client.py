@@ -12,6 +12,7 @@ from .controllers.routes_controller import RoutesController
 from .controllers.messages_controller import MessagesController
 from .controllers.e911s_controller import E911sController
 from .controllers.cnams_controller import CNAMsController
+from .controllers.porting_controller import PortingController
 
 
 class FlowroutenumbersandmessagingClient(object):
@@ -37,6 +38,10 @@ class FlowroutenumbersandmessagingClient(object):
     @lazy_property
     def cnams(self):
         return CNAMsController()
+
+    @lazy_property
+    def porting(self):
+        return PortingController()
 
     def __init__(self,
                  basic_auth_user_name = None,

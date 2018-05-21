@@ -14,10 +14,10 @@ from ..models.mdr_2 import MDR2
 from ..exceptions.error_exception import ErrorException
 import json
 
+
 class MessagesController(BaseController):
 
     """A Controller to access Endpoints in the flowroutenumbersandmessaging API."""
-
 
     def look_up_a_set_of_messages(self,
                                       start_date,
@@ -188,6 +188,196 @@ class MessagesController(BaseController):
             raise ErrorException('The specified resource was not found', _context)
         elif _context.response.status_code == 422:
             raise ErrorException('Unprocessable Entity - You tried to enter an incorrect value.', _context)
+        self.validate_response(_context)
+
+        # Return appropriate type
+        return APIHelper.json_deserialize(_context.response.raw_body)
+
+    def set_account_level_sms_callback(self, url):
+        """Does a PUT request to /v2.1/messages/sms_callback.
+
+        Sets the callback url for all sms messages.
+
+        Args:
+            url (string): The callback url to be hit.
+
+        Returns:
+            mixed: Response from the API. ACCEPTED
+
+        Raises:
+            APIException: When an error occurs while fetching the data from
+                the remote API. This exception includes the HTTP Response
+                code, an error message, and the HTTP body that was received in
+                the request.
+        """
+
+        # Prepare query URL
+        _query_builder = Configuration.base_uri
+        _query_builder += '/v2.1/messages/sms_callback'
+        _query_url = APIHelper.clean_url(_query_builder)
+
+        # Prepare headers
+        _headers = {
+            'accept': 'application/vnd.api+json',
+            'content-type': 'application/vnd.api+json; charset=utf-8'
+        }
+
+        body = {
+            'data': {
+                'attributes': {
+                    'callback_url': url
+                }
+            }
+        }
+
+        # Prepare and execute request
+        _request = self.http_client.put(_query_url,
+                                        headers=_headers,
+                                        parameters=APIHelper.json_serialize(body))
+        BasicAuth.apply(_request)
+        _context = self.execute_request(_request)
+
+        # Endpoint and global error handling using HTTP status codes.
+        if _context.response.status_code == 401:
+            raise ErrorException('Unauthorized – There was an issue with your API credentials.', _context)
+        elif _context.response.status_code == 403:
+            raise ErrorException('Forbidden – You don\'t have permission to access this resource.', _context)
+        elif _context.response.status_code == 404:
+            raise ErrorException('The specified resource was not found', _context)
+        elif _context.response.status_code == 422:
+            raise ErrorException('Unprocessable Entity - You tried to enter an incorrect value.', _context)
+        self.validate_response(_context)
+
+        # Return appropriate type
+        return APIHelper.json_deserialize(_context.response.raw_body)
+
+    def set_account_level_mms_callback(self, url):
+        """Does a PUT request to /v2.1/messages/mms_callback.
+
+        Sets the callback url for all mms messages.
+
+        Args:
+            url (string): The callback url to be hit.
+
+        Returns:
+            mixed: Response from the API. ACCEPTED
+
+        Raises:
+            APIException: When an error occurs while fetching the data from
+                the remote API. This exception includes the HTTP Response
+                code, an error message, and the HTTP body that was received in
+                the request.
+        """
+
+        # Prepare query URL
+        _query_builder = Configuration.base_uri
+        _query_builder += '/v2.1/messages/mms_callback'
+        _query_url = APIHelper.clean_url(_query_builder)
+
+        # Prepare headers
+        _headers = {
+            'accept': 'application/vnd.api+json',
+            'content-type': 'application/vnd.api+json; charset=utf-8'
+        }
+
+        body = {
+            'data': {
+                'attributes': {
+                    'callback_url': url
+                }
+            }
+        }
+
+        # Prepare and execute request
+        _request = self.http_client.put(_query_url,
+                                        headers=_headers,
+                                        parameters=APIHelper.json_serialize(
+                                             body))
+        BasicAuth.apply(_request)
+        _context = self.execute_request(_request)
+
+        # Endpoint and global error handling using HTTP status codes.
+        if _context.response.status_code == 401:
+            raise ErrorException(
+                'Unauthorized – There was an issue with your API credentials.',
+                _context)
+        elif _context.response.status_code == 403:
+            raise ErrorException(
+                'Forbidden – You don\'t have permission to access this resource.',
+                _context)
+        elif _context.response.status_code == 404:
+            raise ErrorException('The specified resource was not found',
+                                 _context)
+        elif _context.response.status_code == 422:
+            raise ErrorException(
+                'Unprocessable Entity - You tried to enter an incorrect value.',
+                _context)
+        self.validate_response(_context)
+
+        # Return appropriate type
+        return APIHelper.json_deserialize(_context.response.raw_body)
+
+    def set_account_level_dlr_callback(self, url):
+        """Does a PUT request to /v2.1/messages/dlr_callback.
+
+        Sets the callback url for all delivery receipts (dlrs)
+
+        Args:
+            url (string): The callback url to be hit.
+
+        Returns:
+            mixed: Response from the API. ACCEPTED
+
+        Raises:
+            APIException: When an error occurs while fetching the data from
+                the remote API. This exception includes the HTTP Response
+                code, an error message, and the HTTP body that was received in
+                the request.
+        """
+
+        # Prepare query URL
+        _query_builder = Configuration.base_uri
+        _query_builder += '/v2.1/messages/dlr_callback'
+        _query_url = APIHelper.clean_url(_query_builder)
+
+        # Prepare headers
+        _headers = {
+            'accept': 'application/vnd.api+json',
+            'content-type': 'application/vnd.api+json; charset=utf-8'
+        }
+
+        body = {
+            'data': {
+                'attributes': {
+                    'callback_url': url
+                }
+            }
+        }
+
+        # Prepare and execute request
+        _request = self.http_client.put(_query_url,
+                                        headers=_headers,
+                                        parameters=APIHelper.json_serialize(
+                                             body))
+        BasicAuth.apply(_request)
+        _context = self.execute_request(_request)
+
+        # Endpoint and global error handling using HTTP status codes.
+        if _context.response.status_code == 401:
+            raise ErrorException(
+                'Unauthorized – There was an issue with your API credentials.',
+                _context)
+        elif _context.response.status_code == 403:
+            raise ErrorException(
+                'Forbidden – You don\'t have permission to access this resource.',
+                _context)
+        elif _context.response.status_code == 404:
+            raise ErrorException('The specified resource was not found',
+                                 _context)
+        elif _context.response.status_code == 422:
+            raise ErrorException(
+                'Unprocessable Entity - You tried to enter an incorrect value.',
+                _context)
         self.validate_response(_context)
 
         # Return appropriate type
