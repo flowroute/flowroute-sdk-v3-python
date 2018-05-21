@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 import pprint
+import os
 from flowroutenumbersandmessaging.flowroutenumbersandmessaging_client import FlowroutenumbersandmessagingClient
 
+# Set up your api credentials and test mobile number for outbound SMS or MMS
+basic_auth_user_name = os.environ.get('FR_ACCESS_KEY')
+basic_auth_password = os.environ.get('FR_SECRET_KEY')
+
 # Instantiate API client and create controllers for Numbers and E911s
-client = FlowroutenumbersandmessagingClient()
+client = FlowroutenumbersandmessagingClient(basic_auth_user_name, basic_auth_password)
 numbers_controller = client.numbers
 e911s_controller = client.e911s
 
