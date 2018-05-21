@@ -7,6 +7,7 @@
 """
 from .api_helper import APIHelper
 
+
 class Configuration(object):
 
     """A class used for configuring the SDK by a user.
@@ -25,9 +26,9 @@ class Configuration(object):
 
     # The username to use with basic authentication
     # TODO: Set an appropriate value
-    basic_auth_user_name = "TODO: Replace"
+    basic_auth_user_name = "22476860"
 
     # The password to use with basic authentication
     # TODO: Set an appropriate value
-    basic_auth_password = "TODO: Replace"
+    basic_auth_password = "FYzckHAgBdHm1QpKbe6jdMivOWFlnApf"
 

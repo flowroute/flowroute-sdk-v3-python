@@ -14,10 +14,11 @@ from ..exceptions.error_exception import ErrorException
 from ..exceptions.api_exception import APIException
 import json
 
+
 class RoutesController(BaseController):
 
-    """A Controller to access Endpoints in the flowroutenumbersandmessaging API."""
-
+    """A Controller to access Endpoints in the
+    flowroutenumbersandmessaging API."""
 
     def create_an_inbound_route(self, body):
         """Does a POST request to /v2/routes.
@@ -52,15 +53,19 @@ class RoutesController(BaseController):
         }
 
         # Prepare and execute request
-        _request = self.http_client.post(_query_url, headers=_headers, parameters=APIHelper.json_serialize(json.loads(body)))
+        _request = self.http_client.post(_query_url,
+                                         headers=_headers,
+                                         parameters=APIHelper.json_serialize(json.loads(body)))
         BasicAuth.apply(_request)
         _context = self.execute_request(_request)
 
         # Endpoint and global error handling using HTTP status codes.
         if _context.response.status_code == 401:
-            raise ErrorException('401 Unauthorized – There was an issue with your API credentials.', _context)
+            raise ErrorException('401 Unauthorized – '
+                                 'There was an issue with your API credentials.', _context)
         elif _context.response.status_code == 403:
-            raise ErrorException('403 Forbidden – The server understood the request but refuses to authorize it.', _context)
+            raise ErrorException('403 Forbidden – '
+                                 'The server understood the request but refuses to authorize it.', _context)
         elif _context.response.status_code == 404:
             raise ErrorException('404 The specified resource was not found', _context)
         self.validate_response(_context)
@@ -156,7 +161,8 @@ class RoutesController(BaseController):
         _query_url = APIHelper.clean_url(_query_builder)
 
         # Prepare and execute request
-        _request = self.http_client.patch(_query_url, parameters=APIHelper.json_serialize(json.loads(body)))
+        _request = self.http_client.patch(_query_url,
+                                          parameters=APIHelper.json_serialize(json.loads(body)))
         BasicAuth.apply(_request)
         _context = self.execute_request(_request)
 
@@ -168,8 +174,8 @@ class RoutesController(BaseController):
         self.validate_response(_context)
 
     def update_failover_voice_route(self,
-                                                       number_id,
-                                                       body):
+                                    number_id,
+                                    body):
         """Does a PATCH request to /v2/numbers/{number_id}/relationships/failover_route.
 
         Use this endpoint to update the failover voice route for a phone
@@ -213,3 +219,23 @@ class RoutesController(BaseController):
         elif _context.response.status_code == 404:
             raise ErrorException('The specified resource was not found', _context)
         self.validate_response(_context)
+
+    def list_edge_strategies(self):
+        # Prepare query URL
+        _query_builder = Configuration.base_uri
+        _query_builder += '/v2/routes/edge_strategies'
+        _query_url = APIHelper.clean_url(_query_builder)
+        print("Query is : {}".format(_query_url))
+        # Prepare and execute request
+        _request = self.http_client.get(_query_url)
+        BasicAuth.apply(_request)
+        _context = self.execute_request(_request)
+
+        # Endpoint and global error handling using HTTP status codes.
+        if _context.response.status_code == 401:
+            raise APIException('Unauthorized', _context)
+        elif _context.response.status_code == 404:
+            raise APIException('Not Found', _context)
+        self.validate_response(_context)
+
+        return APIHelper.json_deserialize(_context.response.raw_body)
