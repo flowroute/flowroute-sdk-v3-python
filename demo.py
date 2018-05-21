@@ -68,9 +68,9 @@ purchasable_number = None
 if len(result['data']):
     print("--Purchase a Phone Number")
     print("NOTE: This demo has been disabled as it pulls credit from your account")
-    purchasable_number = result['data'][0]['id']
-    result = numbers_controller.purchase_a_phone_number(purchasable_number)
-    pprint.pprint(result)
+    # purchasable_number = result['data'][0]['id']
+    # result = numbers_controller.purchase_a_phone_number(purchasable_number)
+    # pprint.pprint(result)
 
 print("--List Account Phone Numbers")
 starts_with = None
