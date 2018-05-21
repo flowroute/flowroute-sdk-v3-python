@@ -27,9 +27,16 @@ result = e911s_controller.validate_address(
                                            zip="98101")
 pprint.pprint(result)
 
-print("--Get Details for a specific E911 Record")
-result = e911s_controller.get_e911(11476)
-pprint.pprint(result)
+e911_id = None
+# If the user has any E911 records, pull one up
+for e in result['data']:
+    e911_id = e['id']
+    break
+
+if e911_id:
+    print("--Get Details for a specific E911 Record")
+    result = e911s_controller.get_e911(e911_id)
+    pprint.pprint(result)
 
 print("--Create and Validate an Address")
 result = e911s_controller.create_address(
@@ -37,7 +44,7 @@ result = e911s_controller.create_address(
                                          first_name="Chris",
                                          last_name="Smith",
                                          street_name="3rd Ave",
-                                         street_number="1182",
+                                         street_number="1218",
                                          city="Seattle",
                                          state="WA",
                                          country="USA",
