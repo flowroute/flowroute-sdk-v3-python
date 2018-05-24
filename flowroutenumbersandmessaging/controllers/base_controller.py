@@ -10,7 +10,9 @@
 from ..api_helper import APIHelper
 from ..http.http_context import HttpContext
 from ..http.requests_client import RequestsClient
+from ..exceptions.error_exception import ErrorException
 from ..exceptions.api_exception import APIException
+from ..http.auth.basic_auth import BasicAuth
 
 
 class BaseController(object):
@@ -98,3 +100,25 @@ class BaseController(object):
         if (context.response.status_code < 200) or \
                 (context.response.status_code > 208):
             raise APIException('HTTP response not OK.', context)
+
+    # Process request and status code and response text
+    def handle_request_and_response(self, request):
+        BasicAuth.apply(request)
+        context = self.execute_request(request)
+
+        # Endpoint and global error handling using HTTP status codes.
+        if context.response.status_code == 401:
+            raise ErrorException('Unauthorized – There was an issue with your '
+                                 'API credentials.', context)
+        elif context.response.status_code == 403:
+            raise ErrorException('Forbidden – You don\'t have permission to '
+                                 'access this resource.', context)
+        elif context.response.status_code == 404:
+            raise ErrorException('The specified resource was not found',
+                                 context)
+        elif context.response.status_code == 422:
+            raise ErrorException('Unprocessable Entity - You tried to enter an'
+                                 ' incorrect value.', context)
+        self.validate_response(context)
+
+        return APIHelper.json_deserialize(context.response.raw_body)
