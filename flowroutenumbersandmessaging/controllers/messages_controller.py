@@ -9,21 +9,20 @@
 from .base_controller import BaseController
 from ..api_helper import APIHelper
 from ..configuration import Configuration
-from ..http.auth.basic_auth import BasicAuth
 from ..models.mdr_2 import MDR2
-from ..exceptions.error_exception import ErrorException
 import json
 
 
 class MessagesController(BaseController):
 
-    """A Controller to access Endpoints in the flowroutenumbersandmessaging API."""
+    """A Controller to access Endpoints in the
+    flowroutenumbersandmessaging API."""
 
     def look_up_a_set_of_messages(self,
-                                      start_date,
-                                      end_date=None,
-                                      limit=None,
-                                      offset=None):
+                                  start_date,
+                                  end_date=None,
+                                  limit=None,
+                                  offset=None):
         """Does a GET request to /v2.1/messages.
 
         Retrieves a list of Message Detail Records (MDRs) within a specified
@@ -57,7 +56,7 @@ class MessagesController(BaseController):
         parsed_end_date = None
 
         if end_date is not None:
-          parsed_end_date = APIHelper.RFC3339DateTime(end_date)
+            parsed_end_date = APIHelper.RFC3339DateTime(end_date)
 
         # Prepare query URL
         _query_builder = Configuration.base_uri
@@ -68,8 +67,10 @@ class MessagesController(BaseController):
             'limit': limit,
             'offset': offset
         }
-        _query_builder = APIHelper.append_url_with_query_parameters(_query_builder,
-            _query_parameters, Configuration.array_serialization)
+        _query_builder = APIHelper.append_url_with_query_parameters(
+            _query_builder,
+            _query_parameters,
+            Configuration.array_serialization)
         _query_url = APIHelper.clean_url(_query_builder)
 
         # Prepare headers
@@ -79,18 +80,8 @@ class MessagesController(BaseController):
 
         # Prepare and execute request
         _request = self.http_client.get(_query_url, headers=_headers)
-        BasicAuth.apply(_request)
-        _context = self.execute_request(_request)
 
-        # Endpoint and global error handling using HTTP status codes.
-        if _context.response.status_code == 401:
-            raise ErrorException('Unauthorized – There was an issue with your API credentials.', _context)
-        elif _context.response.status_code == 404:
-            raise ErrorException('The specified resource was not found', _context)
-        self.validate_response(_context)
-
-        # Return appropriate type
-        return APIHelper.json_deserialize(_context.response.raw_body)
+        return self.handle_request_and_response(_request)
 
     def look_up_a_message_detail_record(self,
                                             id):
@@ -118,9 +109,10 @@ class MessagesController(BaseController):
         # Prepare query URL
         _query_builder = Configuration.base_uri
         _query_builder += '/v2.1/messages/{id}'
-        _query_builder = APIHelper.append_url_with_template_parameters(_query_builder, { 
-            'id': id
-        })
+        _query_builder = APIHelper.append_url_with_template_parameters(
+            _query_builder, {
+                'id': id
+            })
         _query_url = APIHelper.clean_url(_query_builder)
 
         # Prepare headers
@@ -130,18 +122,8 @@ class MessagesController(BaseController):
 
         # Prepare and execute request
         _request = self.http_client.get(_query_url, headers=_headers)
-        BasicAuth.apply(_request)
-        _context = self.execute_request(_request)
 
-        # Endpoint and global error handling using HTTP status codes.
-        if _context.response.status_code == 401:
-            raise ErrorException('Unauthorized – There was an issue with your API credentials.', _context)
-        elif _context.response.status_code == 404:
-            raise ErrorException('The specified resource was not found', _context)
-        self.validate_response(_context)
-
-        # Return appropriate type
-        return APIHelper.json_deserialize(_context.response.raw_body)
+        return self.handle_request_and_response(_request)
 
     def send_a_message(self, body):
         """Does a POST request to /v2.1/messages.
@@ -175,23 +157,11 @@ class MessagesController(BaseController):
         }
 
         # Prepare and execute request
-        _request = self.http_client.post(_query_url, headers=_headers, parameters=APIHelper.json_serialize(json.loads(body)))
-        BasicAuth.apply(_request)
-        _context = self.execute_request(_request)
+        _request = self.http_client.post(_query_url,
+                                         headers=_headers,
+                                         parameters=APIHelper.json_serialize(json.loads(body)))
 
-        # Endpoint and global error handling using HTTP status codes.
-        if _context.response.status_code == 401:
-            raise ErrorException('Unauthorized – There was an issue with your API credentials.', _context)
-        elif _context.response.status_code == 403:
-            raise ErrorException('Forbidden – You don\'t have permission to access this resource.', _context)
-        elif _context.response.status_code == 404:
-            raise ErrorException('The specified resource was not found', _context)
-        elif _context.response.status_code == 422:
-            raise ErrorException('Unprocessable Entity - You tried to enter an incorrect value.', _context)
-        self.validate_response(_context)
-
-        # Return appropriate type
-        return APIHelper.json_deserialize(_context.response.raw_body)
+        return self.handle_request_and_response(_request)
 
     def set_account_level_sms_callback(self, url):
         """Does a PUT request to /v2.1/messages/sms_callback.
@@ -234,22 +204,8 @@ class MessagesController(BaseController):
         _request = self.http_client.put(_query_url,
                                         headers=_headers,
                                         parameters=APIHelper.json_serialize(body))
-        BasicAuth.apply(_request)
-        _context = self.execute_request(_request)
 
-        # Endpoint and global error handling using HTTP status codes.
-        if _context.response.status_code == 401:
-            raise ErrorException('Unauthorized – There was an issue with your API credentials.', _context)
-        elif _context.response.status_code == 403:
-            raise ErrorException('Forbidden – You don\'t have permission to access this resource.', _context)
-        elif _context.response.status_code == 404:
-            raise ErrorException('The specified resource was not found', _context)
-        elif _context.response.status_code == 422:
-            raise ErrorException('Unprocessable Entity - You tried to enter an incorrect value.', _context)
-        self.validate_response(_context)
-
-        # Return appropriate type
-        return APIHelper.json_deserialize(_context.response.raw_body)
+        return self.handle_request_and_response(_request)
 
     def set_account_level_mms_callback(self, url):
         """Does a PUT request to /v2.1/messages/mms_callback.
@@ -293,29 +249,8 @@ class MessagesController(BaseController):
                                         headers=_headers,
                                         parameters=APIHelper.json_serialize(
                                              body))
-        BasicAuth.apply(_request)
-        _context = self.execute_request(_request)
 
-        # Endpoint and global error handling using HTTP status codes.
-        if _context.response.status_code == 401:
-            raise ErrorException(
-                'Unauthorized – There was an issue with your API credentials.',
-                _context)
-        elif _context.response.status_code == 403:
-            raise ErrorException(
-                'Forbidden – You don\'t have permission to access this resource.',
-                _context)
-        elif _context.response.status_code == 404:
-            raise ErrorException('The specified resource was not found',
-                                 _context)
-        elif _context.response.status_code == 422:
-            raise ErrorException(
-                'Unprocessable Entity - You tried to enter an incorrect value.',
-                _context)
-        self.validate_response(_context)
-
-        # Return appropriate type
-        return APIHelper.json_deserialize(_context.response.raw_body)
+        return self.handle_request_and_response(_request)
 
     def set_account_level_dlr_callback(self, url):
         """Does a PUT request to /v2.1/messages/dlr_callback.
@@ -359,26 +294,5 @@ class MessagesController(BaseController):
                                         headers=_headers,
                                         parameters=APIHelper.json_serialize(
                                              body))
-        BasicAuth.apply(_request)
-        _context = self.execute_request(_request)
 
-        # Endpoint and global error handling using HTTP status codes.
-        if _context.response.status_code == 401:
-            raise ErrorException(
-                'Unauthorized – There was an issue with your API credentials.',
-                _context)
-        elif _context.response.status_code == 403:
-            raise ErrorException(
-                'Forbidden – You don\'t have permission to access this resource.',
-                _context)
-        elif _context.response.status_code == 404:
-            raise ErrorException('The specified resource was not found',
-                                 _context)
-        elif _context.response.status_code == 422:
-            raise ErrorException(
-                'Unprocessable Entity - You tried to enter an incorrect value.',
-                _context)
-        self.validate_response(_context)
-
-        # Return appropriate type
-        return APIHelper.json_deserialize(_context.response.raw_body)
+        return self.handle_request_and_response(_request)
