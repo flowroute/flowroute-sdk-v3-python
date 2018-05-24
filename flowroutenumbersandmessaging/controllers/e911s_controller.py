@@ -122,7 +122,7 @@ class E911sController(BaseController):
                          city,
                          state,
                          country,
-                         zip):
+                         zipcode):
         """Does a POST request to /v2/e911s/validate.
 
         Returns a 204 No Content on success, or a 404 with error data
@@ -136,7 +136,7 @@ class E911sController(BaseController):
             city (string):
             state (2 character string):
             country (string USA or Canada):
-            zip (string postal code)
+            zipcode (string postal code)
 
         Returns:
             mixed: Response from the API. A 204 - No Content or a
@@ -161,7 +161,7 @@ class E911sController(BaseController):
         body['data']['attributes']['city'] = city
         body['data']['attributes']['state'] = state
         body['data']['attributes']['country'] = country
-        body['data']['attributes']['zip'] = zip
+        body['data']['attributes']['zip'] = zipcode
 
         # Prepare query URL
         _query_builder = Configuration.base_uri
@@ -200,7 +200,7 @@ class E911sController(BaseController):
                        city,
                        state,
                        country,
-                       zip):
+                       zipcode):
         """Does a POST request to /v2/e911s.
 
         Creates an address record that can then be associated with 1 or more DIDs
@@ -238,7 +238,8 @@ class E911sController(BaseController):
         body['data']['attributes']['city'] = city
         body['data']['attributes']['state'] = state
         body['data']['attributes']['country'] = country
-        body['data']['attributes']['zip'] = zip
+        body['data']['attributes']['zip'] = zipcode
+        print(body)
 
         # Prepare query URL
         _query_builder = Configuration.base_uri
@@ -278,7 +279,7 @@ class E911sController(BaseController):
                        city=None,
                        state=None,
                        country=None,
-                       zip=None):
+                       zipcode=None):
 
         """Does a PATCH request to /v2/e911s/<e911_id>.
 
@@ -294,7 +295,7 @@ class E911sController(BaseController):
             city (string, optional):
             state (2 character string, optional):
             country (string USA or Canada, optional):
-            zip (string postal code, optional)
+            zipcode (string postal code, optional)
 
         Returns:
             mixed: Response from the API. A JSON object containing the new record information.
@@ -329,9 +330,17 @@ class E911sController(BaseController):
             record_data['data']['attributes']['state'] = state
         if country is not None:
             record_data['data']['attributes']['country'] = country
-        if zip is not None:
-            record_data['data']['attributes']['zip'] = str(zip)
-            record_data['data']['attributes']['zip_code'] = str(zip)
+        if zipcode is not None:
+            record_data['data']['attributes']['zip'] = str(zipcode)
+            record_data['data']['attributes']['zip_code'] = str(zipcode)
+
+        # Fix address_type if not used
+        if 'address_type' in record_data['data']['attributes'] and \
+                record_data['data']['attributes']['address_type'] == u'':
+            record_data['data']['attributes'].pop('address_type', None)
+            record_data['data']['attributes'].pop('address_type_number', None)
+
+        print(record_data)
 
         # Prepare query URL
         _query_builder = Configuration.base_uri
@@ -344,7 +353,7 @@ class E911sController(BaseController):
         _headers = {
             'accept': 'application/json'
         }
-
+        print("Calling {}".format(_query_url))
         # Prepare and execute request
         _request = self.http_client.patch(_query_url, headers=_headers,
                                           parameters=APIHelper.json_serialize(record_data))
@@ -386,6 +395,7 @@ class E911sController(BaseController):
 
         # Return appropriate type
         _query_url = APIHelper.clean_url(_query_builder)
+        print("Calling {}".format(_query_url))
 
         # Prepare headers
         _headers = {
@@ -438,6 +448,7 @@ class E911sController(BaseController):
         _headers = {
             'accept': 'application/json'
         }
+        print("Calling {}".format(_query_url))
 
         # Prepare and execute request
         _request = self.http_client.patch(_query_url, headers=_headers)
@@ -454,13 +465,12 @@ class E911sController(BaseController):
         # Return appropriate type
         return APIHelper.json_deserialize(_context.response.raw_body)
 
-    def disconnect(self, e911_id, did):
-        """Does a DELETE request to /v2/numbers/<did>/relationships/e911s/<e911_id>.
+    def disconnect(self, did):
+        """Does a DELETE request to /v2/numbers/<did>/relationships/e911s.
 
         Un-Associates the specified e911 record with the specified did
 
         Args:
-            e911_id (integer, required): the id of the e911 record to update
             did (string, required): the phone number to associate with
 
         Returns:
@@ -476,10 +486,11 @@ class E911sController(BaseController):
         """
         # Prepare query URL
         _query_builder = Configuration.base_uri
-        _query_builder += '/v2/numbers/{}/relationships/e911s/{}'.format(did, e911_id)
+        _query_builder += '/v2/numbers/{}/relationships/e911s'.format(did)
 
         # Return appropriate type
         _query_url = APIHelper.clean_url(_query_builder)
+        print("Calling {}".format(_query_url))
 
         # Prepare headers
         _headers = {

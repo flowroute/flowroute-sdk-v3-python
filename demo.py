@@ -180,7 +180,7 @@ request_body = '{ \
     "attributes": { \
       "to": "' + str(mobile_number) + '", \
       "from": "' + str(number_id) + '", \
-      "body": "' + unicode(body, "utf-8") + '", \
+      "body": "' + str(body) + '", \
       "is_mms": "false" \
     } \
   } \
@@ -205,7 +205,7 @@ request_body_with_dlr = '{ \
     "attributes": { \
       "to": "' + str(mobile_number) + '", \
       "from": "' + str(number_id) + '", \
-      "body": "' + unicode(body, "utf-8") + '", \
+      "body": "' + str(body) + '", \
       "is_mms": "false", \
       "dlr_callback": "http://httpbin.org/status/:code" \
     } \

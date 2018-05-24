@@ -8,7 +8,8 @@ basic_auth_user_name = os.environ.get('FR_ACCESS_KEY')
 basic_auth_password = os.environ.get('FR_SECRET_KEY')
 
 # Instantiate API client and create controllers for Numbers and E911s
-client = FlowroutenumbersandmessagingClient(basic_auth_user_name, basic_auth_password)
+client = FlowroutenumbersandmessagingClient(basic_auth_user_name,
+                                            basic_auth_password)
 numbers_controller = client.numbers
 e911s_controller = client.e911s
 
@@ -19,19 +20,6 @@ offset = None
 result = e911s_controller.list_e911s(limit, offset)
 pprint.pprint(result)
 
-print("--Validate an Address")
-result = e911s_controller.validate_address(
-                                           label="Test Address",
-                                           first_name="Chris",
-                                           last_name="Smith",
-                                           street_name="3rd Ave",
-                                           street_number="1182",
-                                           city="Seattle",
-                                           state="WA",
-                                           country="USA",
-                                           zip="98101")
-pprint.pprint(result)
-
 e911_id = None
 # If the user has any E911 records, pull one up
 for e in result['data']:
@@ -39,29 +27,55 @@ for e in result['data']:
     break
 
 if e911_id:
-    print("--Get Details for a specific E911 Record")
+    print("\n--Get Details for a specific E911 Record")
     result = e911s_controller.get_e911(e911_id)
     pprint.pprint(result)
 
-print("--Create and Validate an Address")
-result = e911s_controller.create_address(
-                                         label="E911 Test",
-                                         first_name="Chris",
-                                         last_name="Smith",
-                                         street_name="3rd Ave",
-                                         street_number="1218",
-                                         city="Seattle",
-                                         state="WA",
-                                         country="USA",
-                                         zip="98101")
-pprint.pprint(result)
+print("\n--Validate an Address")
+try:
+    result = e911s_controller.validate_address(
+                                               label="Test Address",
+                                               first_name="Chris",
+                                               last_name="Smith",
+                                               street_name="3rd Ave",
+                                               street_number="1182",
+                                               city="Seattle",
+                                               state="WA",
+                                               country="US",
+                                               zipcode="98101")
+    pprint.pprint(result)
+except Exception as e:
+    print(str(e))
+    print(e.context.response.raw_body)
+
+print("\n--Create and Validate an Address")
+try:
+    result = e911s_controller.create_address(
+                                             label="E911 Test",
+                                             first_name="Chris",
+                                             last_name="Smith",
+                                             street_name="3rd Ave",
+                                             street_number="1218",
+                                             city="Seattle",
+                                             state="WA",
+                                             country="US",
+                                             zipcode="98101")
+    pprint.pprint(result)
+except Exception as e:
+    print(str(e))
+    print(e.context.response.raw_body)
 
 # Pull the ID from the newly created record
-record_id = result['data']['id']
+if len(result):
+    record_id = result['data']['id']
 
-print("--Update an E911 Address")
-result = e911s_controller.update_address(record_id, last_name='Wiley')
-pprint.pprint(result)
+    print("\n--Update an E911 Address")
+    try:
+        result = e911s_controller.update_address(record_id, last_name='Wiley')
+        pprint.pprint(result)
+    except Exception as e:
+        print(str(e))
+        print(e.context.response.raw_body)
 
 # Get our DIDs
 did_list = numbers_controller.list_account_phone_numbers()
@@ -73,19 +87,30 @@ e911_id = e911_list['data'][0]['id']
 
 # Associate them
 print("--Associate an E911 Record and a DID")
-result = e911s_controller.associate(e911_id, did)
-pprint.pprint(result)
+try:
+    result = e911s_controller.associate(e911_id, did)
+    pprint.pprint(result)
+except Exception as e:
+    print(str(e))
+    print(e.context.response.raw_body)
 
-print("--List all DIDs associated with an E911 Record")
+print("\n--List all DIDs associated with an E911 Record")
 result = e911s_controller.list_dids_for_e911(e911_id)
 pprint.pprint(result)
 
-# Diss-Associate them
-print("--Un-associate the address")
-result = e911s_controller.disconnect(e911_id, did)
-pprint.pprint(result)
+# Dis-Associate them
+try:
+    print("\n--Un-associate the address")
+    result = e911s_controller.disconnect(did)
+    pprint.pprint(result)
+except Exception as e:
+    print(str(e))
+    print(e.context.response.raw_body)
 
-print("--Delete an E911 Address")
-result = e911s_controller.delete_address(e911_id)
-pprint.pprint(result)
-
+try:
+    print("\n--Delete an E911 Address")
+    result = e911s_controller.delete_address(e911_id)
+    pprint.pprint(result)
+except Exception as e:
+    print(str(e))
+    print(e.context.response.raw_body)
