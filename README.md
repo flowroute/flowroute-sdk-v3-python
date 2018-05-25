@@ -32,6 +32,7 @@ The Flowroute Python library v3 provides methods for interacting with [Numbers v
             *   [send_a_message](#send_a_messagemessage_body)
             *   [look_up_a_set_of_messagesstart_date](#look_up_a_set_of_messagesstart_date)
             *   [look_up_a_message_detail_record](#look_up_a_message_detail_recordmessage_id)
+
         *   [E911 Address Management](#e911-management)
             *   [list_e911s](#)
             *   [get_e911](#)
@@ -42,6 +43,15 @@ The Flowroute Python library v3 provides methods for interacting with [Numbers v
             *   [list_dids_for_e911](#)
             *   [disconnect](#)
             *   [delete_address](#)
+
+        *   [CNAM Record Management](#cnam-management)
+            *   [list_cnams](#)
+            *   [get_cnam](#)
+            *   [search_cnams](#)
+            *   [create_cnam_record](#)
+            *   [associate_cnam](#)
+            *   [unassociate_cnam](#)
+            *   [remove_cnam](#)
 
         *   [Messaging](#messaging)
             *   [send_a_message](#send_a_messagemessage_body)
