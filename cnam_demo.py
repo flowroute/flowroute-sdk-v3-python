@@ -46,8 +46,7 @@ print("\n--Create a CNAM Record")
 cnam_value = 'FR ' + random_generator()
 result = cnams_controller.create_cnam_record(cnam_value)
 pprint.pprint(result)
-print("\nNOTE: Newly created CNAM records are NOT available to association "
-      "until they are approved.\n")
+print("\nNOTE: Newly created CNAM records need to be approved first before they can be associated with your long code number.")
 
 print("\n--Associate a CNAM Record to a DID")
 our_numbers = numbers_controller.list_account_phone_numbers()
