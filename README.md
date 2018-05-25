@@ -139,13 +139,6 @@ Contains all of the methods necessary to create, update, and validate new and ex
 ### CNAMsController
 
 Contains all of the methods necessary to create and delete CNAM records, view all of the CNAM records associated with your account, filter for specific CNAM records by status, review CNAM record details, and assign and unassign CNAM records to your Flowroute long code phone numbers.
-
-            *   [list_cnams](#)
-            *   [get_cnam](#)
-            *   [create_cnam_record](#)
-            *   [associate_cnam](#)
-            *   [unassociate_cnam](#)
-            *   [remove_cnam](#)
 *   [list\_cnams()](#list_cnams) \- Returns a list of all CNAM records on your account by default. You can apply search filters using any of the available query parameters.
 *   [get\_cnam(cnam\_id)](#get_cnam) \- Returns details pertaining to a specific CNAM record on your account, including long code numbers that are associated with the record.
 *   [create\_cnam\_record(cnam\_value)](#create_cnam_record) \- Lets you create a Caller ID record for your account which can then be assigned to any of your long code numbers. To assign a CNAM record to your number, see the [associate\_cnam](#associate_cnam) method.
