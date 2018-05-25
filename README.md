@@ -12,6 +12,8 @@ The Flowroute Python library v3 provides methods for interacting with [Numbers v
         * [Numbers Controller](#numberscontroller)
         * [Routes Controller](#routescontroller)
         * [Messages Controller](#messagescontroller)
+        * [E911s Controller](#e911scontroller)
+        * [CNAMs Controller](#cnamscontroller)
     *   [Credentials](#credentials)
     *   [Methods](#methods)
         *   [Number Management](#number-management)
@@ -47,7 +49,6 @@ The Flowroute Python library v3 provides methods for interacting with [Numbers v
         *   [CNAM Record Management](#cnam-management)
             *   [list_cnams](#)
             *   [get_cnam](#)
-            *   [search_cnams](#)
             *   [create_cnam_record](#)
             *   [associate_cnam](#)
             *   [unassociate_cnam](#)
@@ -122,18 +123,37 @@ Contains the methods required to send an MMS or SMS, and review a specific Messa
 *   [look\_up\_a\_message\_detail\_record()](#look_up_a_message_detail_recordmessage_id) \- Searches for a specific message record ID and returns a Message Detail Record (in MDR2 format).
 *   [look\_up\_a\_set\_of\_messages()](#look_up_a_set_of_messagesstart_date) \- Retrieves a list of Message Detail Records (MDRs) within a specified date range. Date and time is based on Coordinated Universal Time (UTC).
 
-### NumbersController
+### E911sController
 
-Contains all of the methods necessary to search through Flowroute's phone number inventory, purchase a phone number, and review details of your account phone numbers.
+Contains all of the methods necessary to create, update, and validate new and existing E911 addresses, retrieve all of the E911 records, activate and deactive E911 service for long code and toll-free numbers on your account, view all of the phone numbers associated with an E911 record, and remove an E911 address from your account once it is no longer associated with any of your Flowroute phone numbers.
 
-*   [list\_available\_area\_codes()](#list_available_area_codes) \- Returns a list of all Numbering Plan Area (NPA) codes containing purchasable phone numbers. All request parameters are optional. If you don't specify a limit, results are limited to the first 10 items.
-*   [list\_available\_exchange\_codes()](#list_available_exchange_codes) \- Returns a list of all Central Office (exchange) codes containing purchasable phone numbers. All request parameters are optional.
-*   [search\_for\_purchasable\_phone\_numbers()](#search_for_purchasable_phone_numbers) \- Searches for purchasable phone numbers by state or rate center, or by your specified search value.
-*   [purchase\_a\_phone\_number(purchasable\_number)](#purchase_a_phone_numbernumber_id) \- Lets you purchase a phone number from available Flowroute inventory.
-*   [list\_account\_phone\_numbers()](#list_account_phone_numbers) \- Returns a list of all phone numbers currently on your Flowroute account. 
-*   [list\_phone\_number\_details(number\_id)](#list_phone_number_detailsnumber_id) \- Returns details on a specific phone number associated with your account, including primary voice route, and failover voice route if previously configured.
+*   [list\_e911s()](#list_e911s) \- Returns a list of all E911 records on your account by default. All request parameters are optional. If you don't specify a limit, results are limited to the first 10 items.
+*   [get\_e911(e911\_id)](#get_e911) \- Returns details on a specified E911 record.
+*   [validate\_address(e911\_attributes)](#validate_address) \- Lets you validate new and existing E911 addresses on your account.
+*   [create\_address(e911\_attributes)](#create_address) \- Lets you create and validate an E911 address within the US and Canada which can then be assigned to any of the long code or toll­free numbers on your account. To assign an E911 address to your number, see the [associate](#associate) method.
+*   [update\_address(e911\_id, e911\_attributes)](#update_address) \- Lets you update and validate an existing E911 address on your account. You must create the E911 address first by following the [create\_address](#create_address) method. 
+*   [associate(e911\_id, number\_id)](#associate) \- Lets you update and validate an existing E911 address on your account. You must create the E911 address first by following the [create\_address](#create_address) method. 
+*   [disconnect(number\_id)](#disconnect) \- Lets you deactivate the current E911 service for your phone number.
+*   [delete\_address(e911\_id)](#list_dids_for_e911) \- Lets you delete an E911 address associated with your account. You must remove all phone number associations first before you can successfully delete the specified E911 record.
 
-The following shows an example of a single Python file that imports the Flowroute API client and all the required modules. The Python library v3 comes with three example demo files &mdash;**number_route_message_demo.py**, **e911_demo.py**, **cnam_demo.py** files that you can edit and run for demonstration and testing purposes.
+### CNAMsController
+
+Contains all of the methods necessary to create and delete CNAM records, view all of the CNAM records associated with your account, filter for specific CNAM records by status, review CNAM record details, and assign and unassign CNAM records to your Flowroute long code phone numbers.
+
+            *   [list_cnams](#)
+            *   [get_cnam](#)
+            *   [create_cnam_record](#)
+            *   [associate_cnam](#)
+            *   [unassociate_cnam](#)
+            *   [remove_cnam](#)
+*   [list\_cnams()](#list_cnams) \- Returns a list of all CNAM records on your account by default. You can apply search filters using any of the available query parameters.
+*   [get\_cnam(cnam\_id)](#get_cnam) \- Returns details pertaining to a specific CNAM record on your account, including long code numbers that are associated with the record.
+*   [create\_cnam\_record(cnam\_value)](#create_cnam_record) \- Lets you create a Caller ID record for your account which can then be assigned to any of your long code numbers. To assign a CNAM record to your number, see the [associate\_cnam](#associate_cnam) method.
+*   [associate\_cnam(cnam\_id, number\_id)](#associate) \- Lets you associate a CNAM record with a specified long code number on your account. Note that a CNAM record takes 1-2 days to be approved.
+*   [unassociate(number\_id)](#disconnect) \- Lets you unassign a CNAM record associated with a specified long code number on your account without deleting the CNAM record itself.
+*   [remove\_cnam(cnam\_id)](#remove_cnam) \- Lets you delete a CNAM record from your account. Note that this will automatically disassociate all numbers associated with the deleted CNAM record.
+
+The following shows an example of a single Python file that imports the Flowroute API client and all the required modules. The Python library v3 comes with three example demo files &mdash; **number_route_message_demo.py**, **e911_demo.py**, **cnam_demo.py** &mdash; files that you can edit and run for demonstration and testing purposes.
 
 ```python
 import pprint
