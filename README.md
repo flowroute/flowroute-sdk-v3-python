@@ -90,7 +90,7 @@ Depending on your `pip` permissions, you may be required to preface each `pip` c
 * * *
 Usage
 ------------
-In Flowroute's approach to building the Python library v3, HTTP requests are handled by controllers named after the API resources they represent: **Numbers**, **Routes**, and **Messages**. These controllers contain the methods used to perform messaging, number management, and route management within the Python library.
+In Flowroute's approach to building the Python library v3, HTTP requests are handled by controllers named after the API resources they represent: **Numbers**, **Routes**, **E911s**, **CNAMs**, and **Messages**. These controllers contain the methods used to perform messaging, number management, route management, E911 address management, and CNAM record management  within the Python library.
 
 ## Controllers
 
@@ -122,7 +122,18 @@ Contains the methods required to send an MMS or SMS, and review a specific Messa
 *   [look\_up\_a\_message\_detail\_record()](#look_up_a_message_detail_recordmessage_id) \- Searches for a specific message record ID and returns a Message Detail Record (in MDR2 format).
 *   [look\_up\_a\_set\_of\_messages()](#look_up_a_set_of_messagesstart_date) \- Retrieves a list of Message Detail Records (MDRs) within a specified date range. Date and time is based on Coordinated Universal Time (UTC).
 
-The following shows an example of a single Python file that imports the Flowroute API client and all the required modules. The Python library v3 comes with a **demo.py** file that you can edit and run as an example.
+### NumbersController
+
+Contains all of the methods necessary to search through Flowroute's phone number inventory, purchase a phone number, and review details of your account phone numbers.
+
+*   [list\_available\_area\_codes()](#list_available_area_codes) \- Returns a list of all Numbering Plan Area (NPA) codes containing purchasable phone numbers. All request parameters are optional. If you don't specify a limit, results are limited to the first 10 items.
+*   [list\_available\_exchange\_codes()](#list_available_exchange_codes) \- Returns a list of all Central Office (exchange) codes containing purchasable phone numbers. All request parameters are optional.
+*   [search\_for\_purchasable\_phone\_numbers()](#search_for_purchasable_phone_numbers) \- Searches for purchasable phone numbers by state or rate center, or by your specified search value.
+*   [purchase\_a\_phone\_number(purchasable\_number)](#purchase_a_phone_numbernumber_id) \- Lets you purchase a phone number from available Flowroute inventory.
+*   [list\_account\_phone\_numbers()](#list_account_phone_numbers) \- Returns a list of all phone numbers currently on your Flowroute account. 
+*   [list\_phone\_number\_details(number\_id)](#list_phone_number_detailsnumber_id) \- Returns details on a specific phone number associated with your account, including primary voice route, and failover voice route if previously configured.
+
+The following shows an example of a single Python file that imports the Flowroute API client and all the required modules. The Python library v3 comes with three example demo files &mdash;**number_route_message_demo.py**, **e911_demo.py**, **cnam_demo.py** files that you can edit and run for demonstration and testing purposes.
 
 ```python
 import pprint
@@ -134,7 +145,7 @@ from flowroutenumbersandmessaging.flowroutenumbersandmessaging_client import Flo
 ```    
 #### Credentials
 
-In **demo.py**, replace `basic_auth_user_name` with your API Access Key and `basic_auth_password` with your API Secret Key from the [Flowroute Manager](https://manage.flowroute.com/accounts/preferences/api/). Note that in our example, we are accessing your Flowroute credentials as environment variables. To learn more about setting environment variables, see [How To Read and Set Environmental and Shell Variables](https://www.digitalocean.com/community/tutorials/how-to-read-and-set-environmental-and-shell-variables-on-a-linux-vps).
+Let's take **number_route_message_demo.py** as an example. In the file, replace `basic_auth_user_name` with your API Access Key and `basic_auth_password` with your API Secret Key from the [Flowroute Manager](https://manage.flowroute.com/accounts/preferences/api/). Note that in our example, we are accessing your Flowroute credentials as environment variables. To learn more about setting environment variables, see [How To Read and Set Environmental and Shell Variables](https://www.digitalocean.com/community/tutorials/how-to-read-and-set-environmental-and-shell-variables-on-a-linux-vps).
 
 ```python
 # Set up your api credentials and test mobile number for outbound SMS or MMS
@@ -153,7 +164,7 @@ routes_controller = client.routes
 messages_controller = client.messages
 ```
 ## Methods
-The following section will demonstrate the capabilities of Numbers v2 and Messages v2.1 that are wrapped in our Python library. Note that the example responses have been formatted using Mac's `pbpaste` and `jq`. To learn more, see [Quickly Tidy Up JSON from the Command Line](http://onebigfunction.com/vim/2015/02/02/quickly-tidying-up-json-from-the-command-line-and-vim/). 
+The following section will demonstrate the capabilities of Numbers v2, Messaging v2.1, E911 v2, and CNAM v2 that are wrapped in our Python library. Note that the example responses have been formatted using Mac's `pbpaste` and `jq`. To learn more, see [Quickly Tidy Up JSON from the Command Line](http://onebigfunction.com/vim/2015/02/02/quickly-tidying-up-json-from-the-command-line-and-vim/). 
 
 ### Number Management
 
