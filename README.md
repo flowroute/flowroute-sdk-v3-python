@@ -897,18 +897,49 @@ The method accepts `limit`, `offset`, and `state` as parameters which you can le
     
 ##### Example Request
 ```python
-print("--List Available Area Codes")
-max_setup_cost = 3.25
-limit = 3
+print("--List E911 Records")
+limit = 2
 offset = None
-result = numbers_controller.list_available_area_codes(limit, offset, max_setup_cost)
+result = e911s_controller.list_e911s(limit, offset)
 pprint.pprint(result)
 ```
 
 ##### Example Response
 
-On success, the HTTP status code in the response header is `200 OK` and the response body contains an array of area code objects in JSON format.
+On success, the HTTP status code in the response header is `200 OK` and the response body contains an array of e911 objects in JSON format.
 
+```
+--List E911 Records
+{'data': [{'attributes': {'address_type': 'Lobby',
+                          'address_type_number': '12',
+                          'city': 'Seattle',
+                          'country': 'USA',
+                          'first_name': 'Maria',
+                          'label': 'Example E911',
+                          'last_name': 'Bermudez',
+                          'state': 'WA',
+                          'street_name': '20th Ave SW',
+                          'street_number': '7742',
+                          'zip': '98106'},
+           'id': '20930',
+           'links': {'self': 'https://api.flowroute.com/v2/e911s/20930'},
+           'type': 'e911'},
+          {'attributes': {'address_type': 'Apartment',
+                          'address_type_number': '12',
+                          'city': 'Seattle',
+                          'country': 'US',
+                          'first_name': 'Something',
+                          'label': '5th E911',
+                          'last_name': 'Someone',
+                          'state': 'WA',
+                          'street_name': 'Main St',
+                          'street_number': '645',
+                          'zip': '98104'},
+           'id': '20707',
+           'links': {'self': 'https://api.flowroute.com/v2/e911s/20707'},
+           'type': 'e911'}],
+ 'links': {'next': 'https://api.flowroute.com/v2/e911s?limit=2&offset=2',
+           'self': 'https://api.flowroute.com/v2/e911s?limit=2&offset=0'}}
 ```
 #### Errors
 
