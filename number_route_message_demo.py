@@ -13,7 +13,7 @@ print("Number/Route Management v2 & Messaging v2.1 Demo")
 # Set up your api credentials and test mobile number for outbound SMS or MMS
 # basic_auth_user_name = os.environ.get('FR_ACCESS_KEY')
 # basic_auth_password = os.environ.get('FR_SECRET_KEY')
-mobile_number = "YOUR NUMBER HERE"
+mobile_number = "YOUR_MOBILE_NUMBER"
 
 
 # Instantiate API client and create controllers for Numbers,
