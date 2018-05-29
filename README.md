@@ -167,7 +167,7 @@ basic_auth_password = os.environ.get('FR_SECRET_KEY')
 mobile_number = "YOUR_MOBILE_NUMBER"
 ```
 #### Instantiate API Client and Controllers
-Next, instantiate the API Client and its controllers.
+Next, instantiate the API Client and its controllers. In the example below, we are only instantiating the necessary controllers for the Numbers,Messages, and Routes resources. The E911 and CNAM demo files come with their own set of required controllers to interact with the associated methods for E911 and CNAM record management.
 
 ```python
 # Instantiate API client and create controllers for Numbers, Messages, and Routes
@@ -882,6 +882,33 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
     "id": "mdr2-ca82be46e6ba11e79d08862d092cf73d"
   }
 }
+```
+### E911 Address Management
+
+The Flowroute Python library v3  allows you to make HTTP requests to the `e911s` resource of Flowroute API v2: `https://api.flowroute.com/v2/e911s`
+
+| API Reference Pages |
+| ------------------- |
+| The E911 and CNAM API reference pages are currently restricted to our beta customers. They will be publicly available when we launch both the E911 and CNAM APIs to GA in a few weeks. |
+
+#### list\_e911s()
+
+The method accepts `limit`, `offset`, and `state` as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/list-account-e911-addresses/).
+    
+##### Example Request
+```python
+print("--List Available Area Codes")
+max_setup_cost = 3.25
+limit = 3
+offset = None
+result = numbers_controller.list_available_area_codes(limit, offset, max_setup_cost)
+pprint.pprint(result)
+```
+
+##### Example Response
+
+On success, the HTTP status code in the response header is `200 OK` and the response body contains an array of area code objects in JSON format.
+
 ```
 #### Errors
 
