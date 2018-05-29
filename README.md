@@ -35,7 +35,7 @@ The Flowroute Python library v3 provides methods for interacting with [Numbers v
             *   [look_up_a_set_of_messagesstart_date](#look_up_a_set_of_messagesstart_date)
             *   [look_up_a_message_detail_record](#look_up_a_message_detail_recordmessage_id)
 
-        *   [E911 Address Management](#e911-management)
+        *   [E911 Address Management](#e911-address-management)
             *   [list_e911s](#)
             *   [get_e911](#)
             *   [validate_address](#)
@@ -889,7 +889,7 @@ The Flowroute Python library v3  allows you to make HTTP requests to the `e911s`
 
 | API Reference Pages |
 | ------------------- |
-| The E911 and CNAM API reference pages are currently restricted to our beta customers. They will be publicly available when we launch both the E911 and CNAM APIs to GA in a few weeks. |
+| The E911 and CNAM API reference pages are currently restricted to our beta customers, which means that all API reference links below currently return a `404 Not Found`. They will be publicly available during our E911 and CNAM APIs GA launch in a few weeks. |
 
 #### list\_e911s()
 
