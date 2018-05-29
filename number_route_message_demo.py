@@ -13,7 +13,7 @@ print("Number/Route Management v2 & Messaging v2.1 Demo")
 # Set up your api credentials and test mobile number for outbound SMS or MMS
 # basic_auth_user_name = os.environ.get('FR_ACCESS_KEY')
 # basic_auth_password = os.environ.get('FR_SECRET_KEY')
-mobile_number = "4254664078"
+mobile_number = "YOUR NUMBER HERE"
 
 
 # Instantiate API client and create controllers for Numbers,
@@ -254,6 +254,10 @@ dlr_url = 'http://example.com/dlr'
 result = messages_controller.set_account_level_dlr_callback(dlr_url)
 pprint.pprint(result)
 
+print("\n---Set a DID Level DLR Callback URL")
+dlr_url = 'http://example.com/did/dlr'
+result = messages_controller.set_did_level_dlr_callback(number_id, dlr_url)
+pprint.pprint(result)
 
 # --------------------- Porting -----------------------------------------
 
