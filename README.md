@@ -941,6 +941,70 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
  'links': {'next': 'https://api.flowroute.com/v2/e911s?limit=2&offset=2',
            'self': 'https://api.flowroute.com/v2/e911s?limit=2&offset=0'}}
 ```
+
+#### get\_e911()
+
+The method accepts an `e911_id` as a path parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/list-e911-record-details/).
+    
+##### Example Request
+```python
+e911_id = None
+# If the user has any E911 records, pull one up
+for e in result['data']:
+    e911_id = e['id']
+    break
+
+if e911_id:
+    print("\n--Get Details for a specific E911 Record")
+    result = e911s_controller.get_e911(e911_id)
+    pprint.pprint(result)
+```
+
+##### Example Response
+
+On success, the HTTP status code in the response header is `200 OK` and the response body contains a detailed e911 object in JSON format.
+
+```
+--Get Details for a specific E911 Record
+{'data': {'attributes': {'address_type': 'L',
+                         'address_type_number': '12',
+                         'city': 'Seattle',
+                         'country': 'USA',
+                         'first_name': 'Maria',
+                         'label': 'Example E911',
+                         'last_name': 'Bermudez',
+                         'state': 'WA',
+                         'street_name': '20th Ave SW',
+                         'street_number': '7742',
+                         'zip': '98106'},
+          'id': '20930',
+          'links': {'self': 'https://api.flowroute.com/v2/e911s/20930'},
+          'type': 'e911'}}
+```
+
+#### validate\_address()
+
+The method accepts the different attributes of an E911 address &mdash; `label`, 'first\_name`, `last\_name`, `street\_name`, `street\_number`, `city`, `state`, `country`, and `zipcode` &mdash; as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/list-e911-record-details/). Note that this method doesn't accept the `address\_type` and `address\_type\_number` which are acceptable but not required E911 address attributes by the API.
+    
+##### Example Request
+```python
+e911_id = None
+# If the user has any E911 records, pull one up
+for e in result['data']:
+    e911_id = e['id']
+    break
+
+if e911_id:
+    print("\n--Get Details for a specific E911 Record")
+    result = e911s_controller.get_e911(e911_id)
+    pprint.pprint(result)
+```
+
+##### Example Response
+
+On success, the HTTP status code in the response header is `200 OK` and the response body contains a detailed e911 object in JSON format.
+
+```
 #### Errors
 
 In cases of method errors, the Python library raises an exception which includes the HTTP Response code, an error message, and the HTTP body that was received in the request. 
