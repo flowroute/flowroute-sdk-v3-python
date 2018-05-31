@@ -41,9 +41,9 @@ The Flowroute Python library v3 provides methods for interacting with [Numbers v
             *   [validate_address](#validate_addresse911_attributes)
             *   [create_address](#create_addresse911_attributes)
             *   [update_address](#e911_ide911_attribute)
-            *   [associate](#)
-            *   [list_dids_for_e911](#)
-            *   [disconnect](#)
+            *   [associate](#associatee911_id-number_id)
+            *   [list_dids_for_e911](#list_dids_for_e911e911_id)
+            *   [disconnect](#disconnectnumber_id)
             *   [delete_address](#)
 
         *   [CNAM Record Management](#cnam-management)
@@ -128,13 +128,14 @@ Contains the methods required to send an MMS or SMS, and review a specific Messa
 Contains all of the methods necessary to create, update, and validate new and existing E911 addresses, retrieve all of the E911 records, activate and deactive E911 service for long code and toll-free numbers on your account, view all of the phone numbers associated with an E911 record, and remove an E911 address from your account once it is no longer associated with any of your Flowroute phone numbers.
 
 *   [list\_e911s()](#list_e911s) \- Returns a list of all E911 records on your account by default. All request parameters are optional. If you don't specify a limit, results are limited to the first 10 items.
-*   [get\_e911(e911\_id)](#get_e911) \- Returns details on a specified E911 record.
-*   [validate\_address(e911\_attributes)](#validate_address) \- Lets you validate new and existing E911 addresses on your account.
-*   [create\_address(e911\_attributes)](#create_address) \- Lets you create and validate an E911 address within the US and Canada which can then be assigned to any of the long code or toll­free numbers on your account. To assign an E911 address to your number, see the [associate](#associate) method.
-*   [update\_address(e911\_id, e911\_attributes)](#update_address) \- Lets you update and validate an existing E911 address on your account. You must create the E911 address first by following the [create\_address](#create_address) method. 
-*   [associate(e911\_id, number\_id)](#associate) \- Lets you update and validate an existing E911 address on your account. You must create the E911 address first by following the [create\_address](#create_address) method. 
-*   [disconnect(number\_id)](#disconnect) \- Lets you deactivate the current E911 service for your phone number.
-*   [delete\_address(e911\_id)](#list_dids_for_e911) \- Lets you delete an E911 address associated with your account. You must remove all phone number associations first before you can successfully delete the specified E911 record.
+*   [get\_e911(e911\_id)](#get_e911e911_id) \- Returns details on a specified E911 record.
+*   [validate\_address(e911\_attributes)](#validate_addresse911_attributes) \- Lets you validate new and existing E911 addresses on your account.
+*   [create\_address(e911\_attributes)](#create_addresse911_attributes) \- Lets you create and validate an E911 address within the US and Canada which can then be assigned to any of the long code or toll­free numbers on your account. To assign an E911 address to your number, see the [associate](#associatee911_id-number_id) method.
+*   [update\_address(e911\_id, e911\_attributes)](#update_addresse911_id-e911_attributes) \- Lets you update and validate an existing E911 address on your account. You must create the E911 address first by following the [create\_address](#create_address) method. 
+*   [associate(e911\_id, number\_id)](#associatee911_id-number_id) \- Lets you update and validate an existing E911 address on your account. You must create the E911 address first by following the [create\_address](#create_addresse911_attributes) method. 
+*   [associate(e911\_id, number\_id)](#associatee911_id-number_id) \- Lets you update and validate an existing E911 address on your account. You must create the E911 address first by following the [create\_address](#create_addresse911_attributes) method. 
+*   [disconnect(number\_id)](#disconnectnumber_id) \- Lets you deactivate the current E911 service for your phone number.
+*   [delete\_address(e911\_id)](#delete_addresse911_id) \- Lets you delete an E911 address associated with your account. You must remove all phone number associations first before you can successfully delete the specified E911 record.
 
 ### CNAMsController
 
@@ -1101,12 +1102,12 @@ The method accepts an E911 record id and a phone number as parameters which you 
 ##### Example Request
 ```
 # Get our DIDs
-didi\_list = numbers\_controller.list\_account\_phone\_numbers()
-did = did\_list['data'][0]['attributes']['value']
+did_list = numbers_controller.list_account_phone_numbers()
+did = did_list['data'][0]['attributes']['value']
 
 # Get our E911s
-e911\_list = e911s\_controller.list\_e911s()
-e911\_id = e911\_list['data'][0]['id']
+e911_list = e911s_controller.list_e911s()
+e911_id = e911_list['data'][0]['id']
 
 # Associate them
 print("--Associate an E911 Record and a DID")
@@ -1122,6 +1123,39 @@ except Exception as e:
 On success, the HTTP status code in the response header is `204 No Content` which means that the server successfully processed the request and is not returning any content.
 
 `204: No Content`
+
+#### list_dids_for_e911(e911_id)
+
+The method accepts an E911 record id as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/list-phone-numbers-associated-with-e911-record/). In the example below, we retrieve the list of phone numbers associated with our previously assigned `e911_id`.
+    
+##### Example Request
+```
+print("\n--List all DIDs associated with an E911 Record")
+result = e911s_controller.list_dids_for_e911(e911_id)
+pprint.pprint(result)
+```
+##### Example Response
+```
+--List all DIDs associated with an E911 Record
+{
+  "data": [
+    {
+      "attributes": {
+        "alias": null,
+        "value": "12062011682"
+      },
+      "id": "12062011682",
+      "links": {
+        "self": "https://api.flowroute.com/v2/numbers/12062011682"
+      },
+      "type": "number"
+    }
+  ],
+  "links": {
+    "self": "https://api.flowroute.com/v2/e911s/21330/relationships/numbers?limit=10&offset=0"
+  }
+}
+```
 
 #### Errors
 
