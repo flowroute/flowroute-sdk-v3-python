@@ -1093,6 +1093,36 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
           'id': '21306',
           'links': {'self': 'https://api.flowroute.com/v2/e911s/21306'},
           'type': 'e911'}}
+```
+#### associate(e911_id, number_id)
+
+The method accepts an E911 record id and a phone number as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/assign-valid-e911-address-to-phone-number/). In the example below, we call the [list_account_phone_numbers](#list_account_phone_numbers) covered under Number Management and [list_e911s](#list_e911s), extract the values of the first items in the returned JSON arrays into variables `e911_id` and `did` then make the association between them.
+    
+##### Example Request
+```
+# Get our DIDs
+didi\_list = numbers\_controller.list\_account\_phone\_numbers()
+did = did\_list['data'][0]['attributes']['value']
+
+# Get our E911s
+e911\_list = e911s\_controller.list\_e911s()
+e911\_id = e911\_list['data'][0]['id']
+
+# Associate them
+print("--Associate an E911 Record and a DID")
+try:
+    result = e911s_controller.associate(e911_id, did)
+    pprint.pprint(result)
+except Exception as e:
+    print(str(e))
+    print(e.context.response.raw_body)
+```
+##### Example Response
+
+On success, the HTTP status code in the response header is `204 No Content` which means that the server successfully processed the request and is not returning any content.
+
+`204: No Content`
+
 #### Errors
 
 In cases of method errors, the Python library raises an exception which includes an error message and the HTTP body that was received in the request. 
@@ -1101,7 +1131,7 @@ In cases of method errors, the Python library raises an exception which includes
 ```
 raise ErrorException('403 Forbidden – The server understood the request but refuses to authorize it.', _context)
 ```
-  
+ 
 ## Testing
 
 Once you are done configuring your Flowroute API credentials and updating the function parameters, run the file to see the demo in action:
