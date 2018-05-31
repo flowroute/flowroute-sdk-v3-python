@@ -132,8 +132,8 @@ Contains all of the methods necessary to create, update, and validate new and ex
 *   [validate\_address(e911\_attributes)](#validate_addresse911_attributes) \- Lets you validate new and existing E911 addresses on your account.
 *   [create\_address(e911\_attributes)](#create_addresse911_attributes) \- Lets you create and validate an E911 address within the US and Canada which can then be assigned to any of the long code or toll­free numbers on your account. To assign an E911 address to your number, see the [associate](#associatee911_id-number_id) method.
 *   [update\_address(e911\_id, e911\_attributes)](#update_addresse911_id-e911_attributes) \- Lets you update and validate an existing E911 address on your account. You must create the E911 address first by following the [create\_address](#create_address) method. 
-*   [associate(e911\_id, number\_id)](#associatee911_id-number_id) \- Lets you update and validate an existing E911 address on your account. You must create the E911 address first by following the [create\_address](#create_addresse911_attributes) method. 
-*   [associate(e911\_id, number\_id)](#associatee911_id-number_id) \- Lets you update and validate an existing E911 address on your account. You must create the E911 address first by following the [create\_address](#create_addresse911_attributes) method. 
+*   [associate(e911\_id, number\_id)](#associatee911_id-number_id) \- Lets you assign a valid E911 address to a specific long code or toll-free phone number in your account. This method calls an endpoint which does not return an error for subsequent attempts at associating a phone number with the same E911 record. The E911 record assignment charge only occurs on the first successful attempt. Note that you can later assign a different `e911_id` to the same phone number and will be charged accordingly.
+*   [list\_dids\_for\_e911(e911\_id)](#list_dids_for_e911number_id) \- Returns a list of your Flowroute long code or toll-free phone numbers associated with a specified E911 record.
 *   [disconnect(number\_id)](#disconnectnumber_id) \- Lets you deactivate the current E911 service for your phone number.
 *   [delete\_address(e911\_id)](#delete_addresse911_id) \- Lets you delete an E911 address associated with your account. You must remove all phone number associations first before you can successfully delete the specified E911 record.
 
@@ -1135,6 +1135,7 @@ result = e911s_controller.list_dids_for_e911(e911_id)
 pprint.pprint(result)
 ```
 ##### Example Response
+On success, the HTTP status code in the response header is `200 OK` and the response body contains an array of related number objects in JSON format.
 ```
 --List all DIDs associated with an E911 Record
 {
@@ -1156,7 +1157,51 @@ pprint.pprint(result)
   }
 }
 ```
+disconnect(number\_id)](#disconnectnumber_id)
 
+#### disconnect(number_id)
+
+The method accepts a phone number as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/deactivate-e911-service-for-phone-number/). In the example below, we deactivate the E911 service for our previously assigned `did`.
+
+##### Example Request
+```
+# Dis-Associate them
+try:
+    print("\n--Un-associate the address")
+    result = e911s_controller.disconnect(12062011682)
+    pprint.pprint(result)
+except Exception as e:
+    print(str(e))
+    print(e.context.response.raw_body)
+```
+##### Example Response
+On success, the HTTP status code in the response header is `204 No Content` which means that the server successfully processed the request and is not returning any content.
+
+```
+--Un-associate the address
+''
+```
+#### delete_address(e911_id)
+
+The method accepts an E911 record ID as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/remove-e911-address-from-account/). Note that all phone number associations must be removed first before you are able to delete the specified `e911_id`. In the example below, we will attempt to delete the previously assigned `e911_id`.
+
+##### Example Request
+```
+try:
+    print("\n--Delete an E911 Address")
+    result = e911s_controller.delete_address(e911_id)
+    pprint.pprint(result)
+except Exception as e:
+    print(str(e))
+    print(e.context.response.raw_body)
+```
+##### Example Response
+On success, the HTTP status code in the response header is `204 No Content` which means that the server successfully processed the request and is not returning any content.
+
+```
+--Delete an E911 Address
+''
+```
 #### Errors
 
 In cases of method errors, the Python library raises an exception which includes an error message and the HTTP body that was received in the request. 
