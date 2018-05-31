@@ -47,8 +47,8 @@ The Flowroute Python library v3 provides methods for interacting with [Numbers v
             *   [delete_address](#)
 
         *   [CNAM Record Management](#cnam-management)
-            *   [list_cnams](#)
-            *   [get_cnam](#)
+            *   [list_cnams](#list_cnams)
+            *   [get_cnam](#get_cnamcnam_id)
             *   [create_cnam_record](#)
             *   [associate_cnam](#)
             *   [unassociate_cnam](#)
@@ -1202,6 +1202,128 @@ On success, the HTTP status code in the response header is `204 No Content` whic
 --Delete an E911 Address
 ''
 ```
+### CNAM Record Management
+
+The Flowroute Python library v3  allows you to make HTTP requests to the `cnams` resource of Flowroute API v2: `https://api.flowroute.com/v2/cnams`
+
+| API Reference Pages |
+| ------------------- |
+| The E911 and CNAM API reference pages are currently restricted to our beta customers, which means that all API reference links below currently return a `404 Not Found`. They will be publicly available during our E911 and CNAM APIs GA launch in a few weeks. |
+
+#### list\_cnams()
+
+The method accepts `limit`, `offset`, and `is_approved` as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/cnams/v2.0/list-account-cnam-records/).
+    
+##### Example Request
+```python
+print("--List CNAM Records")
+limit = 10
+offset = None
+result = cnams_controller.list_cnams(limit, offset)
+pprint.pprint(result)
+```
+
+##### Example Response
+
+On success, the HTTP status code in the response header is `200 OK` and the response body contains an array of cnam objects in JSON format.
+
+```
+--List CNAM Records
+{'data': [{'attributes': {'approval_datetime': None,
+                          'creation_datetime': None,
+                          'is_approved': True,
+                          'rejection_reason': '',
+                          'value': 'TEST, MARIA'},
+           'id': '17604',
+           'links': {'self': 'https://api.flowroute.com/v2/cnams/17604'},
+           'type': 'cnam'},
+          {'attributes': {'approval_datetime': '2018-04-16 '
+                                               '16:20:32.939166+00:00',
+                          'creation_datetime': '2018-04-12 '
+                                               '19:08:39.062539+00:00',
+                          'is_approved': True,
+                          'rejection_reason': None,
+                          'value': 'REGENCE INC'},
+           'id': '22671',
+           'links': {'self': 'https://api.flowroute.com/v2/cnams/22671'},
+           'type': 'cnam'},
+          {'attributes': {'approval_datetime': '2018-04-23 '
+                                               '17:04:30.829341+00:00',
+                          'creation_datetime': '2018-04-19 '
+                                               '21:03:04.932192+00:00',
+                          'is_approved': True,
+                          'rejection_reason': None,
+                          'value': 'BROWN BAG'},
+           'id': '22790',
+           'links': {'self': 'https://api.flowroute.com/v2/cnams/22790'},
+           'type': 'cnam'},
+          {'attributes': {'approval_datetime': '2018-05-23 '
+                                               '18:58:46.052602+00:00',
+                          'creation_datetime': '2018-05-22 '
+                                               '23:38:27.794911+00:00',
+                          'is_approved': True,
+                          'rejection_reason': None,
+                          'value': 'LEATHER REBEL'},
+           'id': '23221',
+           'links': {'self': 'https://api.flowroute.com/v2/cnams/23221'},
+           'type': 'cnam'},
+          {'attributes': {'approval_datetime': '2018-05-23 '
+                                               '18:58:46.052602+00:00',
+                          'creation_datetime': '2018-05-22 '
+                                               '23:39:24.447054+00:00',
+                          'is_approved': True,
+                          'rejection_reason': None,
+                          'value': 'LEATHER REBELZ'},
+           'id': '23223',
+           'links': {'self': 'https://api.flowroute.com/v2/cnams/23223'},
+           'type': 'cnam'},
+          {'attributes': {'approval_datetime': '2018-05-23 '
+                                               '18:58:46.052602+00:00',
+                          'creation_datetime': '2018-05-22 '
+                                               '23:42:00.786818+00:00',
+                          'is_approved': True,
+                          'rejection_reason': None,
+                          'value': 'MORBO'},
+           'id': '23224',
+           'links': {'self': 'https://api.flowroute.com/v2/cnams/23224'},
+           'type': 'cnam'}],
+ 'links': {'self': 'https://api.flowroute.com/v2/cnams?limit=10&offset=0'}}
+```
+#### get_cnam(cnam_id)
+
+The method accepts a CNAM record ID as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/cnams/v2.0/list-cnam-record-details/). In the example below, we query for approved CNAM records on your account and then extract the ID of the first record returned and retrieve the details of that specific CNAM record.
+    
+##### Example Request
+```python
+print("\n--List Approved CNAM Records")
+result = cnams_controller.list_cnams(is_approved=True)
+pprint.pprint(result)
+if len(result['data']):
+    cnam_id = result['data'][0]['id']
+
+    print("\n--List CNAM Detail")
+    result = cnams_controller.get_cnam(cnam_id)
+    pprint.pprint(result)
+```
+##### Example Response
+```
+--List CNAM Detail
+{'data': {'attributes': {'approval_datetime': None,
+                         'creation_datetime': None,
+                         'is_approved': True,
+                         'rejection_reason': '',
+                         'value': 'TEST, MARIA'},
+          'id': '17604',
+          'links': {'self': 'https://api.flowroute.com/v2/cnams/17604'},
+          'type': 'cnam'}}
+```
+
+##### Example Response
+
+On success, the HTTP status code in the response header is `200 OK` and the response body contains an array of cnam objects in JSON format.
+
+```
+
 #### Errors
 
 In cases of method errors, the Python library raises an exception which includes an error message and the HTTP body that was received in the request. 
