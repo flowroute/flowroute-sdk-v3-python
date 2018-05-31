@@ -37,10 +37,10 @@ The Flowroute Python library v3 provides methods for interacting with [Numbers v
 
         *   [E911 Address Management](#e911-address-management)
             *   [list_e911s](#list_e911s)
-            *   [get_e911](#)get_e911
-            *   [validate_address](#validate_address)
-            *   [create_address](#)
-            *   [update_address](#)
+            *   [get_e911](#get_e911e911_id)
+            *   [validate_address](#validate_addresse911_attributes)
+            *   [create_address](#create_addresse911_attributes)
+            *   [update_address](#e911_ide911_attribute)
             *   [associate](#)
             *   [list_dids_for_e911](#)
             *   [disconnect](#)
@@ -982,12 +982,12 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
           'type': 'e911'}}
 ```
 
-#### validate\_address(label, first\_name, last\_name, street\_name, street\_number, city, state, country, zipcode)
+#### validate_address(e911_attributes)
 
-The method accepts the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/list-e911-record-details/). Note that this method doesn't accept the `address\_type` and `address\_type\_number` which are acceptable but not required E911 address attributes by the API.
+The method accepts the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/validate-e911-address/). Note that this method doesn't accept the `address_type` and `address_type_number` which are acceptable but not required E911 address attributes by the API.
     
 ##### Example Request
-```python
+```
 print("\n--Validate an Address")
 try:
     result = e911s_controller.validate_address(
@@ -1014,11 +1014,88 @@ On success, the HTTP status code in the response header is `204 No Content` whic
 HTTP response not OK.
 {"errors":[{"detail":"Could not geocode this address. Please check the validity of your address.","id":"7fcfd1cd-486b-4159-8484-b710bd4bbab4","status":400,"title":"Client Error"}]}
 ```
+#### create_address(e911_attributes)
+
+The method accepts the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/create-and-validate-new-e911-address/). Note that this method doesn't accept the `address_type` and `address_type\_number` which are acceptable but not required E911 address attributes by the API.
+    
+##### Example Request
+```
+print("\n--Create and Validate an Address")
+try:
+    result = e911s_controller.create_address(
+                                             label="E911 Test",
+                                             first_name="Chris",
+                                             last_name="Smith",
+                                             street_name="3rd Ave",
+                                             street_number="1218",
+                                             city="Seattle",
+                                             state="WA",
+                                             country="US",
+                                             zipcode="98101")
+    pprint.pprint(result)
+except Exception as e:
+    print(str(e))
+    print(e.context.response.raw_body)
+```
+
+##### Example Response
+
+On success, the HTTP status code in the response header is `201 Created` and the response body contains the newly created e911 object in JSON format. On error, a printable representation of the detailed API response is displayed.
 
 ```
+--Create and Validate an Address
+{'data': {'attributes': {'city': 'Seattle',
+                         'country': 'US',
+                         'first_name': 'Chris',
+                         'label': 'E911 Test',
+                         'last_name': 'Smith',
+                         'state': 'WA',
+                         'street_name': '3rd Ave',
+                         'street_number': '1218',
+                         'zip': '98101'},
+          'id': '21301',
+          'links': {'self': 'https://api.flowroute.com/v2/e911s/21301'},
+          'type': 'e911'}}
+```
+#### update_address(e911_id, e911_attributes)
+
+The method accepts an E911 record id and the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes that you can update in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/update-and-validate-existing-e911-address/). Note that this method doesn't accept the `address_type` and `address_type_number` which are acceptable but not required E911 address attributes by the API. In the example below, we will retrieve the record ID of our newly created E911 address and assign it to a variable, `record_id`. We then update the `last_name` of our selected E911 address to "Wiley".
+    
+##### Example Request
+```
+# Pull the ID from the newly created record
+if len(result):
+    record_id = result['data']['id']
+
+    print("\n--Update an E911 Address")
+    try:
+        result = e911s_controller.update_address(record_id, last_name='Wiley')
+        pprint.pprint(result)
+    except Exception as e:
+        print(str(e))
+        print(e.context.response.raw_body)
+```
+##### Example Response
+
+On success, the HTTP status code in the response header is `200 OK` and the response body contains the newly updated e911 object in JSON format. On error, a printable representation of the detailed API response is displayed.
+
+```
+--Update an E911 Address
+{'data': {'attributes': {'city': 'Seattle',
+                         'country': 'US',
+                         'first_name': 'Chris',
+                         'label': 'E911 Test 2',
+                         'last_name': 'Wiley',
+                         'state': 'WA',
+                         'street_name': '3rd Ave',
+                         'street_number': '1218',
+                         'zip': '98104'},
+          'id': '21306',
+          'links': {'self': 'https://api.flowroute.com/v2/e911s/21306'},
+          'type': 'e911'}}
 #### Errors
 
-In cases of method errors, the Python library raises an exception which includes the HTTP Response code, an error message, and the HTTP body that was received in the request. 
+In cases of method errors, the Python library raises an exception which includes an error message and the HTTP body that was received in the request. 
 
 ##### Example Error
 ```
