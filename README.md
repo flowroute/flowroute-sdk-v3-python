@@ -44,15 +44,15 @@ The Flowroute Python library v3 provides methods for interacting with [Numbers v
             *   [associate](#associatee911_id-number_id)
             *   [list_dids_for_e911](#list_dids_for_e911e911_id)
             *   [disconnect](#disconnectnumber_id)
-            *   [delete_address](#)
+            *   [delete_address](#delete_addresse911_id)
 
         *   [CNAM Record Management](#cnam-management)
             *   [list_cnams](#list_cnams)
             *   [get_cnam](#get_cnamcnam_id)
-            *   [create_cnam_record](#)
-            *   [associate_cnam](#)
-            *   [unassociate_cnam](#)
-            *   [remove_cnam](#)
+            *   [create_cnam_record](#create_cnam_recordcnam_value)
+            *   [associate_cnam](#associatecnam_id-number_id)
+            *   [unassociate_cnam](#unassociate_cnamnumber_id)
+            *   [remove_cnam](#remove_cnamcnam_id)
 
         *   [Messaging](#messaging)
             *   [send_a_message](#send_a_messagemessage_body)
@@ -1291,10 +1291,10 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
 ```
 #### get_cnam(cnam_id)
 
-The method accepts a CNAM record ID as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/cnams/v2.0/list-cnam-record-details/). In the example below, we query for approved CNAM records on your account and then extract the ID of the first record returned and retrieve the details of that specific CNAM record.
+The method accepts a CNAM record ID as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/cnams/v2.0/list-cnam-record-details/). In the example below, we query for approved CNAM records on your account and then extract the ID of the first record returned and retrieve the details of that specific CNAM record. 
     
 ##### Example Request
-```python
+```
 print("\n--List Approved CNAM Records")
 result = cnams_controller.list_cnams(is_approved=True)
 pprint.pprint(result)
@@ -1306,6 +1306,8 @@ if len(result['data']):
     pprint.pprint(result)
 ```
 ##### Example Response
+
+On success, the HTTP status code in the response header is `200 OK` and the response body contains a detailed cnam object in JSON format. For the sake of brevity, we will omit the response to the approved CNAM record query.
 ```
 --List CNAM Detail
 {'data': {'attributes': {'approval_datetime': None,
@@ -1317,11 +1319,104 @@ if len(result['data']):
           'links': {'self': 'https://api.flowroute.com/v2/cnams/17604'},
           'type': 'cnam'}}
 ```
+#### create_cnam_record(cnam_value)
+
+The method accepts a Caller ID value as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/cnams/v2.0/create-a-new-cnam-record/). In the example below, we reuse the `random_generator()` function to generate a four-character random string which we will concatenate with FR and assign as our CNAM value.
+    
+##### Example Request
+```
+# Helper function for random strings
+def random_generator(size=4, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for x in range(size))
+
+print("\n--Create a CNAM Record")
+cnam_value = 'FR ' + random_generator()
+result = cnams_controller.create_cnam_record(cnam_value)
+pprint.pprint(result)
+print("\nNOTE: Newly created CNAM records need to be approved first before they can be associated with your long code number.")
+```
 
 ##### Example Response
 
-On success, the HTTP status code in the response header is `200 OK` and the response body contains an array of cnam objects in JSON format.
+On success, the HTTP status code in the response header is `201 Created` and the response body contains the newly created cnam object in JSON format.
 
+```
+--Create a CNAM Record
+{'data': {'attributes': {'approval_datetime': None,
+                         'creation_datetime': '2018-06-01 '
+                                              '00:09:52.513092+00:00',
+                         'is_approved': False,
+                         'rejection_reason': None,
+                         'value': 'FR H5K8'},
+          'id': '23454',
+          'links': {'self': 'https://api.flowroute.com/v2/cnams/23454'},
+          'type': 'cnam'}}
+
+NOTE: Newly created CNAM records need to be approved first before they can be associated with your long code number.
+```
+#### associate_cnam(cnam_id, number_id)
+
+The method accepts a CNAM record ID and a phone number as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/cnams/v2.0/assign-cnam-record-to-phone-number/). In the following example, we will call `list_account_phone_numbers()` and associate the first number in the returned array with our previously assigned `cnam_id`.
+    
+##### Example Request
+```
+print("\n--Associate a CNAM Record to a DID")
+our_numbers = numbers_controller.list_account_phone_numbers()
+did_id = our_numbers['data'][0]['id']
+
+if cnam_id is None:
+    print("Create some CNAM records and wait for approval before trying"
+          " to associate them with a DID")
+else:
+    result = cnams_controller.associate_cnam(cnam_id, did_id)
+    pprint.pprint(result)
+```
+
+##### Example Response
+On success, the HTTP status code in the response header is `202 Accepted` and the response body contains an attributes dictionary containing the `date_created` field and the assigned cnam object in JSON format. This request will fail if the CNAM you are trying to associate has not yet been approved.
+```
+--Associate a CNAM Record to a DID
+{'data': {'attributes': {'date_created': 'Fri, 01 Jun 2018 00:17:52 GMT'},
+          'id': 17604,
+          'type': 'cnam'}}
+```
+#### unassociate_cnam(number_id)
+
+The method accepts a phone number as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/cnams/v2.0/unassign-a-cnam-record-from-phone-number/). In the following example, we will disassociate the same phone number that we've used in `associate_cnam()`.
+    
+##### Example Request
+```
+print("\n--Unassociate a CNAM Record from a DID")
+result = cnams_controller.unassociate_cnam(did_id)
+pprint.pprint(result)
+```
+
+##### Example Response
+On success, the HTTP status code in the response header is `202 Accepted` and the response body contains an attributes object with the date the CNAM was requested to be deleted, and the updated cnam object in JSON format.
+
+```
+--Unassociate a CNAM Record from a DID
+{'data': {'attributes': {'date_created': 'Fri, 01 Jun 2018 00:17:52 GMT'},
+          'id': None,
+          'type': 'cnam'}}
+```
+#### remove_cnam(cnam_id)
+
+The method accepts a CNAM record ID as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/cnams/v2.0/remove-cnam-record-from-account/). In the following example, we will be deleting our previously extracted `cnam_id` from the "List Approved CNAM Records" function call.
+    
+##### Example Request
+```
+print("\n--Remove a CNAM Record from your account")
+result = cnams_controller.remove_cnam(cnam_id)
+pprint.pprint(result)
+```
+
+##### Example Response
+On success, the HTTP status code in the response header is `204 No Content` which means that the server successfully processed the request and is not returning any content.
+
+```
+--Remove a CNAM Record from your account
+''
 ```
 
 #### Errors
@@ -1329,9 +1424,7 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
 In cases of method errors, the Python library raises an exception which includes an error message and the HTTP body that was received in the request. 
 
 ##### Example Error
-```
-raise ErrorException('403 Forbidden – The server understood the request but refuses to authorize it.', _context)
-```
+` raise ErrorException('403 Forbidden – The server understood the request but refuses to authorize it.', _context) `
  
 ## Testing
 

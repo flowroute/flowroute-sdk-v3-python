@@ -96,58 +96,6 @@ class CNAMsController(BaseController):
 
         return self.handle_request_and_response(_request)
 
-    def search_cnams(self, limit=10, offset=0, starts_with=None, contains=None,
-                     ends_with=None):
-        """Does a GET request to /v2/cnams?.
-
-        Searches for CNAM Records that match the criteria
-
-        Args:
-            limit (int, optional): Limits the number of items to retrieve. A
-                maximum of 200 items can be retrieved.
-            offset (int, optional): Offsets the list of cnams by your
-                specified value. For example, if you have 4 cnam records and
-                you entered 1 as your offset value, then only 3 of your cnams
-                will be displayed in the response.
-            starts_with (string, optional): matching value must start with
-                these characters
-            contains (string, optional): matching value must contain these
-                characters
-            ends_with (string, optional): matching value must end with
-                these characters
-
-        Returns:
-            mixed: Response from the API. A JSON object of of an CNAM record
-             that satisfy your search criteria.
-
-        Raises:
-            APIException: When an error occurs while fetching the data from
-                the remote API. This exception includes the HTTP Response
-                code, an error message, and the HTTP body that was received in
-                the request.
-
-        """
-
-        # Prepare query URL
-        _query_builder = Configuration.base_uri
-        _query_builder += '/v2/cnams'
-        _query_parameters = {
-            'limit': limit,
-            'offset': offset
-        }
-        if starts_with is not None:
-            _query_parameters['starts_with'] = starts_with
-        if contains is not None:
-            _query_parameters['contains'] = contains
-        if ends_with is not None:
-            _query_parameters['ends_with'] = ends_with
-        _query_url = APIHelper.clean_url(_query_builder)
-
-        # Prepare and execute request
-        _request = self.http_client.get(_query_url)
-
-        return self.handle_request_and_response(_request)
-
     def create_cnam_record(self, value):
         """Does a POST request to /v2/cnams.
 
