@@ -26,9 +26,9 @@ class Configuration(object):
 
     # The username to use with basic authentication
     # TODO: Set an appropriate value
-    basic_auth_user_name = "22476860"
+    basic_auth_user_name = "YOUR API KEY"
 
     # The password to use with basic authentication
     # TODO: Set an appropriate value
-    basic_auth_password = "FYzckHAgBdHm1QpKbe6jdMivOWFlnApf"
+    basic_auth_password = "YOUR SECRET KEY"
 
