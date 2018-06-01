@@ -156,7 +156,7 @@ class E911sController(BaseController):
 
         # Prepare headers
         _headers = {
-            'accept': 'application/json'
+            'accept': 'application/vnd.api+json'
         }
 
         # Prepare and execute request
@@ -229,7 +229,7 @@ class E911sController(BaseController):
 
         # Prepare headers
         _headers = {
-            'accept': 'application/json'
+            'accept': 'application/vnd.api+json'
         }
 
         # Prepare and execute request
@@ -318,7 +318,7 @@ class E911sController(BaseController):
 
         # Prepare headers
         _headers = {
-            'accept': 'application/json'
+            'accept': 'application/vnd.api+json'
         }
 
         # Prepare and execute request
@@ -356,7 +356,7 @@ class E911sController(BaseController):
 
         # Prepare headers
         _headers = {
-            'accept': 'application/json'
+            'accept': 'application/vnd.api+json'
         }
 
         # Prepare and execute request
@@ -394,7 +394,7 @@ class E911sController(BaseController):
 
         # Prepare headers
         _headers = {
-            'accept': 'application/json'
+            'accept': 'application/vnd.api+json'
         }
 
         # Prepare and execute request
@@ -430,7 +430,7 @@ class E911sController(BaseController):
 
         # Prepare headers
         _headers = {
-            'accept': 'application/json'
+            'accept': 'application/vnd.api+json'
         }
 
         # Prepare and execute request
