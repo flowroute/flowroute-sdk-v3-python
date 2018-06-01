@@ -35,12 +35,6 @@ if len(result['data']):
     print("\n--List CNAM Detail")
     result = cnams_controller.get_cnam(cnam_id)
     pprint.pprint(result)
-    if len(result['data']):
-        cnam_id = result['data']['id']
-
-print("\n--Search for CNAM Record")
-result = cnams_controller.search_cnams(contains='CHRIS')
-pprint.pprint(result)
 
 print("\n--Create a CNAM Record")
 cnam_value = 'FR ' + random_generator()
