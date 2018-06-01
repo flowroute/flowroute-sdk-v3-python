@@ -1,7 +1,7 @@
 Flowroute Python Library v3
 =====================
 
-The Flowroute Python library v3 provides methods for interacting with [Numbers v2](https://developer.flowroute.com/api/numbers/v2.0/) and [Messages v2.1](https://developer.flowroute.com/api/messages/v2.1/) of the [Flowroute](https://www.flowroute.com) API.
+The Flowroute Python Library v3 provides methods for interacting with [Numbers v2](https://developer.flowroute.com/api/numbers/v2.0/) and [Messages v2.1](https://developer.flowroute.com/api/messages/v2.1/) of the [Flowroute](https://www.flowroute.com) API.
 
 **Topics**
 
@@ -91,7 +91,7 @@ Depending on your `pip` permissions, you may be required to preface each `pip` c
 * * *
 Usage
 ------------
-In Flowroute's approach to building the Python library v3, HTTP requests are handled by controllers named after the API resources they represent: **Numbers**, **Routes**, **E911s**, **CNAMs**, and **Messages**. These controllers contain the methods used to perform messaging, number management, route management, E911 address management, and CNAM record management  within the Python library.
+In Flowroute's approach to building the Python Library v3, HTTP requests are handled by controllers named after the API resources they represent: **Numbers**, **Routes**, **E911s**, **CNAMs**, and **Messages**. These controllers contain the methods used to perform messaging, number management, route management, E911 address management, and CNAM record management  within the Python library.
 
 ## Controllers
 
@@ -147,7 +147,7 @@ Contains all of the methods necessary to create and delete CNAM records, view al
 *   [unassociate(number\_id)](#disconnect) \- Lets you unassign a CNAM record associated with a specified long code number on your account without deleting the CNAM record itself.
 *   [remove\_cnam(cnam\_id)](#remove_cnam) \- Lets you delete a CNAM record from your account. Note that this will automatically disassociate all numbers associated with the deleted CNAM record.
 
-The following shows an example of a single Python file that imports the Flowroute API client and all the required modules. The Python library v3 comes with three example demo files &mdash; **number_route_message_demo.py**, **e911_demo.py**, **cnam_demo.py** &mdash; files that you can edit and run for demonstration and testing purposes.
+The following shows an example of a single Python file that imports the Flowroute API client and all the required modules. The Python Library v3 comes with three example demo files &mdash; **number_route_message_demo.py**, **e911_demo.py**, **cnam_demo.py** &mdash; files that you can edit and run for demonstration and testing purposes.
 
 ```python
 import pprint
@@ -182,7 +182,9 @@ The following section will demonstrate the capabilities of Numbers v2, Messaging
 
 ### Number Management
 
-The Flowroute Python library v3  allows you to make HTTP requests to the `numbers` resource of Flowroute API v2: `https://api.flowroute.com/v2/numbers`
+The Flowroute Python Library v3  allows you to make HTTP requests to the `numbers` resource of Flowroute API v2: `https://api.flowroute.com/v2/numbers`.
+
+All of the number management methods are encapsulated in `number_route_message_demo.py`.
 
 #### list\_available\_area\_codes()
 
@@ -562,7 +564,9 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
 
 ### Route Management
 
-The Flowroute Python library v3 allows you to make HTTP requests to the `routes` resource of Flowroute API v2: `https://api.flowroute.com/v2/routes`
+The Flowroute Python Library v3 allows you to make HTTP requests to the `routes` resource of Flowroute API v2: `https://api.flowroute.com/v2/routes`.
+
+All of the route management methods are encapsulated in `number_route_message_demo.py`.
     
 #### create\_an\_inbound\_route(route\_body) 
 
@@ -725,7 +729,9 @@ On success, the HTTP status code in the response header is `204 No Content` whic
 
 
 ### Messaging
-The Flowroute Python library v3 allows you to make HTTP requests to the `messages` resource of Flowroute API v2.1: `https://api.flowroute.com/v2.1/messages`
+The Flowroute Python Library v3 allows you to make HTTP requests to the `messages` resource of Flowroute API v2.1: `https://api.flowroute.com/v2.1/messages`.
+
+All of the messaging methods are encapsulated in `number_route_message_demo.py`.
 
 #### send\_a\_message(message\_body)
 
@@ -886,7 +892,9 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
 ```
 ### E911 Address Management
 
-The Flowroute Python library v3  allows you to make HTTP requests to the `e911s` resource of Flowroute API v2: `https://api.flowroute.com/v2/e911s`
+The Flowroute Python Library v3  allows you to make HTTP requests to the `e911s` resource of Flowroute API v2: `https://api.flowroute.com/v2/e911s`.
+
+All of the E911 address management methods are encapsulated in `e911_demo.py`.
 
 | API Reference Pages |
 | ------------------- |
@@ -1204,7 +1212,9 @@ On success, the HTTP status code in the response header is `204 No Content` whic
 ```
 ### CNAM Record Management
 
-The Flowroute Python library v3  allows you to make HTTP requests to the `cnams` resource of Flowroute API v2: `https://api.flowroute.com/v2/cnams`
+The Flowroute Python Library v3  allows you to make HTTP requests to the `cnams` resource of Flowroute API v2: `https://api.flowroute.com/v2/cnams`.
+
+All of the CNAM record management methods are encapsulated in `cnam_demo.py`.
 
 | API Reference Pages |
 | ------------------- |
@@ -1428,6 +1438,6 @@ In cases of method errors, the Python library raises an exception which includes
  
 ## Testing
 
-Once you are done configuring your Flowroute API credentials and updating the function parameters, run the file to see the demo in action:
+Once you are done configuring your Flowroute API credentials and updating the function parameters, you can run any of the demo files to see them in action. The Flowroute library demo files are named after the resource they represent: <resource_name>_demo.py.
 
-` python demo.py `
+` python cnam_demo.py `
