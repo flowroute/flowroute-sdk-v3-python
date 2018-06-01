@@ -40,7 +40,7 @@ The Flowroute Python Library v3 provides methods for interacting with [Numbers v
             *   [get_e911](#get_e911e911_id)
             *   [validate_address](#validate_addresse911_attributes)
             *   [create_address](#create_addresse911_attributes)
-            *   [update_address](#e911_ide911_attribute)
+            *   [update_address](#update_addresse911_id-e911_attributes)
             *   [associate](#associatee911_id-number_id)
             *   [list_dids_for_e911](#list_dids_for_e911e911_id)
             *   [disconnect](#disconnectnumber_id)
@@ -50,7 +50,7 @@ The Flowroute Python Library v3 provides methods for interacting with [Numbers v
             *   [list_cnams](#list_cnams)
             *   [get_cnam](#get_cnamcnam_id)
             *   [create_cnam_record](#create_cnam_recordcnam_value)
-            *   [associate_cnam](#associatecnam_id-number_id)
+            *   [associate_cnam](#associate_cnamcnam_id-number_id)
             *   [unassociate_cnam](#unassociate_cnamnumber_id)
             *   [remove_cnam](#remove_cnamcnam_id)
 
@@ -133,7 +133,7 @@ Contains all of the methods necessary to create, update, and validate new and ex
 *   [create\_address(e911\_attributes)](#create_addresse911_attributes) \- Lets you create and validate an E911 address within the US and Canada which can then be assigned to any of the long code or toll­free numbers on your account. To assign an E911 address to your number, see the [associate](#associatee911_id-number_id) method.
 *   [update\_address(e911\_id, e911\_attributes)](#update_addresse911_id-e911_attributes) \- Lets you update and validate an existing E911 address on your account. You must create the E911 address first by following the [create\_address](#create_address) method. 
 *   [associate(e911\_id, number\_id)](#associatee911_id-number_id) \- Lets you assign a valid E911 address to a specific long code or toll-free phone number in your account. This method calls an endpoint which does not return an error for subsequent attempts at associating a phone number with the same E911 record. The E911 record assignment charge only occurs on the first successful attempt. Note that you can later assign a different `e911_id` to the same phone number and will be charged accordingly.
-*   [list\_dids\_for\_e911(e911\_id)](#list_dids_for_e911number_id) \- Returns a list of your Flowroute long code or toll-free phone numbers associated with a specified E911 record.
+*   [list\_dids\_for\_e911(e911\_id)](#list_dids_for_e911e911_id) \- Returns a list of your Flowroute long code or toll-free phone numbers associated with a specified E911 record.
 *   [disconnect(number\_id)](#disconnectnumber_id) \- Lets you deactivate the current E911 service for your phone number.
 *   [delete\_address(e911\_id)](#delete_addresse911_id) \- Lets you delete an E911 address associated with your account. You must remove all phone number associations first before you can successfully delete the specified E911 record.
 
@@ -141,11 +141,11 @@ Contains all of the methods necessary to create, update, and validate new and ex
 
 Contains all of the methods necessary to create and delete CNAM records, view all of the CNAM records associated with your account, filter for specific CNAM records by status, review CNAM record details, and assign and unassign CNAM records to your Flowroute long code phone numbers.
 *   [list\_cnams()](#list_cnams) \- Returns a list of all CNAM records on your account by default. You can apply search filters using any of the available query parameters.
-*   [get\_cnam(cnam\_id)](#get_cnam) \- Returns details pertaining to a specific CNAM record on your account, including long code numbers that are associated with the record.
-*   [create\_cnam\_record(cnam\_value)](#create_cnam_record) \- Lets you create a Caller ID record for your account which can then be assigned to any of your long code numbers. To assign a CNAM record to your number, see the [associate\_cnam](#associate_cnam) method.
-*   [associate\_cnam(cnam\_id, number\_id)](#associate) \- Lets you associate a CNAM record with a specified long code number on your account. Note that a CNAM record takes 1-2 days to be approved.
-*   [unassociate(number\_id)](#disconnect) \- Lets you unassign a CNAM record associated with a specified long code number on your account without deleting the CNAM record itself.
-*   [remove\_cnam(cnam\_id)](#remove_cnam) \- Lets you delete a CNAM record from your account. Note that this will automatically disassociate all numbers associated with the deleted CNAM record.
+*   [get\_cnam(cnam\_id)](#get_cnamcnam_id) \- Returns details pertaining to a specific CNAM record on your account, including long code numbers that are associated with the record.
+*   [create\_cnam\_record(cnam\_value)](#create_cnam_recordcnam_value) \- Lets you create a Caller ID record for your account which can then be assigned to any of your long code numbers. To assign a CNAM record to your number, see the [associate\_cnam](#associate_cnamcnam_id-number_id) method.
+*   [associate\_cnam(cnam\_id, number\_id)](#associate_cnamcnam_id-number_id) \- Lets you associate a CNAM record with a specified long code number on your account. Note that a CNAM record takes 1-2 days to be approved.
+*   [unassociate(number\_id)](#unassociate_cnamnumber_id) \- Lets you unassign a CNAM record associated with a specified long code number on your account without deleting the CNAM record itself.
+*   [remove\_cnam(cnam\_id)](#remove_cnamcnam_id) \- Lets you delete a CNAM record from your account. Note that this will automatically disassociate all numbers associated with the deleted CNAM record.
 
 The following shows an example of a single Python file that imports the Flowroute API client and all the required modules. The Python Library v3 comes with three example demo files &mdash; **number_route_message_demo.py**, **e911_demo.py**, **cnam_demo.py** &mdash; files that you can edit and run for demonstration and testing purposes.
 
@@ -1165,7 +1165,6 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
   }
 }
 ```
-disconnect(number\_id)](#disconnectnumber_id)
 
 #### disconnect(number_id)
 
