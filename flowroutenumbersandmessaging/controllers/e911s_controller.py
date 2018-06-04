@@ -458,7 +458,7 @@ class E911sController(BaseController):
         """
         # Prepare query URL
         _query_builder = Configuration.base_uri
-        _query_builder += '/v2/e911s/{}'.format(e911_id)
+        _query_builder += '/v2/e911s/{}/relationships/numbers'.format(e911_id)
         _query_url = APIHelper.clean_url(_query_builder)
 
         # Prepare and execute request
