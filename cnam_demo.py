@@ -3,19 +3,22 @@ import pprint
 import os
 import random
 import string
-from flowroutenumbersandmessaging.flowroutenumbersandmessaging_client import FlowroutenumbersandmessagingClient
+from flowroutenumbersandmessaging.flowroutenumbersandmessaging_client \
+    import FlowroutenumbersandmessagingClient
 
 
 # Helper function for random strings
 def random_generator(size=4, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size))
 
+
 # Set up your api credentials and test mobile number for outbound SMS or MMS
 basic_auth_user_name = os.environ.get('FR_ACCESS_KEY')
 basic_auth_password = os.environ.get('FR_SECRET_KEY')
 
 # Instantiate API client and create controllers for Numbers and E911s
-client = FlowroutenumbersandmessagingClient(basic_auth_user_name, basic_auth_password)
+client = FlowroutenumbersandmessagingClient(basic_auth_user_name,
+                                            basic_auth_password)
 numbers_controller = client.numbers
 cnams_controller = client.cnams
 cnam_id = None
@@ -36,11 +39,27 @@ if len(result['data']):
     result = cnams_controller.get_cnam(cnam_id)
     pprint.pprint(result)
 
+    if len(result['data']):
+        cnam_id = result['data']['id']
+
+print("\n--Search for CNAM Record by contains")
+result = cnams_controller.search_cnams(contains='CHRIS')
+pprint.pprint(result)
+
+print("\n--Search for CNAM Record by startswith")
+result = cnams_controller.search_cnams(starts_with='CHRIS')
+pprint.pprint(result)
+
+print("\n--Search for CNAM Record by endswith")
+result = cnams_controller.search_cnams(ends_with='CHRIS')
+pprint.pprint(result)
+
 print("\n--Create a CNAM Record")
 cnam_value = 'FR ' + random_generator()
 result = cnams_controller.create_cnam_record(cnam_value)
 pprint.pprint(result)
-print("\nNOTE: Newly created CNAM records need to be approved first before they can be associated with your long code number.")
+print("\nNOTE: Newly created CNAM records need to be approved first before "
+      "they can be associated with your long code number.")
 
 print("\n--Associate a CNAM Record to a DID")
 our_numbers = numbers_controller.list_account_phone_numbers()

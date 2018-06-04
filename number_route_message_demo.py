@@ -13,7 +13,7 @@ print("Number/Route Management v2 & Messaging v2.1 Demo")
 # Set up your api credentials and test mobile number for outbound SMS or MMS
 # basic_auth_user_name = os.environ.get('FR_ACCESS_KEY')
 # basic_auth_password = os.environ.get('FR_SECRET_KEY')
-mobile_number = "YOUR_MOBILE_NUMBER"
+mobile_number = "YOUR MOBILE NUMBER HERE"
 
 
 # Instantiate API client and create controllers for Numbers,
@@ -212,8 +212,12 @@ request_body_with_dlr = '{ \
   } \
 }'
 
-print("---Send A Message")
+print("---Send an SMS Message")
 result = messages_controller.send_a_message(request_body)
+pprint.pprint(result)
+
+print("---Send an MMS Message")
+result = messages_controller.send_a_message(request_body_mms)
 pprint.pprint(result)
 
 print("---Send A Message with a DLR")
