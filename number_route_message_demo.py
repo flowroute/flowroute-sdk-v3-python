@@ -67,10 +67,15 @@ pprint.pprint(result)
 purchasable_number = None
 if len(result['data']):
     print("--Purchase a Phone Number")
-    print("NOTE: This demo has been disabled as it pulls credit from your account")
+    print("NOTE: This demo has been disabled as it pulls "
+          "credit from your account")
     # purchasable_number = result['data'][0]['id']
-    # result = numbers_controller.purchase_a_phone_number(purchasable_number)
-    # pprint.pprint(result)
+    # try:
+    #     result = numbers_controller.purchase_a_phone_number(purchasable_number)
+    #     pprint.pprint(result)
+    # except Exception as e:
+    #     pprint.pprint(e.context.response.raw_body)
+    #     purchasable_number = None
 
 print("--List Account Phone Numbers")
 starts_with = None
@@ -213,17 +218,26 @@ request_body_with_dlr = '{ \
 }'
 
 print("---Send an SMS Message")
-result = messages_controller.send_a_message(request_body)
-pprint.pprint(result)
+try:
+    result = messages_controller.send_a_message(request_body)
+    pprint.pprint(result)
+except Exception as e:
+    pprint.pprint(e.context.response.raw_body)
 
 print("---Send an MMS Message")
-result = messages_controller.send_a_message(request_body_mms)
-pprint.pprint(result)
+try:
+    result = messages_controller.send_a_message(request_body_mms)
+    pprint.pprint(result)
+except Exception as e:
+    pprint.pprint(e.context.response.raw_body)
 
 print("---Send A Message with a DLR")
 sms_url = 'http://example.com/sms/special'
-result = messages_controller.send_a_message(request_body_with_dlr)
-pprint.pprint(result)
+try:
+    result = messages_controller.send_a_message(request_body_with_dlr)
+    pprint.pprint(result)
+except Exception as e:
+    pprint.pprint(e.context.response.raw_body)
 
 print("---Look Up A Set Of Messages")
 start_date = datetime.datetime.now() - relativedelta(days=30)
