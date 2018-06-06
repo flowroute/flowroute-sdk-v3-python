@@ -902,7 +902,7 @@ All of the E911 address management methods are encapsulated in `e911_demo.py`.
 
 #### list\_e911s()
 
-The method accepts `limit`, `offset`, and `state` as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/list-account-e911-addresses/).
+The method accepts `limit`, `offset`, and `state` as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/list-account-e911-addresses/).
     
 ##### Example Request
 ```python
@@ -953,7 +953,7 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
 
 #### get\_e911(e911_id)
 
-The method accepts an `e911_id` as a path parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/list-e911-record-details/).
+The method accepts an `e911_id` as a path parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/list-e911-record-details/).
     
 ##### Example Request
 ```python
@@ -993,7 +993,7 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
 
 #### validate_address(e911_attributes)
 
-The method accepts the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/validate-e911-address/). Note that this method doesn't accept the `address_type` and `address_type_number` which are acceptable but not required E911 address attributes by the API.
+The method accepts the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/validate-e911-address/). Note that this method doesn't accept the `address_type` and `address_type_number` which are acceptable but not required E911 address attributes by the API.
     
 ##### Example Request
 ```
@@ -1025,7 +1025,7 @@ HTTP response not OK.
 ```
 #### create_address(e911_attributes)
 
-The method accepts the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/create-and-validate-new-e911-address/). Note that this method doesn't accept the `address_type` and `address_type\_number` which are acceptable but not required E911 address attributes by the API.
+The method accepts the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/create-and-validate-new-e911-address/). Note that this method doesn't accept the `address_type` and `address_type\_number` which are acceptable but not required E911 address attributes by the API.
     
 ##### Example Request
 ```
@@ -1068,7 +1068,7 @@ On success, the HTTP status code in the response header is `201 Created` and the
 ```
 #### update_address(e911_id, e911_attributes)
 
-The method accepts an E911 record id and the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes that you can update in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/update-and-validate-existing-e911-address/). Note that this method doesn't accept the `address_type` and `address_type_number` which are acceptable but not required E911 address attributes by the API. In the following example, we will retrieve the record ID of our newly created E911 address and assign it to a variable, `record_id`. We then update the `last_name` of our selected E911 address to "Wiley".
+The method accepts an E911 record id and the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes that you can update in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/update-and-validate-existing-e911-address/). Note that this method doesn't accept the `address_type` and `address_type_number` which are acceptable but not required E911 address attributes by the API. In the following example, we will retrieve the record ID of our newly created E911 address and assign it to a variable, `record_id`. We then update the `last_name` of our selected E911 address to "Wiley".
     
 ##### Example Request
 ```
@@ -1105,7 +1105,7 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
 ```
 #### associate(e911_id, number_id)
 
-The method accepts an E911 record id and a phone number as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/assign-valid-e911-address-to-phone-number/). In the following example, we call the [list_account_phone_numbers](#list_account_phone_numbers) covered under Number Management and [list_e911s](#list_e911s), extract the values of the first items in the returned JSON arrays into variables `e911_id` and `did` then make the association between them.
+The method accepts an E911 record id and a phone number as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/assign-valid-e911-address-to-phone-number/). In the following example, we call the [list_account_phone_numbers](#list_account_phone_numbers) covered under Number Management and [list_e911s](#list_e911s), extract the values of the first items in the returned JSON arrays into variables `e911_id` and `did` then make the association between them.
     
 ##### Example Request
 ```
@@ -1134,7 +1134,7 @@ On success, the HTTP status code in the response header is `204 No Content` whic
 
 #### list_dids_for_e911(e911_id)
 
-The method accepts an E911 record id as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/list-phone-numbers-associated-with-e911-record/). In the following example, we retrieve the list of phone numbers associated with our previously assigned `e911_id`.
+The method accepts an E911 record id as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/list-phone-numbers-associated-with-e911-record/). In the following example, we retrieve the list of phone numbers associated with our previously assigned `e911_id`.
     
 ##### Example Request
 ```
@@ -1168,7 +1168,7 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
 
 #### disconnect(number_id)
 
-The method accepts a phone number as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/deactivate-e911-service-for-phone-number/). In the following example, we deactivate the E911 service for our previously assigned `did`.
+The method accepts a phone number as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/deactivate-e911-service-for-phone-number/). In the following example, we deactivate the E911 service for our previously assigned `did`.
 
 ##### Example Request
 ```
@@ -1190,7 +1190,7 @@ On success, the HTTP status code in the response header is `204 No Content` whic
 ```
 #### delete_address(e911_id)
 
-The method accepts an E911 record ID as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/remove-e911-address-from-account/). Note that all phone number associations must be removed first before you are able to delete the specified `e911_id`. In the following example, we will attempt to delete the previously assigned `e911_id`.
+The method accepts an E911 record ID as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/remove-e911-address-from-account/). Note that all phone number associations must be removed first before you are able to delete the specified `e911_id`. In the following example, we will attempt to delete the previously assigned `e911_id`.
 
 ##### Example Request
 ```
@@ -1221,7 +1221,7 @@ All of the CNAM record management methods are encapsulated in `cnam_demo.py`.
 
 #### list\_cnams()
 
-The method accepts `limit`, `offset`, and `is_approved` as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/cnams/v2.0/list-account-cnam-records/).
+The method accepts `limit`, `offset`, and `is_approved` as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/list-account-cnam-records/).
     
 ##### Example Request
 ```python
@@ -1300,7 +1300,7 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
 ```
 #### get_cnam(cnam_id)
 
-The method accepts a CNAM record ID as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/cnams/v2.0/list-cnam-record-details/). In the following example, we query for approved CNAM records on your account and then extract the ID of the first record returned and retrieve the details of that specific CNAM record. 
+The method accepts a CNAM record ID as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/list-cnam-record-details/). In the following example, we query for approved CNAM records on your account and then extract the ID of the first record returned and retrieve the details of that specific CNAM record. 
     
 ##### Example Request
 ```
@@ -1330,7 +1330,7 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
 ```
 #### create_cnam_record(cnam_value)
 
-The method accepts a Caller ID value as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/cnams/v2.0/create-a-new-cnam-record/). In the following example, we reuse the `random_generator()` function to generate a four-character random string which we will concatenate with FR and assign as our CNAM value.
+The method accepts a Caller ID value as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/create-a-new-cnam-record/). In the following example, we reuse the `random_generator()` function to generate a four-character random string which we will concatenate with FR and assign as our CNAM value.
     
 ##### Example Request
 ```
@@ -1365,7 +1365,7 @@ NOTE: Newly created CNAM records need to be approved first before they can be as
 ```
 #### associate_cnam(cnam_id, number_id)
 
-The method accepts a CNAM record ID and a phone number as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/cnams/v2.0/assign-cnam-record-to-phone-number/). In the following example, we will call `list_account_phone_numbers()` and associate the first number in the returned array with our previously assigned `cnam_id`.
+The method accepts a CNAM record ID and a phone number as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/assign-cnam-record-to-phone-number/). In the following example, we will call `list_account_phone_numbers()` and associate the first number in the returned array with our previously assigned `cnam_id`.
     
 ##### Example Request
 ```
@@ -1391,7 +1391,7 @@ On success, the HTTP status code in the response header is `202 Accepted` and th
 ```
 #### unassociate_cnam(number_id)
 
-The method accepts a phone number as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/cnams/v2.0/unassign-a-cnam-record-from-phone-number/). In the following example, we will disassociate the same phone number that we've used in `associate_cnam()`.
+The method accepts a phone number as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/unassign-a-cnam-record-from-phone-number/). In the following example, we will disassociate the same phone number that we've used in `associate_cnam()`.
     
 ##### Example Request
 ```
@@ -1411,7 +1411,7 @@ On success, the HTTP status code in the response header is `202 Accepted` and th
 ```
 #### remove_cnam(cnam_id)
 
-The method accepts a CNAM record ID as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/cnams/v2.0/remove-cnam-record-from-account/). In the following example, we will be deleting our previously extracted `cnam_id` from the "List Approved CNAM Records" function call.
+The method accepts a CNAM record ID as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/remove-cnam-record-from-account/). In the following example, we will be deleting our previously extracted `cnam_id` from the "List Approved CNAM Records" function call.
     
 ##### Example Request
 ```
