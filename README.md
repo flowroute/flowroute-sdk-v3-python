@@ -54,10 +54,6 @@ The Flowroute Python Library v3 provides methods for interacting with [Numbers v
             *   [unassociate_cnam](#unassociate_cnamnumber_id)
             *   [remove_cnam](#remove_cnamcnam_id)
 
-        *   [Messaging](#messaging)
-            *   [send_a_message](#send_a_messagemessage_body)
-            *   [look_up_a_set_of_messagesstart_date](#look_up_a_set_of_messagesstart_date)
-            *   [look_up_a_message_detail_record](#look_up_a_message_detail_recordmessage_id)
     *   [Errors](#errors)
     *   [Testing](#testing)
 
