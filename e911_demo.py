@@ -42,7 +42,9 @@ try:
                                                city="Seattle",
                                                state="WA",
                                                country="US",
-                                               zipcode="98101")
+                                               zipcode="98101",
+                                               address_type="Suite",
+                                               address_type_number="600")
     pprint.pprint(result)
 except Exception as e:
     print(str(e))
@@ -59,7 +61,28 @@ try:
                                              city="Seattle",
                                              state="WA",
                                              country="US",
-                                             zipcode="98101")
+                                             zipcode="98101",
+                                             address_type="Suite",
+                                             address_type_number="600")
+    pprint.pprint(result)
+except Exception as e:
+    print(str(e))
+    print(e.context.response.raw_body)
+
+print("\n--Create and Validate an Address")
+try:
+    result = e911s_controller.create_address(
+                                             label="E911 Test",
+                                             first_name="Chris",
+                                             last_name="Smith",
+                                             street_name="3rd Ave",
+                                             street_number="1218",
+                                             city="Seattle",
+                                             state="WA",
+                                             country="US",
+                                             zipcode="98101",
+                                             address_type='Suite',
+                                             address_type_number='700')
     pprint.pprint(result)
 except Exception as e:
     print(str(e))
