@@ -947,7 +947,7 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
            'self': 'https://api.flowroute.com/v2/e911s?limit=2&offset=0'}}
 ```
 
-#### get\_e911(e911_id)
+#### get\_e911(e911\_id)
 
 The method accepts an `e911_id` as a path parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/list-e911-record-details/).
     
@@ -971,20 +971,28 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
 
 ```
 --Get Details for a specific E911 Record
-{'data': {'attributes': {'address_type': 'L',
-                         'address_type_number': '12',
-                         'city': 'Seattle',
-                         'country': 'USA',
-                         'first_name': 'Maria',
-                         'label': 'Example E911',
-                         'last_name': 'Bermudez',
-                         'state': 'WA',
-                         'street_name': '20th Ave SW',
-                         'street_number': '7742',
-                         'zip': '98106'},
-          'id': '20930',
-          'links': {'self': 'https://api.flowroute.com/v2/e911s/20930'},
-          'type': 'e911'}}
+{
+  "data": {
+    "attributes": {
+      "address_type": "Suite",
+      "address_type_number": "333",
+      "city": "Seattle",
+      "country": "US",
+      "first_name": "Albus",
+      "label": "Office Space III",
+      "last_name": "Rasputin, Jr.",
+      "state": "WA",
+      "street_name": "Main St",
+      "street_number": "666",
+      "zip": "98101"
+    },
+    "id": "21845",
+    "links": {
+      "self": "https://api.flowroute.com/v2/e911s/21845"
+    },
+    "type": "e911"
+  }
+}
 ```
 
 #### validate_address(e911_attributes)
