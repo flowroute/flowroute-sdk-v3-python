@@ -1350,7 +1350,7 @@ print("\nNOTE: Newly created CNAM records need to be approved first before they 
 
 ##### Example Response
 
-On success, the HTTP status code in the response header is `201 Created` and the response body contains the newly created cnam object in JSON format.
+On success, the HTTP status code in the response header is `201 Created` and the response body contains the newly created cnam object in JSON format. Note that CNAM records take up to 48 hours to be approved on your account and further association with a phone number takes 5-7 business days.
 
 ```
 --Create a CNAM Record
