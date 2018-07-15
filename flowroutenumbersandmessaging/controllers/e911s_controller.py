@@ -103,7 +103,9 @@ class E911sController(BaseController):
                          city,
                          state,
                          country,
-                         zipcode):
+                         zipcode,
+                         address_type=None,
+                         address_type_number=None):
         """Does a POST request to /v2/e911s/validate.
 
         Returns a 204 No Content on success, or a 404 with error data
@@ -118,6 +120,8 @@ class E911sController(BaseController):
             state (2 character string):
             country (string USA or Canada):
             zipcode (string postal code)
+            address_type (string address type)
+            address_type_number (string when address_type used, required)
 
         Returns:
             mixed: Response from the API. A 204 - No Content or a
@@ -142,10 +146,14 @@ class E911sController(BaseController):
                     'city': city,
                     'state': state,
                     'country': country,
-                    'zip': zipcode
+                    'zip': zipcode,
                 }
             }
         }
+
+        if address_type and address_type_number:
+            body['data']['attributes']['address_type'] = address_type
+            body['data']['attributes']['address_type_number'] = address_type_number
 
         # Prepare query URL
         _query_builder = Configuration.base_uri
@@ -156,7 +164,7 @@ class E911sController(BaseController):
 
         # Prepare headers
         _headers = {
-            'accept': 'application/json'
+            'accept': 'application/vnd.api+json'
         }
 
         # Prepare and execute request
@@ -175,7 +183,9 @@ class E911sController(BaseController):
                        city,
                        state,
                        country,
-                       zipcode):
+                       zipcode,
+                       address_type=None,
+                       address_type_number=None):
         """Does a POST request to /v2/e911s.
 
         Creates an address record that can then be associated
@@ -191,6 +201,8 @@ class E911sController(BaseController):
             state (2 character string):
             country (string USA or Canada):
             zipcode (string postal code)
+            address_type (string address type)
+            address_type_number (string required if address_type specified)
 
         Returns:
             mixed: Response from the API. A JSON object containing the new
@@ -215,10 +227,14 @@ class E911sController(BaseController):
                     'city': city,
                     'state': state,
                     'country': country,
-                    'zip': zipcode
+                    'zip': zipcode,
                 }
             }
         }
+
+        if address_type and address_type_number:
+            body['data']['attributes']['address_type'] = address_type
+            body['data']['attributes']['address_type_number'] = address_type_number
 
         # Prepare query URL
         _query_builder = Configuration.base_uri
@@ -229,7 +245,7 @@ class E911sController(BaseController):
 
         # Prepare headers
         _headers = {
-            'accept': 'application/json'
+            'accept': 'application/vnd.api+json'
         }
 
         # Prepare and execute request
@@ -249,7 +265,9 @@ class E911sController(BaseController):
                        city=None,
                        state=None,
                        country=None,
-                       zipcode=None):
+                       zipcode=None,
+                       address_type=None,
+                       address_type_number=None):
 
         """Does a PATCH request to /v2/e911s/<e911_id>.
 
@@ -303,6 +321,10 @@ class E911sController(BaseController):
             record_data['data']['attributes']['zip'] = str(zipcode)
             record_data['data']['attributes']['zip_code'] = str(zipcode)
 
+        record_data['data']['attributes']['address_type'] = address_type
+        record_data['data']['attributes']['address_type_number'] = \
+            address_type_number
+
         # Fix address_type if not used
         if 'address_type' in record_data['data']['attributes'] and \
                 record_data['data']['attributes']['address_type'] == u'':
@@ -318,7 +340,7 @@ class E911sController(BaseController):
 
         # Prepare headers
         _headers = {
-            'accept': 'application/json'
+            'accept': 'application/vnd.api+json'
         }
 
         # Prepare and execute request
@@ -356,7 +378,7 @@ class E911sController(BaseController):
 
         # Prepare headers
         _headers = {
-            'accept': 'application/json'
+            'accept': 'application/vnd.api+json'
         }
 
         # Prepare and execute request
@@ -394,7 +416,7 @@ class E911sController(BaseController):
 
         # Prepare headers
         _headers = {
-            'accept': 'application/json'
+            'accept': 'application/vnd.api+json'
         }
 
         # Prepare and execute request
@@ -430,7 +452,7 @@ class E911sController(BaseController):
 
         # Prepare headers
         _headers = {
-            'accept': 'application/json'
+            'accept': 'application/vnd.api+json'
         }
 
         # Prepare and execute request
@@ -458,7 +480,7 @@ class E911sController(BaseController):
         """
         # Prepare query URL
         _query_builder = Configuration.base_uri
-        _query_builder += '/v2/e911s/{}'.format(e911_id)
+        _query_builder += '/v2/e911s/{}/relationships/numbers'.format(e911_id)
         _query_url = APIHelper.clean_url(_query_builder)
 
         # Prepare and execute request
