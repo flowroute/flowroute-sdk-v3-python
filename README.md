@@ -1,7 +1,7 @@
 Flowroute Python Library v3
 =====================
 
-The Flowroute Python Library v3 provides methods for interacting with [Numbers v2](https://developer.flowroute.com/api/numbers/v2.0/) and [Messages v2.1](https://developer.flowroute.com/api/messages/v2.1/) of the [Flowroute](https://www.flowroute.com) API.
+The Flowroute Python Library v3 provides methods for interacting with [Numbers v2](https://developer.flowroute.com/api/numbers/v2.0/) &endash; which includes inbound voice routes, E911 addresses, and CNAM storage &endash; and [Messages v2.1](https://developer.flowroute.com/api/messages/v2.1/) of the [Flowroute](https://www.flowroute.com) API.
 
 **Topics**
 
@@ -87,7 +87,7 @@ Depending on your `pip` permissions, you may be required to preface each `pip` c
 * * *
 Usage
 ------------
-In Flowroute's approach to building the Python Library v3, HTTP requests are handled by controllers named after the API resources they represent: **Numbers**, **Routes**, **E911s**, **CNAMs**, and **Messages**. These controllers contain the methods used to perform messaging, number management, route management, E911 address management, and CNAM record management  within the Python library.
+In Flowroute's approach to building the Python Library v3, HTTP requests are handled by controllers named after the API resources they represent: **Numbers**, **Routes**, **E911s**, **CNAMs**, and **Messages**. These controllers contain the methods used to perform messaging, number management, route management, E911 address management, and CNAM record management within the Python library.
 
 ## Controllers
 
@@ -138,7 +138,7 @@ Contains all of the methods necessary to create, update, and validate new and ex
 Contains all of the methods necessary to create and delete CNAM records, view all of the CNAM records associated with your account, filter for specific CNAM records by status, review CNAM record details, and assign and unassign CNAM records to your Flowroute long code phone numbers.
 *   [list\_cnams()](#list_cnams) \- Returns a list of all CNAM records on your account by default. You can apply search filters using any of the available query parameters.
 *   [get\_cnam(cnam\_id)](#get_cnamcnam_id) \- Returns details pertaining to a specific CNAM record on your account, including long code numbers that are associated with the record.
-*   [create\_cnam\_record(cnam\_value)](#create_cnam_recordcnam_value) \- Lets you create a Caller ID record for your account which can then be assigned to any of your long code numbers. To assign a CNAM record to your number, see the [associate\_cnam](#associate_cnam) method.
+*   [create\_cnam\_record(cnam\_value)](#create_cnam_recordcnam_value) \- Lets you create a Caller ID record for your account which can then be assigned to any of your long code numbers. To assign a CNAM record to your number, see the [associate\_cnam](#associate_cnamcnam_id-number_id) method.
 *   [associate\_cnam(cnam\_id, number\_id)](#associate_cnamcnam_id-number_id) \- Lets you associate a CNAM record with a specified long code number on your account. Note that a CNAM record takes 1-2 days to be approved.
 *   [unassociate(number\_id)](#unassociate_cnamnumber_id) \- Lets you unassign a CNAM record associated with a specified long code number on your account without deleting the CNAM record itself.
 *   [remove\_cnam(cnam\_id)](#remove_cnamcnam_id) \- Lets you delete a CNAM record from your account. Note that this will automatically disassociate all numbers associated with the deleted CNAM record.
@@ -997,7 +997,7 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
 
 #### validate_address(e911_attributes)
 
-The method accepts the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/validate-e911-address/). Note that this method doesn't accept the `address_type` and `address_type_number` which are acceptable but not required E911 address attributes by the API.
+The method accepts the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, optional `address_type` and `address_type_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/validate-e911-address/). 
     
 ##### Example Request
 ```
@@ -1029,7 +1029,7 @@ HTTP response not OK.
 ```
 #### create_address(e911_attributes)
 
-The method accepts the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/create-and-validate-new-e911-address/). Note that this method doesn't accept the `address_type` and `address_type\_number` which are acceptable but not required E911 address attributes by the API.
+The method accepts the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, optional `address_type` and `address_type_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/create-and-validate-new-e911-address/). 
     
 ##### Example Request
 ```
@@ -1072,7 +1072,7 @@ On success, the HTTP status code in the response header is `201 Created` and the
 ```
 #### update_address(e911_id, e911_attributes)
 
-The method accepts an E911 record id and the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes that you can update in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/update-and-validate-existing-e911-address/). Note that this method doesn't accept the `address_type` and `address_type_number` which are acceptable but not required E911 address attributes by the API. In the following example, we will retrieve the record ID of our newly created E911 address and assign it to a variable, `record_id`. We then update the `last_name` of our selected E911 address to "Wiley".
+The method accepts an E911 record id and the different attributes of an E911 address as parameters: `label`, `first_name`, `last_name`, `street_name`, `street_number`, optional `address_type` and `address_type_number`, `city`, `state`, `country`, and `zipcode`. Learn more about the different E911 attributes that you can update in the [API reference](https://developer.flowroute.com/api/e911s/v2.0/update-and-validate-existing-e911-address/). In the following example, we will retrieve the record ID of our newly created E911 address and assign it to a variable, `record_id`. We then update the `last_name` of our selected E911 address to "Wiley".
     
 ##### Example Request
 ```
@@ -1134,7 +1134,10 @@ except Exception as e:
 
 On success, the HTTP status code in the response header is `204 No Content` which means that the server successfully processed the request and is not returning any content.
 
-`204: No Content`
+```
+--Associate an E911 Record and a DID
+204: No Content
+```
 
 #### list_dids_for_e911(e911_id)
 
@@ -1351,7 +1354,7 @@ print("\nNOTE: Newly created CNAM records need to be approved first before they 
 
 ##### Example Response
 
-On success, the HTTP status code in the response header is `201 Created` and the response body contains the newly created cnam object in JSON format.
+On success, the HTTP status code in the response header is `201 Created` and the response body contains the newly created cnam object in JSON format. Note that CNAM records take up to 48 hours to be approved on your account and further association with a phone number takes 5-7 business days.
 
 ```
 --Create a CNAM Record
