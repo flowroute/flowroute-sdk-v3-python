@@ -1338,6 +1338,16 @@ On success, the HTTP status code in the response header is `200 OK` and the resp
 #### create_cnam_record(cnam_value)
 
 The method accepts a Caller ID value as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/create-a-new-cnam-record/). In the following example, we reuse the `random_generator()` function to generate a four-character random string which we will concatenate with FR and assign as our CNAM value.
+
+| CNAM Storage Rules |
+| ------------------- |
+| You can enter up to 15 characters for your CNAM value at least one of which is a letter. |
+| While most CNAM presets can be approved, the following are not allowed and must be rejected: |
+|    -  Consist of curse words and/or is inappropriate. |
+|    -  A phone number (CNAM must be a name not a number) |
+|    -  If the CNAM preset which the customer has submitted appears to be misleading such as: |
+|       - Political Figures or Places (Obama, Barack or The White House) |
+|       - False or fake CNAM (Seattle Police) |
     
 ##### Example Request
 ```
