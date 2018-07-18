@@ -892,10 +892,6 @@ The Flowroute Python Library v3  allows you to make HTTP requests to the `e911s`
 
 All of the E911 address management methods are encapsulated in `e911_demo.py`.
 
-| API Reference Pages |
-| ------------------- |
-| The E911 and CNAM API reference pages are currently restricted to our beta customers, which means that all API reference links below currently return a `404 Not Found`. They will be publicly available during our E911 and CNAM APIs GA launch in a few weeks. |
-
 #### list\_e911s()
 
 The method accepts `limit`, `offset`, and `state` as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/numbers/v2.0/list-account-e911-addresses/).
@@ -1221,10 +1217,6 @@ On success, the HTTP status code in the response header is `204 No Content` whic
 The Flowroute Python Library v3  allows you to make HTTP requests to the `cnams` resource of Flowroute API v2: `https://api.flowroute.com/v2/cnams`.
 
 All of the CNAM record management methods are encapsulated in `cnam_demo.py`.
-
-| API Reference Pages |
-| ------------------- |
-| The E911 and CNAM API reference pages are currently restricted to our beta customers, which means that all API reference links below currently return a `404 Not Found`. They will be publicly available during our E911 and CNAM APIs GA launch in a few weeks. |
 
 #### list\_cnams()
 
