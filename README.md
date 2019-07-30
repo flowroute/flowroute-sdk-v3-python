@@ -1,7 +1,7 @@
 Flowroute Python Library v3
 =====================
 
-The Flowroute Python Library v3 provides methods for interacting with [Numbers v2](https://developer.flowroute.com/api/numbers/v2.0/) &endash; which includes inbound voice routes, E911 addresses, and CNAM storage &endash; and [Messages v2.1](https://developer.flowroute.com/api/messages/v2.1/) of the [Flowroute](https://www.flowroute.com) API.
+The Flowroute Python Library v3 provides methods for interacting with [Numbers v2](https://developer.flowroute.com/api/numbers/v2.0/) &endash; which includes inbound voice routes, E911 addresses, CNAM storage &endash; and [Messages v2.1](https://developer.flowroute.com/api/messages/v2.1/) and [CDR v2.0](https://developer.flowroute.com/api/cdrs/v2.0/) of the [Flowroute](https://www.flowroute.com) API.
 
 **Topics**
 
@@ -53,6 +53,12 @@ The Flowroute Python Library v3 provides methods for interacting with [Numbers v
             *   [associate_cnam](#associate_cnamcnam_id-number_id)
             *   [unassociate_cnam](#unassociate_cnamnumber_id)
             *   [remove_cnam](#remove_cnamcnam_id)
+
+        *   [Call Detail Record (CDR)](#call-detail-record)
+            *   [list_cdr_exports](#list_cdr_exports)
+            *   [create_cdr_export](#create_cdr_export)
+            *   [get_cdr_export_status](#get_cdr_export_status)
+            *   [download_cdr_export](#download_cdr_export)
 
     *   [Errors](#errors)
     *   [Testing](#testing)
@@ -142,6 +148,17 @@ Contains all of the methods necessary to create and delete CNAM records, view al
 *   [associate\_cnam(cnam\_id, number\_id)](#associate_cnamcnam_id-number_id) \- Lets you associate a CNAM record with a specified long code number on your account. Note that a CNAM record takes 1-2 days to be approved.
 *   [unassociate(number\_id)](#unassociate_cnamnumber_id) \- Lets you unassign a CNAM record associated with a specified long code number on your account without deleting the CNAM record itself.
 *   [remove\_cnam(cnam\_id)](#remove_cnamcnam_id) \- Lets you delete a CNAM record from your account. Note that this will automatically disassociate all numbers associated with the deleted CNAM record.
+
+### CDRsController
+
+Contains all of the methods necessary to create and retrieve CDR exports.
+*   [list\_cdr\_exports](#list_cdr_exports) \- Returns a list of all CDR Exports that have been created on your account.
+*   [create\_cdr\_export](#create_cdr_export) \- Create a CDR Export with a list of filter parameters.  When this asynchronous job is done running,
+Flowroute's servers will post to a callback URL if one is provided.
+*   [get\_cdr\_export\_status(cdr\_export\_id)](#get_cdr_export_status) \- Returns details pertaining to a specific CDR Export, including the download_url that
+is required to retrieve the CDR Export data.
+*   [download\_cdr\_export(cdr\_export\_id)](#download_cdr_export) \- Downloads the CDR Export CSV file or GZIPPED CSV file from the Flowroute servers.
+
 
 The following shows an example of a single Python file that imports the Flowroute API client and all the required modules. The Python Library v3 comes with three example demo files &mdash; **number_route_message_demo.py**, **e911_demo.py**, **cnam_demo.py** &mdash; files that you can edit and run for demonstration and testing purposes.
 
@@ -1437,6 +1454,239 @@ On success, the HTTP status code in the response header is `204 No Content` whic
 ''
 ```
 
+### Call Detail Record Export API
+
+The Flowroute Python Library v3 allows you to make HTTP requests to the `cdrs` resource of Flowroute API v2: `https://api.flowroute.com/v2/cdrs`.
+
+All of the CDR export methods are encapsulated in `cdr_demo.py`.
+
+#### list_cdr_exports
+
+The method accepts `status`, `limit`, and `offset` as parameters which you can learn more about in the [API reference](https://developer.flowroute.com/api/cdrexports/v2.0/list-cdrs/).
+
+##### Example Request
+```python
+print("--List Completed CDR Exports")
+status = 'completed'
+limit = 10
+offset = None
+result = cdrs_controller.list_cdr_exports(status, limit, offset)
+pprint.pprint(result)
+```
+
+##### Example Response
+
+On success, the HTTP status code in the response header is `200 OK` and the response body contains an array of CDR Export objects in JSON format.
+
+```
+{
+  "data": [
+    {
+      "data": {
+        "attributes": {
+          "billed_minutes": 0,
+          "callback_url": null,
+          "ccrf": "0.0",
+          "created_at": "2019-03-18T23:20:30+00:00",
+          "download_url": "https://s3.us-west-2.amazonaws.com/flowroute-cdrexports/40375/2019/3/18/e55f474c3154a14cd2cec842f79ca6a8000.gz?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential;=ASIA2DG5LFSOIDMMFUVW%2F20190318%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date;=20190318T232030Z&X-Amz-Expires;=259200&X-Amz-SignedHeaders;=host&X-Amz-Security-Token;=FQoGZXIvYXdzEJz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDBB4u7fdwDGKfgWUSyKZBF6fKcf16poJprJr9imLeVtLmQCcWKWnJjmmkRLz%2FQKjaMUvHTnTo4drHg8KWAbvvbpwoC3NOgFsn28nw1fHlgBjVODuIDeMJxFHROUZAPTbayDsUttyO%2BqbcluTENh3ESJoZGoXi3sGwHDvvtcYTtHr0MQMw7cvEEKgKvaMp7KgliTpwJzzquAPeMQg2LD5C%2FR36nI%2BZNXrqp64ZovMrtVV1IR9KLXTkRZs3%2Ft%2Bvt7CzhM8Fopc96cKhu%2FpX7eVR%2BBJfTeUD%2FPvz19KWuKWsM9V%2FEqNptPTADIg6LtupuainAJVhvBaatHOdGe7aUt2ABkvsCZVs5uFbdy79aHVMMtZgN886E1TsVR%2FDwbg1AhfsxLBujEumIn9bJAkr1RJpHakrC67gm%2FyTsU64huC%2BGCqQrd5CHIAQsbDCV8tMPw5K%2B3SonWV2TLusiOg%2FWZikSMqgDrexj7KQo7utXWGAAt2W4INKGSpwY1BoOWJGl6rBMJ1rWpERJ2lxagHeAPd8tOPiKVvkytscHH1vEgM4S1wOApspud5tMsvtkhyAWGwfsbkn1ZiF5PoqUbBjHXH9m%2Bq8p4oLUEI2aozdrLEqdQxELSlleQna0U1VsxyRa%2BXRjxDU7oOpmqETzUEx3NKELDGOb%2FwzO%2F8HH%2BqPcC8OVaox2KdLvAFwHGulKLwRrtSlblZopzZqrBmd0R5X60tZ4u2KIUH3lLeiSiGvb%2FkBQ%3D%3D&X-Amz-Signature;=beb0e34bbd48cac63ce1db887de6f783238acddcfd7675b3a525ae49003d2cb7",
+          "expires_at": "2019-03-21T23:20:30+00:00",
+          "filter_parameters": {
+            "number_aliases": [
+              "Home Phone"
+            ],
+            "start_call_end_time": "2019-01-01T00:00:00+00:00",
+            "start_call_start_time": "2018-12-01T00:00:00+00:00"
+          },
+          "num_calls": 0,
+          "requested_at": "2019-03-18T23:20:17+00:00",
+          "status": "completed",
+          "total_cost": "0.0",
+          "call_subtotal": "0.0",
+          "connect_fees": "0.0",
+          "cnamlookup_fees": "0.0",
+          "usf_fees": "0.0"
+        },
+        "id": 203485,
+        "type": "cdrexport"
+      }
+    },
+    {
+      "data": {
+        "attributes": {
+          "billed_minutes": 0,
+          "callback_url": null,
+          "ccrf": "0.0",
+          "created_at": "2019-03-18T23:16:47+00:00",
+          "download_url": "https://s3.us-west-2.amazonaws.com/flowroute-cdrexports/40375/2019/3/18/8294b10fd18846d61ab1de8535f05b55000.gz?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential;=ASIA2DG5LFSOIDMMFUVW%2F20190318%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date;=20190318T231647Z&X-Amz-Expires;=259200&X-Amz-SignedHeaders;=host&X-Amz-Security-Token;=FQoGZXIvYXdzEJz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDBB4u7fdwDGKfgWUSyKZBF6fKcf16poJprJr9imLeVtLmQCcWKWnJjmmkRLz%2FQKjaMUvHTnTo4drHg8KWAbvvbpwoC3NOgFsn28nw1fHlgBjVODuIDeMJxFHROUZAPTbayDsUttyO%2BqbcluTENh3ESJoZGoXi3sGwHDvvtcYTtHr0MQMw7cvEEKgKvaMp7KgliTpwJzzquAPeMQg2LD5C%2FR36nI%2BZNXrqp64ZovMrtVV1IR9KLXTkRZs3%2Ft%2Bvt7CzhM8Fopc96cKhu%2FpX7eVR%2BBJfTeUD%2FPvz19KWuKWsM9V%2FEqNptPTADIg6LtupuainAJVhvBaatHOdGe7aUt2ABkvsCZVs5uFbdy79aHVMMtZgN886E1TsVR%2FDwbg1AhfsxLBujEumIn9bJAkr1RJpHakrC67gm%2FyTsU64huC%2BGCqQrd5CHIAQsbDCV8tMPw5K%2B3SonWV2TLusiOg%2FWZikSMqgDrexj7KQo7utXWGAAt2W4INKGSpwY1BoOWJGl6rBMJ1rWpERJ2lxagHeAPd8tOPiKVvkytscHH1vEgM4S1wOApspud5tMsvtkhyAWGwfsbkn1ZiF5PoqUbBjHXH9m%2Bq8p4oLUEI2aozdrLEqdQxELSlleQna0U1VsxyRa%2BXRjxDU7oOpmqETzUEx3NKELDGOb%2FwzO%2F8HH%2BqPcC8OVaox2KdLvAFwHGulKLwRrtSlblZopzZqrBmd0R5X60tZ4u2KIUH3lLeiSiGvb%2FkBQ%3D%3D&X-Amz-Signature;=8b4dab6a349ecc98905d949d026889035101ee8acb34055efb87ca2c299e4ba4",
+          "expires_at": "2019-03-21T23:16:47+00:00",
+          "filter_parameters": {
+            "number_aliases": [
+              "Home Phone"
+            ],
+            "start_call_end_time": "2018-10-01T00:00:00+00:00",
+            "start_call_start_time": "2018-10-01T00:00:00+00:00"
+          },
+          "num_calls": 0,
+          "requested_at": "2019-03-18T23:16:46+00:00",
+          "status": "completed",
+          "total_cost": "0.0",
+          "call_subtotal": "0.0",
+          "connect_fees": "0.0",
+          "cnamlookup_fees": "0.0",
+          "usf_fees": "0.0"
+        },
+        "id": 203484,
+        "type": "cdrexport"
+      }
+    }
+  ],
+  "links": {
+    "next": "http://cdr-api/cdrs/exports?offset=2&limit;=2",
+    "self": "http://cdr-api/cdrs/exports?offset=0&limit;=2"
+  }
+}
+```
+
+#### create_cdr_export
+
+The method accepts a many query parameters, such as `start_call_start_time`, `start_call_end_time`, and `number_aliases`. Learn more about the different CDR export filter parameters in the [API reference](https://developer.flowroute.com/api/cdrexports/v2.0/query-cdrs/).
+
+##### Example Request
+```
+print("\n--Create a CDR Export where the call started between a certain time from a list of number alises")
+try:
+    filters = {
+        "start_call_start_time": "2019-01-01 00:00:00",
+        "start_call_end_time": "2019-02-01 00:00:00",
+        "number_aliases": ["Office 221", "Office 888"]
+    }
+    callback_url = "https://myserver.com/cdrs"
+    result = cdrs_controller.create_cdr(filters, callback_url)
+    pprint.pprint(result)
+except Exception as e:
+    print(str(e))
+    print(e.context.response.raw_body)
+```
+
+##### Example Response
+
+On success, the HTTP status code in the response header is `201 Created` and the response body contains the newly created CDR export object in JSON format. On error, a printable representation of the detailed API response is displayed.
+
+```
+
+{
+  "data": {
+    "type": "cdrexport",
+    "id": "38647",
+    "links": {
+        "self": "https://api.flowroute.com/v2/cdrs/exports/38647"
+      },
+    "attributes": {
+      "number_aliases": [
+        "Office 221",
+        "Office 888"
+      ],
+      "start_call_start_time": "2019-01-01 00:00:00",
+      "start_call_end_time": "2019-02-01 00:00:00",
+      "callback_url": "https://myserver.com/cdrs",
+      "status": "processing",
+      "download_url": None,
+      "requested_at": "2019-03-18T16:43:00+00:00",
+      "created_at": "2019-03-18T16:43:01+03:00",
+      "expires_at": None,
+      "total_cost": None,
+      "call_subtotal": None,
+      "connect_fees": None,
+      "cnamlookup_fees": None,
+      "usf_fees": None,
+      "ccrf": None,
+      "billed_minutes": None,
+      "filter_parameters": {
+        "number_aliases": [
+          "Office 221",
+          "Office 888"
+        ],
+      }
+    }
+  }
+}
+```
+
+#### get_cdr_export_status(cdrexport_id)
+
+The method accepts a CDR Export ID as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/cdrexports/v2.0/cdr-status/). In the following example, we will be retrieving the Detail Status of the CDR Export we created in the previous query.
+
+##### Example Request
+```
+print("\n--Get CDR Export Detail Status")
+result = cdrs_controller.get_cdr_export_status(cdrexport_id)
+pprint.pprint(result)
+```
+
+##### Example Response
+On success, the HTTP status code in the response header is `200 OK` and the response body contains a CDR export JSON object.
+
+```
+{'data':
+	'type': 'cdrexport',
+	'id': '38647',
+	'attributes': {
+		'callback_url': 'http://myserver.com/webhook',
+		'status': 'completed',
+		'download_url': ('https://s3.us-east-2.amazonaws.com/uiuc-presigned-url-example/secret.'
+			'txt?X-Amz-Date=20170720T182534Z&X-Amz-SignedHeaders;=host&X-Amz-Creden;'
+			'tial=ASIAIYLQNVRRFNZOCFBA%2F20170720%2Fus-east-2%2Fs3%2Faws4_request&'
+			'X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Expires;=604800&X-Amz-Security-;'
+			'Token=FQoDYXdzEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDOLWx95j90zPxGh7WSL'
+			'dAVnoYoKC4gjrrR1xbokFWRRwutmuAmOxaIVcQqOy%2Fqxy%2FXQt3Iz%2FohuEEmI7%2'
+			'FHPzShy%2BfgQtvfUeDaojrAx5q8fG9P1KuIfcedfkiU%2BCxpM2foyCGlXzoZuNlcF8o'
+			'hm%2BaM3wh4%2BxQ%2FpShLl18cKiKEiw0QF1UQGj%2FsiEqzoM81vOSUVWL9SpTTkVq8'
+			'EQHY1chYKBkBWt7eIQcxjTI2dQeYOohlrbnZ5Y1%2F1cxPgrbk6PkNFO3whAoliSjyRC8'
+			'e4TSjIY2j3V6d9fUy4%2Fp6nLZIf9wuERL7xW9PjE6eZbKOHnw8sF&X-Amz-Signature;'
+			'=a14b3065ab822105e8d7892eb5dcc455ddd603c61e47520774a7289178af9ecc'),
+		 'requested_at': '2018-09-11T23:21:20+00:00'
+		 'created_at': '2018-09-11T23:23:23+00:00'
+		 'expires_at': '2018-09-14T23:23:29+00:00',
+		 'total_cost': '34.321300',
+		 'usf_fees': '5.93190',
+		 'ccrf': '0.0',
+		 'num_calls': 301,
+		 'billed_minutes': 10,
+		 'filter_parameters': {
+			"start_call_start_time": "2019-01-01 00:00:00",
+			"start_call_end_time": "2019-02-01 00:00:00",
+			"number_aliases": "['Office 221', 'Office 888']"
+		 }
+	},
+	'links': {
+		'self': 'http://cdr-api/cdrs/exports/38647'
+    }
+}
+```
+
+#### #download_cdr_export(cdrexport_id)
+
+The method accepts a CDR Export ID as a parameter which you can learn more about in the [API reference](https://developer.flowroute.com/api/cdrexports/v2.0/cdr-status/). In the following example, we will be retrieving the file of the CDR Export we created in the previous query.
+You can learn more about the format of the CDR Export Data in the [API results reference](https://developer.flowroute.com/api/cdrexports/v2.0/cdr-results/).
+
+##### Example Request
+```
+print("\n--Get CDR Export Data")
+result = cdrs_controller.download_cdr_export(cdrexport_id, filename)
+pprint.pprint(result)
+```
+
+##### Example Response
+On success, the HTTP status code in the response header is `200 OK` and a file is written to the local computer using the provided filename.
+
+```
+direction,start_time,end_time,destination,number_alias,callerid,total_cost,destination_name,callerid_country,line_information,result,call_fail_sip_code,call_fail_reason,duration,billed_duration,rate,first_increment,subsequent_increment,cost_subtotal,connect_fee,usf_fee,ccrf,cnam_lookup_fee,custom_x_tag,customer_ip
+Outbound,2019-06-25 18:18:54+00,2019-06-25 18:19:31+00,18774551500,Office Line 2,+12063389999,0.00000000,UNITED STATES - TOLL FREE,N/A,,completed,200,OK,37,42,0.000000,6,6,0.00000000,0.0000,0.00000000,0.00000000,0.00000000,,53.186.152.52:5080
+Inbound,2019-06-25 18:18:00+00,2019-06-25 18:18:29+00,12063389999,Office Line 2,+12069928999,0.00474784,UNITED STATES,UNITED STATES,61,completed,200,OK,29,30,0.001500,6,6,0.00075000,0.0000,0.00000000,0.00009784,0.00390000,,53.186.152.52
+Outbound,2019-06-25 18:15:38+00,2019-06-25 18:17:24+00,12069928999,Office Line 1,+12063389998,0.01994112,UNITED STATES,N/A,,completed,200,OK,106,108,0.009800,6,6,0.01764000,0.0000,0.00000000,0.00230112,0.00000000,,53.186.151.52:5080
+```
+
+
 #### Errors
 
 In cases of method errors, the Python library raises an exception which includes an error message and the HTTP body that was received in the request. 
@@ -1446,6 +1696,8 @@ In cases of method errors, the Python library raises an exception which includes
  
 ## Testing
 
-Once you are done configuring your Flowroute API credentials and updating the function parameters, you can run any of the demo files to see them in action. The Flowroute library demo files are named after the resource they represent: <resource_name>_demo.py.
+Once you are done configuring your Flowroute API credentials and updating the function parameters, you can run any of the demo files to see them in action. The Flowroute library demo files are named after the resource they represent: `<resource_name>_demo.py`.
 
 ` python cnam_demo.py `
+` python e911_demo.py `
+` python cdrs_demo.py `
