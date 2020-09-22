@@ -8,8 +8,10 @@
 from csv import DictReader
 import gzip
 import json
-import StringIO
-import urllib2
+#import StringIO
+from io import StringIO
+#import urllib2
+from urllib.request import urlopen
 
 from .base_controller import BaseController
 from ..api_helper import APIHelper
@@ -190,7 +192,7 @@ class CDRsController(BaseController):
             export_url = _response['data']['attributes']['download_url']
             #urllib.urlretrieve(export_url, filename)
             try:
-                response = urllib2.urlopen(export_url)
+                response = urlopen(export_url)
                 compressedFile = StringIO.StringIO(response.read())
                 decompressedFile = gzip.GzipFile(fileobj=compressedFile)
                 with open(filename, 'w') as outfile:
