@@ -15,6 +15,7 @@ from .controllers.cnams_controller import CNAMsController
 from .controllers.porting_controller import PortingController
 from .controllers.cdrs_controller import CDRsController
 
+
 class FlowroutenumbersandmessagingClient(object):
 
     config = Configuration
@@ -47,10 +48,8 @@ class FlowroutenumbersandmessagingClient(object):
     def cdrs(self):
         return CDRsController()
 
-    def __init__(self,
-                 basic_auth_user_name = None,
-                 basic_auth_password = None):
-        if basic_auth_user_name != None:
+    def __init__(self, basic_auth_user_name=None, basic_auth_password=None):
+        if basic_auth_user_name is not None:
             Configuration.basic_auth_user_name = basic_auth_user_name
-        if basic_auth_password != None:
+        if basic_auth_password is not None:
             Configuration.basic_auth_password = basic_auth_password
