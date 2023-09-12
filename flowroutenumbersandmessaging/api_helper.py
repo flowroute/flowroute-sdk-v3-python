@@ -18,6 +18,7 @@ import jsonpickle
 import dateutil.parser
 from requests.utils import quote
 
+
 class APIHelper(object):
 
     """A Helper Class for various functions associated with API Calls.
@@ -120,27 +121,47 @@ class APIHelper(object):
         tuples = []
 
         if sys.version_info[0] < 3:
-            serializable_types = (str, int, long, float, bool, datetime.date, APIHelper.CustomDate)
+            serializable_types = (
+                str,
+                int,
+                long,
+                float,
+                bool,
+                datetime.date,
+                APIHelper.CustomDate,
+            )
         else:
-            serializable_types = (str, int, float, bool, datetime.date, APIHelper.CustomDate)
+            serializable_types = (
+                str,
+                int,
+                float,
+                bool,
+                datetime.date,
+                APIHelper.CustomDate,
+            )
 
         if isinstance(array[0], serializable_types):
             if formatting is "unindexed":
                 tuples += [("{0}[]".format(key), element) for element in array]
             elif formatting is "indexed":
-                tuples += [("{0}[{1}]".format(key, index), element) for index, element in enumerate(array)]
+                tuples += [
+                    ("{0}[{1}]".format(key, index), element)
+                    for index, element in enumerate(array)
+                ]
             elif formatting is "plain":
                 tuples += [(key, element) for element in array]
             else:
                 raise ValueError("Invalid format provided.")
         else:
-            tuples += [("{0}[{1}]".format(key, index), element) for index, element in enumerate(array)]
+            tuples += [
+                ("{0}[{1}]".format(key, index), element)
+                for index, element in enumerate(array)
+            ]
 
         return tuples
 
     @staticmethod
-    def append_url_with_template_parameters(url,
-                                            parameters):
+    def append_url_with_template_parameters(url, parameters):
         """Replaces template parameters in the given url.
 
         Args:
@@ -166,18 +187,18 @@ class APIHelper(object):
             if element is None:
                 replace_value = ""
             elif isinstance(element, list):
-                replace_value = "/".join(quote(str(x), safe='') for x in element)
+                replace_value = "/".join(quote(str(x), safe="") for x in element)
             else:
-                replace_value = quote(str(element), safe='')
+                replace_value = quote(str(element), safe="")
 
-            url = url.replace('{{{0}}}'.format(key), str(replace_value))
+            url = url.replace("{{{0}}}".format(key), str(replace_value))
 
         return url
 
     @staticmethod
-    def append_url_with_query_parameters(url,
-                                         parameters,
-                                         array_serialization="indexed"):
+    def append_url_with_query_parameters(
+        url, parameters, array_serialization="indexed"
+    ):
         """Adds query parameters to a URL.
 
         Args:
@@ -196,25 +217,42 @@ class APIHelper(object):
             return url
 
         for key, value in parameters.items():
-            seperator = '&' if '?' in url else '?'
+            seperator = "&" if "?" in url else "?"
             if value is not None:
                 if isinstance(value, list):
                     value = [element for element in value if element]
                     if array_serialization is "csv":
-                        url += "{0}{1}={2}".format(seperator, key,
-                            ",".join(quote(str(x), safe='') for x in value))
+                        url += "{0}{1}={2}".format(
+                            seperator,
+                            key,
+                            ",".join(quote(str(x), safe="") for x in value),
+                        )
                     elif array_serialization is "psv":
-                        url += "{0}{1}={2}".format(seperator, key,
-                            "|".join(quote(str(x), safe='') for x in value))
+                        url += "{0}{1}={2}".format(
+                            seperator,
+                            key,
+                            "|".join(quote(str(x), safe="") for x in value),
+                        )
                     elif array_serialization is "tsv":
-                        url += "{0}{1}={2}".format(seperator, key,
-                            "\t".join(quote(str(x), safe='') for x in value))
+                        url += "{0}{1}={2}".format(
+                            seperator,
+                            key,
+                            "\t".join(quote(str(x), safe="") for x in value),
+                        )
                     else:
-                        url += "{0}{1}".format(seperator,
-                            "&".join(("{0}={1}".format(k, quote(str(v), safe='')))
-                                for k, v in APIHelper.serialize_array(key, value, array_serialization)))
+                        url += "{0}{1}".format(
+                            seperator,
+                            "&".join(
+                                ("{0}={1}".format(k, quote(str(v), safe="")))
+                                for k, v in APIHelper.serialize_array(
+                                    key, value, array_serialization
+                                )
+                            ),
+                        )
                 else:
-                    url += "{0}{1}={2}".format(seperator, key, quote(str(value), safe=''))
+                    url += "{0}{1}={2}".format(
+                        seperator, key, quote(str(value), safe="")
+                    )
 
         return url
 
@@ -233,19 +271,18 @@ class APIHelper(object):
         regex = "^https?://[^/]+"
         match = re.match(regex, url)
         if match is None:
-            raise ValueError('Invalid Url format.')
+            raise ValueError("Invalid Url format.")
 
         protocol = match.group(0)
-        index = url.find('?')
-        query_url = url[len(protocol): index if index != -1 else None]
+        index = url.find("?")
+        query_url = url[len(protocol) : index if index != -1 else None]
         query_url = re.sub("//+", "/", query_url)
         parameters = url[index:] if index != -1 else ""
 
         return protocol + query_url + parameters
 
     @staticmethod
-    def form_encode_parameters(form_parameters,
-                               array_serialization="indexed"):
+    def form_encode_parameters(form_parameters, array_serialization="indexed"):
         """Form encodes a dictionary of form parameters
 
         Args:
@@ -265,9 +302,7 @@ class APIHelper(object):
         return encoded
 
     @staticmethod
-    def form_encode(obj,
-                    instance_name,
-                    array_serialization="indexed"):
+    def form_encode(obj, instance_name, array_serialization="indexed"):
         """Encodes a model in a form-encoded manner such as person[Name]
 
         Args:
@@ -289,11 +324,17 @@ class APIHelper(object):
         if obj is None:
             return []
         elif isinstance(obj, list):
-            for element in APIHelper.serialize_array(instance_name, obj, array_serialization):
-                retval += APIHelper.form_encode(element[1], element[0], array_serialization)
+            for element in APIHelper.serialize_array(
+                instance_name, obj, array_serialization
+            ):
+                retval += APIHelper.form_encode(
+                    element[1], element[0], array_serialization
+                )
         elif isinstance(obj, dict):
             for item in obj:
-                retval += APIHelper.form_encode(obj[item], instance_name + "[" + item + "]", array_serialization)
+                retval += APIHelper.form_encode(
+                    obj[item], instance_name + "[" + item + "]", array_serialization
+                )
         else:
             retval.append((instance_name, obj))
 
@@ -322,21 +363,33 @@ class APIHelper(object):
                 # Loop through each item
                 dictionary[obj._names[name]] = list()
                 for item in value:
-                    dictionary[obj._names[name]].append(APIHelper.to_dictionary(item) if hasattr(item, "_names") else item)
+                    dictionary[obj._names[name]].append(
+                        APIHelper.to_dictionary(item)
+                        if hasattr(item, "_names")
+                        else item
+                    )
             elif isinstance(value, dict):
                 # Loop through each item
                 dictionary[obj._names[name]] = dict()
                 for key in value:
-                    dictionary[obj._names[name]][key] = APIHelper.to_dictionary(value[key]) if hasattr(value[key], "_names") else value[key]
+                    dictionary[obj._names[name]][key] = (
+                        APIHelper.to_dictionary(value[key])
+                        if hasattr(value[key], "_names")
+                        else value[key]
+                    )
             else:
-                dictionary[obj._names[name]] = APIHelper.to_dictionary(value) if hasattr(value, "_names") else value
+                dictionary[obj._names[name]] = (
+                    APIHelper.to_dictionary(value)
+                    if hasattr(value, "_names")
+                    else value
+                )
 
         # Return the result
         return dictionary
 
     class CustomDate(object):
 
-        """ A base class for wrapper classes of datetime.
+        """A base class for wrapper classes of datetime.
 
         This class contains methods which help in
         appropriate serialization of datetime objects.
@@ -361,21 +414,24 @@ class APIHelper(object):
 
     class HttpDateTime(CustomDate):
 
-        """ A wrapper class for datetime to support HTTP date format."""
+        """A wrapper class for datetime to support HTTP date format."""
 
         @classmethod
         def from_datetime(cls, date_time):
-            return eut.formatdate(timeval=mktime(date_time.timetuple()),
-                                  localtime=False, usegmt=True)
+            return eut.formatdate(
+                timeval=mktime(date_time.timetuple()), localtime=False, usegmt=True
+            )
 
         @classmethod
         def from_value(cls, value):
-            dtime = datetime.datetime.fromtimestamp(eut.mktime_tz(eut.parsedate_tz(value)))
+            dtime = datetime.datetime.fromtimestamp(
+                eut.mktime_tz(eut.parsedate_tz(value))
+            )
             return cls(dtime, value)
 
     class UnixDateTime(CustomDate):
 
-        """ A wrapper class for datetime to support Unix date format."""
+        """A wrapper class for datetime to support Unix date format."""
 
         def __str__(self):
             return str(self.value)
@@ -391,13 +447,12 @@ class APIHelper(object):
 
     class RFC3339DateTime(CustomDate):
 
-        """ A wrapper class for datetime to support Rfc 3339 format."""
+        """A wrapper class for datetime to support Rfc 3339 format."""
 
         @classmethod
         def from_datetime(cls, date_time):
             d = dateutil.parser.parse(date_time).isoformat()
             return d
-
 
         @classmethod
         def from_value(cls, value):
