@@ -159,7 +159,7 @@ class MessagesController(BaseController):
         # Prepare and execute request
         _request = self.http_client.post(_query_url,
                                          headers=_headers,
-                                         parameters=APIHelper.json_serialize(json.loads(body)))
+                                         parameters=APIHelper.json_serialize(body))
 
         return self.handle_request_and_response(_request)
 

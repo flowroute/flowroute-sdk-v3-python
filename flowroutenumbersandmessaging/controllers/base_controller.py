@@ -33,9 +33,7 @@ class BaseController(object):
 
     http_call_back = None
 
-    global_headers = {
-        'user-agent': 'Flowroute SDK v3.0'
-    }
+    global_headers = {"user-agent": "Flowroute SDK v3.0"}
 
     def __init__(self, client=None, call_back=None):
         if client is not None:
@@ -53,8 +51,7 @@ class BaseController(object):
         """
         for name, value in kwargs.items():
             if value is None:
-                raise ValueError("Required parameter {} cannot be None.".
-                                 format(name))
+                raise ValueError("Required parameter {} cannot be None.".format(name))
 
     def execute_request(self, request, binary=False):
         """Executes an HttpRequest.
@@ -74,12 +71,14 @@ class BaseController(object):
             self.http_call_back.on_before_request(request)
 
         # Add global headers to request
-        request.headers = APIHelper.merge_dicts(self.global_headers,
-                                                request.headers)
+        request.headers = APIHelper.merge_dicts(self.global_headers, request.headers)
 
         # Invoke the API call to fetch the response.
-        func = self.http_client.execute_as_binary if binary else \
-            self.http_client.execute_as_string
+        func = (
+            self.http_client.execute_as_binary
+            if binary
+            else self.http_client.execute_as_string
+        )
         response = func(request)
         context = HttpContext(request, response)
 
@@ -97,9 +96,8 @@ class BaseController(object):
             context (HttpContext): The HttpContext of the API call.
 
         """
-        if (context.response.status_code < 200) or \
-                (context.response.status_code > 208):
-            raise APIException('HTTP response not OK.', context)
+        if (context.response.status_code < 200) or (context.response.status_code > 208):
+            raise APIException("HTTP response not OK.", context)
 
     # Process request and status code and response text
     def handle_request_and_response(self, request):
@@ -108,17 +106,22 @@ class BaseController(object):
 
         # Endpoint and global error handling using HTTP status codes.
         if context.response.status_code == 401:
-            raise ErrorException('Unauthorized – There was an issue with your '
-                                 'API credentials.', context)
+            raise ErrorException(
+                "Unauthorized – There was an issue with your " "API credentials.",
+                context,
+            )
         elif context.response.status_code == 403:
-            raise ErrorException('Forbidden – You don\'t have permission to '
-                                 'access this resource.', context)
+            raise ErrorException(
+                "Forbidden – You don't have permission to " "access this resource.",
+                context,
+            )
         elif context.response.status_code == 404:
-            raise ErrorException('The specified resource was not found',
-                                 context)
+            raise ErrorException("The specified resource was not found", context)
         elif context.response.status_code == 422:
-            raise ErrorException('Unprocessable Entity - You tried to enter an'
-                                 ' incorrect value.', context)
+            raise ErrorException(
+                "Unprocessable Entity - You tried to enter an" " incorrect value.",
+                context,
+            )
         self.validate_response(context)
 
         return APIHelper.json_deserialize(context.response.raw_body)
